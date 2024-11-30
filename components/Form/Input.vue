@@ -1,31 +1,37 @@
 <script setup>
-const emits = defineEmits(["update:input"]);
-
-const props = defineProps(["type", "name", "placeholder", "labelText", "autocomplete", "input", "formDataError", "focus"]);
-// convert props values to refs
-const {type, name, placeholder, labelText, autocomplete, input, focus} = toRefs(props)
-// === computed === //
-const inputComputed = computed({
-  get: () => input.value,
-  set: (val) => emits("update:input", val),
-});
+const model = defineModel();
+const props = defineProps([
+  "type",
+  "name",
+  "placeholder",
+  "labelText",
+  "autocomplete",
+  "formDataError",
+  "focus",
+]);
+const { type, name, placeholder, labelText, autocomplete, focus } =
+  toRefs(props);
 </script>
 
 <template>
   <div class="form-floating">
     <input
-        id="floatingInput"
-        :type="type"
-        class="form-control"
-        :name="name"
-        :autocomplete="autocomplete"
-        :placeholder="placeholder"
-        v-model="inputComputed"
-        :class="{'input-error': formDataError }"
+      id="floatingInput"
+      :type="type"
+      class="form-control"
+      :name="name"
+      :autocomplete="autocomplete"
+      :placeholder="placeholder"
+      v-model="model"
+      :class="{ 'input-error': formDataError }"
     />
-    <label for="floatingInput" :class="{'text-danger': formDataError }">{{ labelText }}</label>
+    <label for="floatingInput" :class="{ 'text-danger': formDataError }">{{
+      labelText
+    }}</label>
     <div v-if="formDataError" class="w-100 text-start mt-1">
-      <span class="form-data-error">{{ typeof formDataError == "string" ? formDataError : formDataError[0] }}</span>
+      <span class="form-data-error">{{
+        typeof formDataError == "string" ? formDataError : formDataError[0]
+      }}</span>
     </div>
   </div>
 </template>
@@ -55,8 +61,8 @@ const inputComputed = computed({
   color: var(--bs-primary);
 }
 
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;

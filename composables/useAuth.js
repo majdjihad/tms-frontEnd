@@ -1,6 +1,6 @@
 // Value is initialized in: ~/plugins/auth.js
-import {$larafetch} from "~/utils/$larafetch";
-import {useProjectsStore} from "~/stores/projectsStore";
+import { $larafetch } from "~/utils/$larafetch";
+import { useProjectsStore } from "~/stores/projectsStore";
 
 export const useUser = () => {
   return useState("user", () => undefined);
@@ -27,7 +27,7 @@ export const useAuth = () => {
       method: "post",
       body: credentials,
     });
-    return [response, await refresh()]
+    return [response, await refresh()];
   }
 
   async function checkToken(credentials) {
@@ -67,16 +67,13 @@ export const useAuth = () => {
     });
     return [response, await refresh()];
   }
-  
+
   async function logout() {
     if (!isLoggedIn.value) return;
 
     await $larafetch("/api/logout", { method: "post" });
     user.value = null;
-    // const projectStore = useProjectsStore()
-    // projectStore.changeStatus = true
-    await navigateTo('/login', {replace: true});
-    document.location.reload()
+    await navigateTo("/login", { replace: true });
   }
 
   // async function resendEmailVerification() {

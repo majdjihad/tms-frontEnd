@@ -1,30 +1,33 @@
 <script setup>
-const emits = defineEmits(["update:input"]);
+const model = defineModel();
 
-const props = defineProps(["name", "placeholder", "labelText", "input", "formDataError"]);
+const props = defineProps([
+  "name",
+  "placeholder",
+  "labelText",
+  "formDataError",
+]);
 
 // convert props values to refs
-const {name, placeholder, labelText, input, formDataError} = toRefs(props);
-
-// === computed === //
-const inputComputed = computed({
-  get: () => input.value,
-  set: (val) => emits("update:input", val),
-})
+const { name, placeholder, labelText, formDataError } = toRefs(props);
 </script>
 
 <template>
   <div class="form-floating mb-7">
     <textarea
-        :name="name"
-        :placeholder="placeholder"
-        class="form-control h-100px"
-        :class="{'input-error': formDataError }"
-        v-model="inputComputed"
+      :name="name"
+      :placeholder="placeholder"
+      class="form-control h-100px"
+      :class="{ 'input-error': formDataError }"
+      v-model="model"
     ></textarea>
-    <label for="floatingInput" :class="{'text-danger': formDataError }">{{ labelText }}</label>
+    <label for="floatingInput" :class="{ 'text-danger': formDataError }">{{
+      labelText
+    }}</label>
     <div v-if="formDataError" class="w-100 text-start mt-1">
-      <span class="form-data-error">{{ typeof formDataError == "string" ? formDataError : formDataError[0]}}</span>
+      <span class="form-data-error">{{
+        typeof formDataError == "string" ? formDataError : formDataError[0]
+      }}</span>
     </div>
   </div>
 </template>

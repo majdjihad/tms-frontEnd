@@ -7,22 +7,24 @@
       <div class="rounded skeleton" style="width: 100px; height: 30px"></div>
     </td>
     <td>
-      <div class="rounded skeleton" style="width: 150px; height: 30px;"></div>
+      <div class="rounded skeleton" style="width: 150px; height: 30px"></div>
     </td>
     <td>
-      <div class="rounded skeleton" style="width: 150px; height: 30px;"></div>
+      <div class="rounded skeleton" style="width: 150px; height: 30px"></div>
     </td>
     <td>
-      <div class="rounded skeleton" style="width: 80px; height: 30px;"></div>
+      <div class="rounded skeleton" style="width: 80px; height: 30px"></div>
     </td>
     <td>
-      <div class="rounded skeleton ms-auto" style="width: 80px; height: 30px;"></div>
+      <div
+        class="rounded skeleton ms-auto"
+        style="width: 80px; height: 30px"
+      ></div>
     </td>
   </tr>
 </template>
 
 <script setup>
-
 </script>
 
 <style lang="scss" scoped></style>

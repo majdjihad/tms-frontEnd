@@ -4,20 +4,25 @@
       <div class="d-flex flex-column flex-center text-center p-10">
         <div class="card card-flush w-lg-650px">
           <div class="card-body py-15 py-lg-10">
-
             <div class="mb-5">
               <NuxtLink to="/products">
-                <img alt="Logo" src="/assets/media/logos/logo-dark.png" class="h-60px">
+                <img
+                  alt="Logo"
+                  src="/assets/media/logos/logo-dark.png"
+                  class="h-60px"
+                />
               </NuxtLink>
             </div>
 
             <h1 class="fw-bolder text-gray-900 mb-5">{{ message }}</h1>
             <div class="fw-semibold fs-6 text-gray-500 mb-8">
               This is your opportunity to get creative amazing opportunaties
-              <br>
+              <br />
               that gives readers an idea
             </div>
-            <NuxtLink to="/projects" class="btn btn-sm btn-primary">Go to Home Page</NuxtLink>
+            <NuxtLink to="/projects" class="btn btn-sm btn-primary"
+              >Go to Home Page</NuxtLink
+            >
           </div>
         </div>
       </div>

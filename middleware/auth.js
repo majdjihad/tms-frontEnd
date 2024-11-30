@@ -1,6 +1,6 @@
-import {useUser} from "~/composables/useAuth";
+import { useUser } from "~/composables/useAuth";
 
 export default defineNuxtRouteMiddleware(async () => {
-    const user = useUser();
-    if (!user?.value) return navigateTo("/login", { replace: true });   
+  const user = useUser();
+  if (!user?.value) return navigateTo("/login", { replace: true });
 });

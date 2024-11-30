@@ -1,6 +1,13 @@
 <template>
-  <div id="error-view" class="landing-hero-bg d-flex align-items-center justify-content-center">
-    <Error :statusCode="error.statusCode" :message="error.message" errType="not-mobile"/>
+  <div
+    id="error-view"
+    class="landing-hero-bg d-flex align-items-center justify-content-center"
+  >
+    <Error
+      :statusCode="error.statusCode"
+      :message="error.message"
+      errType="not-mobile"
+    />
   </div>
 </template>
 

@@ -1,47 +1,67 @@
 <script setup>
-import {useAuth, useUser} from "~/composables/useAuth";
-import toast from "bootstrap/js/src/toast";
+import { useAuth, useUser } from "~/composables/useAuth";
 
 const props = defineProps(["isAccountMenu"]);
 const user = useUser();
 
 const { logout } = useAuth();
-const inProgress = ref(false)
+const inProgress = ref(false);
 async function handleLogout() {
-  inProgress.value = true
-  await logout()
-  inProgress.value = false
+  await navigateTo("/login", { replace: true });
+  inProgress.value = true;
+  await logout();
+  inProgress.value = false;
 }
 </script>
 
 <template>
   <Transition name="accountMenu">
-    <div v-if="isAccountMenu"
+    <div
+      v-if="isAccountMenu"
       class="menu-gray-800 menu-state-bg bg-light rounded-2 menu-state-color fw-semibold py-4 fs-6 w-275px position-absolute account-menu shadow"
-      style="z-index: 1000 !important;">
+      style="z-index: 1000 !important"
+    >
       <div class="menu-item px-3">
         <div class="menu-content d-flex align-items-center px-3">
           <div class="symbol symbol-50px me-5">
-            <img v-if="user?.url_photo" :alt="user?.name" :src="user?.url_photo" />
+            <img
+              v-if="user?.url_photo"
+              :alt="user?.name"
+              :src="user?.url_photo"
+            />
             <img v-else alt="Logo" src="../../assets/media/avatars/blank.png" />
           </div>
           <div class="d-flex flex-column">
-            <div class="fw-bold d-flex align-items-center fs-5">{{ user?.name }}</div>
+            <div class="fw-bold d-flex align-items-center fs-5">
+              {{ user?.name }}
+            </div>
             <span class="fw-semibold text-muted fs-7">{{ user?.email }}</span>
           </div>
         </div>
       </div>
       <div class="separator my-2"></div>
-      <div class="menu-item px-5">
-        <div
-          class="menu-item">
-          <NuxtLink :to="`/profile/${user?.identify_number}`" class="menu-link px-5 rounded">My Profile</NuxtLink>
-        </div>
-        <button :disabled="inProgress" @click="handleLogout"
-          class="btn btn-light btn-active-light-danger btn-flex btn-center btn-sm cursor-pointer w-100 justify-content-between">
+      <div class="menu-item mx-2">
+        <NuxtLink
+          :to="`/profile/${user?.identify_number}`"
+          class="w-100 btn btn-light mb-1 text-dark text-start"
+        >
+          <span>My Profile</span>
+        </NuxtLink>
+        <button
+          v-if="!inProgress"
+          @click="handleLogout"
+          class="w-100 btn btn-active-light-danger text-start"
+        >
+          <i class="pi pi-sign-out"></i>
           <span>Logout</span>
-          <icon v-if="inProgress" name="svg-spinners:ring-resize" class="indicator-label" size="15"/>
         </button>
+        <div class="w-100 text-center mx-2" v-else>
+          <icon
+            name="svg-spinners:ring-resize"
+            class="indicator-label"
+            size="19"
+          />
+        </div>
       </div>
     </div>
   </Transition>

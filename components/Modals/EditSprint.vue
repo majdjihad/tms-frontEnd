@@ -2,7 +2,6 @@
 import {useSubmit} from "~/composables/useSubmit";
 import {useToast} from "vue-toastification";
 import {useProjectsStore} from "~/stores/projectsStore";
-import {useProjects} from "~/composables/useProjects";
 import {useBacklogStore} from "~/stores/backlogStore";
 import Dropdown from 'primevue/dropdown';
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -118,7 +117,7 @@ function showToast(statusCode, msg) {
           <form @submit.prevent="formHandle" class=" text-center" id="editSprintForm">
             <FormInput type="text" class="my-6" autocomplete="off" labelText="Sprint Name" name="name"
                        placeholder="Sprint Name"
-                       v-model:input="data.name" :formDataError="errorMsg.errorName"/>
+                       v-model="data.name" :formDataError="errorMsg.errorName"/>
             <div class="my-6">
               <p class="text-start">Start Date</p>
               <VueDatePicker v-model="data.start_date" class="rounded p-1"/>
@@ -129,7 +128,7 @@ function showToast(statusCode, msg) {
                         placeholder="Select a durations" class="w-100 p-2 rounded text-start"/>
             </div>
             <FormTextArea name="description" class="my-6" placeholder="sprint goal" labelText="sprint goal"
-                          v-model:input="data.goal" :formDataError="errorMsg.errorGoal"/>
+                          v-model="data.goal" :formDataError="errorMsg.errorGoal"/>
             <div>
               <p class="text-start">End date</p>
               <div class="d-flex justify-content-start align-items-center border p-4 rounded bg-light">

@@ -102,10 +102,10 @@ function showToast(statusCode, msg) {
             <FormAvatarInput currentImage="" from="project" formDataError="" />
 
             <FormInput type="text" autocomplete="off" labelText="Project Name" name="name" placeholder="Project Name"
-              v-model:input="data.name" :formDataError="errorMsg.errorName" />
+              v-model="data.name" :formDataError="errorMsg.errorName" />
 
             <FormTextArea name="description" placeholder="Project Description" labelText="Project Description"
-              v-model:input="data.description" :formDataError="errorMsg.errorDescription" />
+              v-model="data.description" :formDataError="errorMsg.errorDescription" />
 
             <button :disabled="inProgress" type="submit" class="btn btn-primary w-100 mt-5">
               <span v-if="!inProgress" class="indicator-label">Edit</span>

@@ -1,4 +1,4 @@
-import {$larafetch} from "~/utils/$larafetch";
+import { $larafetch } from "~/utils/$larafetch";
 
 export const useProjects = () => {
   async function projects() {
@@ -22,10 +22,10 @@ export const useProjects = () => {
     });
     return response;
   }
-  
+
   async function detailsProject(projectId) {
-      const response = await $larafetch(`api/projects/${projectId}/details`, {
-          method: "get",
+    const response = await $larafetch(`api/projects/${projectId}/details`, {
+      method: "get",
     });
     return response;
   }
@@ -37,11 +37,16 @@ export const useProjects = () => {
     });
     return response;
   }
-  async  function favoriteProject(projectId) {
+  async function favoriteProject(projectId) {
     await $larafetch(`api/projects/${projectId}/favorite`, {
       method: "get",
     });
-    // projects()
+  }
+  async function archiveProject(projectId) {
+    const response = await $larafetch(`api/projects/${projectId}/archive`, {
+      method: "get",
+    });
+    return response;
   }
   return {
     projects,
@@ -49,6 +54,7 @@ export const useProjects = () => {
     createProject,
     detailsProject,
     editProject,
-    favoriteProject
+    favoriteProject,
+    archiveProject,
   };
 };

@@ -89,7 +89,7 @@ function showToast(statusCode, msg) {
           <label class="col-lg-4 col-form-label required fw-semibold fs-6">Current Password</label>
           <div class="col-lg-8">
             <div class="col-lg-6 fv-row">
-              <FormPasswordInput v-model:input="data.old_password" placeholder="password" autocomplete="off"
+              <FormPasswordInput v-model="data.old_password" placeholder="password" autocomplete="off"
                                  labelText="Password" name="password" :formDataError="errorMsg.errorOldPassword"/>
             </div>
           </div>
@@ -98,7 +98,7 @@ function showToast(statusCode, msg) {
           <label class="col-lg-4 col-form-label required fw-semibold fs-6">new password</label>
           <div class="col-lg-8">
             <div class="col-lg-6 fv-row">
-              <FormPasswordInput v-model:input="data.password" placeholder="new password" autocomplete="off"
+              <FormPasswordInput v-model="data.password" placeholder="new password" autocomplete="off"
                                  labelText="new Password" name="newPassword" :formDataError="errorMsg.errorPassword"/>
             </div>
           </div>
@@ -107,7 +107,7 @@ function showToast(statusCode, msg) {
           <label class="col-lg-4 col-form-label required fw-semibold fs-6">confirm password</label>
           <div class="col-lg-8">
             <div class="col-lg-6 fv-row">
-              <FormPasswordInput v-model:input="data.password_confirmation" placeholder="confirm password"
+              <FormPasswordInput v-model="data.password_confirmation" placeholder="confirm password"
                                  autocomplete="off"
                                  labelText="confirm Password" name="confirmPassword"
                                  :formDataError="errorMsg.errorConfirmPassword"/>

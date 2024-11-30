@@ -15,11 +15,11 @@ const errorImage = computed(() => {
 });
 
 const isMobileError = computed(() =>
-    props.errType === "mobile" ? true : false
+  props.errType === "mobile" ? true : false
 );
 
 // === methods === //
-const handleClearError = () => clearError({redirect: "/projects"});
+const handleClearError = () => clearError({ redirect: "/projects" });
 </script>
 
 <template>
@@ -39,8 +39,8 @@ const handleClearError = () => clearError({redirect: "/projects"});
             <!--end::Title-->
             <!--begin::Text-->
             <p
-                v-if="isMobileError"
-                class="fw-bold text-gray-500 fs-1 text-capitalize text-center"
+              v-if="isMobileError"
+              class="fw-bold text-gray-500 fs-1 text-capitalize text-center"
             >
               <span class="text-primary gradient-text">Taskat Softwatre</span>
               Does Not Allowed for mobile devices
@@ -52,16 +52,16 @@ const handleClearError = () => clearError({redirect: "/projects"});
             <!--begin::Illustration-->
             <div class="mb-3">
               <img
-                  v-if="isMobileError"
-                  src="~/assets/media/auth/mobile-error.png"
-                  alt=""
-                  class="mw-100 mh-300px theme-light-show"
+                v-if="isMobileError"
+                src="~/assets/media/auth/mobile-error.png"
+                alt=""
+                class="mw-100 mh-300px theme-light-show"
               />
               <img
-                  v-else
-                  :src="errorImage"
-                  class="mw-100 mh-300px theme-light-show"
-                  alt=""
+                v-else
+                :src="errorImage"
+                class="mw-100 mh-300px theme-light-show"
+                alt=""
               />
             </div>
             <!--end::Illustration-->

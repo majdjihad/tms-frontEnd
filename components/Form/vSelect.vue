@@ -1,8 +1,7 @@
 <script setup>
-import {clickOutSide as vClickOutSide} from '@mahdikhashan/vue3-click-outside'
 
 const emits = defineEmits(["update:modelValue"]);
-const props = defineProps(['selectTitle', 'list', 'type', 'selected'])
+const props = defineProps(["selectTitle", "list", "type", "selected"]);
 const selectedOption = ref(props.selectTitle);
 const optionsVisible = ref(false);
 
@@ -15,59 +14,78 @@ const getColor = (index) => {
 
 const toggleOptionsVisible = () => {
   optionsVisible.value = !optionsVisible.value;
-}
+};
 
 const selectOption = (option) => {
-  if (props?.type === 'statusMenu') {
+  if (props?.type === "statusMenu") {
     emits("update:modelValue", option);
-  } else if (props?.type === 'assigneeMenu') {
+  } else if (props?.type === "assigneeMenu") {
     emits("update:modelValue", option);
   } else {
     selectedOption.value = option;
   }
   optionsVisible.value = false;
-}
+};
 
 const closeOptions = () => {
   optionsVisible.value = false;
-}
+};
 </script>
 
 <template>
   <div class="custom-select">
-    <div class="selected-option" v-click-out-side="closeOptions" @click="toggleOptionsVisible">
+    <div
+      class="selected-option"
+      v-click-outside="closeOptions"
+      @click="toggleOptionsVisible"
+    >
       <p class="m-0">{{ selectedOption }}</p>
-      <i class="fs-5"
-         :class="{ 'fa-solid fa-angle-up': optionsVisible, 'fa-solid fa-angle-down': !optionsVisible }"></i>
+      <i
+        class="fs-5"
+        :class="{
+          'fa-solid fa-angle-up': optionsVisible,
+          'fa-solid fa-angle-down': !optionsVisible,
+        }"
+      ></i>
     </div>
     <Transition name="menu">
       <div class="options" v-show="optionsVisible">
         <div
-            class="option"
-            v-for="(option, index) in list"
-            :key="index"
-            @click="selectOption(option)"
+          class="option"
+          v-for="(option, index) in list"
+          :key="index"
+          @click="selectOption(option)"
         >
           <span v-if="type === 'statusMenu'">{{ option?.name }}</span>
-          <div v-else-if="type === 'assigneeMenu'" class="w-100 d-flex justify-content-start">
+          <div
+            v-else-if="type === 'assigneeMenu'"
+            class="w-100 d-flex justify-content-start align-items-center"
+          >
             <div class="symbol symbol-circle symbol-30px overflow-hidden">
-              <img v-if="option?.user?.photo" :src="option?.user?.photo"
-                   :alt="option?.user?.name" class="w-100"/>
-              <span v-else class="symbol-label text-inverse-warning fw-bold"
-                    :style="{ backgroundColor: getColor(option?.user?.id) }">{{
-                  option?.user?.name ? option?.user?.name[0].toUpperCase() : '-'
-                }}</span>
+              <img
+                v-if="option?.user?.photo"
+                :src="option?.user?.url_photo"
+                :alt="option?.user?.name"
+                class="w-100"
+              />
+              <span
+                v-else
+                class="symbol-label text-inverse-warning fw-bold"
+                :style="{ backgroundColor: getColor(option?.user?.id) }"
+                >{{
+                  option?.user?.name ? option?.user?.name[0].toUpperCase() : "-"
+                }}</span
+              >
             </div>
             <span class="ms-5 fs-6">{{ option?.user?.name }}</span>
           </div>
           <span v-else>{{ option }}</span>
         </div>
       </div>
-
     </Transition>
   </div>
 </template>
-<style lang="scss" scoped>
+<style scoped>
 /* Add your CSS styles here to customize the appearance */
 .custom-select {
   position: relative;

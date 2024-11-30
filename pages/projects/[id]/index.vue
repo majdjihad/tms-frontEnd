@@ -1,19 +1,10 @@
 <template>
-  <div>
-
-  </div>
+  <div></div>
 </template>
-
-<script setup>
-definePageMeta({
-  layout: "none",
-});
-
-useHead({
-  title: "",
-});
+  
+  <script setup>
 </script>
-
-<style scoped>
-
+  
+  <style>
 </style>
+  

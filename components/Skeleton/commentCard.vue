@@ -10,11 +10,9 @@
               <p class="skeleton w-50px rounded-1 h-15px ms-3"></p>
             </div>
           </div>
-          <div class="skeleton w-250px ms-4 mt-4 h-30px p-4 ps-8">
-          </div>
+          <div class="skeleton w-250px ms-4 mt-4 h-30px p-4 ps-8"></div>
         </div>
-        <div class="skeleton w-50px h-30px">
-        </div>
+        <div class="skeleton w-50px h-30px"></div>
       </div>
     </div>
   </div>

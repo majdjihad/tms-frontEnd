@@ -1,48 +1,56 @@
 <script setup>
-import {useMember} from "~/composables/useMember";
-import {useSubmit} from "~/composables/useSubmit";
-import {useProjectsStore} from "~/stores/projectsStore";
-import {useToast} from "vue-toastification";
+import { useMember } from "~/composables/useMember";
+import { useSubmit } from "~/composables/useSubmit";
+import { useProjectsStore } from "~/stores/projectsStore";
+import { useToast } from "vue-toastification";
 
 const props = defineProps(["member", "index"]);
-const toast = useToast()
-const projectsStore = useProjectsStore()
+const toast = useToast();
+const projectsStore = useProjectsStore();
 
-const { removeMember } = useMember()
+const { removeMember } = useMember();
 
 const handleDeleteMember = () => {
   Swal.fire({
-    html: `Are you sure you want to remove <strong>${props.member?.user?.name || props.member?.user?.email}</strong>,
+    html: `Are you sure you want to remove <strong>${
+      props.member?.user?.name || props.member?.user?.email
+    }</strong>,
              from your team members?`,
     icon: "warning",
     buttonsStyling: false,
     showCancelButton: true,
     confirmButtonText: "Yes, remove!",
-    cancelButtonText: 'No, cancel',
+    cancelButtonText: "No, cancel",
     showLoaderOnConfirm: true,
     customClass: {
       confirmButton: "btn fw-bold btn-danger",
-      cancelButton: 'btn fw-bold btn-active-light-primary',
+      cancelButton: "btn fw-bold btn-active-light-primary",
     },
     preConfirm: () => {
-      submit()
+      submit();
     },
   });
 };
 
-const { submit } = useSubmit(() => {
-  console.log(projectsStore?.project?.project_identify)
-  return removeMember(projectsStore?.project?.project_identify, props.member?.id)
-}, {
-  onSuccess: (response) => {
-    // Handle the response
-    projectsStore?.getProject(projectsStore?.project?.project_identify);
-    showToast('success', response.message)
+const { submit } = useSubmit(
+  () => {
+    console.log(projectsStore?.project?.project_identify);
+    return removeMember(
+      projectsStore?.project?.project_identify,
+      props.member?.id
+    );
   },
-  onError: (error) => {
-    showToast('error', error.data.message)
+  {
+    onSuccess: (response) => {
+      // Handle the response
+      projectsStore?.getProject(projectsStore?.project?.project_identify);
+      showToast("success", response.message);
+    },
+    onError: (error) => {
+      showToast("error", error.data.message);
+    },
   }
-});
+);
 function showToast(statusCode, msg) {
   const toastAttr = {
     position: "top-center",
@@ -55,16 +63,16 @@ function showToast(statusCode, msg) {
     hideProgressBar: true,
     closeButton: false,
     icon: true,
-    rtl: false
-  }
+    rtl: false,
+  };
 
-  if (statusCode === 'success') {
+  if (statusCode === "success") {
     toast.success(msg, {
-      ...toastAttr
+      ...toastAttr,
     });
-  } else if (statusCode === 'error') {
+  } else if (statusCode === "error") {
     toast.error(msg, {
-      ...toastAttr
+      ...toastAttr,
     });
   }
 }
@@ -74,36 +82,53 @@ const getColor = (index) => {
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
-
 </script>
 
 <template>
   <tr class="text-start cursor-pointer px-2 min-w-200px">
     <td class="d-flex align-items-center gap-3 w-auto px-2">
       <div class="symbol symbol-circle symbol-40px overflow-hidden">
-        <img v-if="member?.user?.photo" :src="member?.user?.url_photo"
-             :alt="member?.user?.name" class="w-100"/>
-        <span v-else class="symbol-label text-inverse-warning fw-bold"
-              :style="{ backgroundColor: getColor(member?.user?.id) }">{{
-            member?.user?.name ? member?.user?.name[0].toUpperCase() : '-'
-          }}</span>
+        <img
+          v-if="member?.user?.photo"
+          :src="member?.user?.url_photo"
+          :alt="member?.user?.name"
+          class="w-100"
+        />
+        <span
+          v-else
+          class="symbol-label text-inverse-warning fw-bold"
+          :style="{ backgroundColor: getColor(member?.user?.id) }"
+          >{{
+            member?.user?.name ? member?.user?.name[0].toUpperCase() : "-"
+          }}</span
+        >
       </div>
-      <div class="truncate" style="max-width: 100px">{{ member?.user?.name || "---" }}</div>
+      <div class="truncate" style="max-width: 100px">
+        {{ member?.user?.name || "---" }}
+      </div>
     </td>
     <td class="truncate" style="max-width: 100px">{{ member?.user?.email }}</td>
     <td>{{ member?.role?.name }}</td>
     <td>
       <div
-          class="badge fw-bold text-uppercase"
-          :class="{
+        class="badge fw-bold text-uppercase"
+        :class="{
           'badge-light-warning': member?.invite_status === 'wait',
           'badge-light-primary': member?.invite_status === 'accept',
-          'badge-light-danger': member?.invite_status === 'reject', }">
+          'badge-light-danger': member?.invite_status === 'reject',
+        }"
+      >
         {{ member?.invite_status }}
       </div>
     </td>
-    <td v-if="member?.user?.id !== projectsStore?.project?.user_id" @click="handleDeleteMember" class="text-end px-2">
-      <div class="btn btn-light-danger btn-flex btn-center btn-sm cursor-pointer">
+    <td
+      v-if="member?.user?.id !== projectsStore?.project?.user_id"
+      @click="handleDeleteMember"
+      class="text-end px-2"
+    >
+      <div
+        class="btn btn-light-danger btn-flex btn-center btn-sm cursor-pointer"
+      >
         <div class="d-flex align-items-center gap-1">
           <i class="ki-duotone ki-trash fs-5">
             <span class="path1"></span>
@@ -117,9 +142,7 @@ const getColor = (index) => {
       </div>
     </td>
     <td v-else class="text-end px-2">
-      <div class="btn">
-        Owner
-      </div>
+      <div class="btn">Owner</div>
     </td>
   </tr>
 </template>

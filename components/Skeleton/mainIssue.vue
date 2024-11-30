@@ -13,10 +13,8 @@
         <div class="modal-body overflow-hidden mx-5 pt-0 pb-15">
           <p class="skeleton w-150px h-20px rounded-1 my-5"></p>
           <div class="d-flex w-50">
-            <p class="skeleton w-80px h-20px rounded-1 py-2 px-3 me-3">
-            </p>
-            <p class="skeleton w-80px h-20px rounded-1 py-2 px-3">
-            </p>
+            <p class="skeleton w-80px h-20px rounded-1 py-2 px-3 me-3"></p>
+            <p class="skeleton w-80px h-20px rounded-1 py-2 px-3"></p>
           </div>
           <div class="description">
             <p class="skeleton rounded-1 w-70px h-20px my-6"></p>
@@ -27,31 +25,41 @@
               <p class="skeleton w-70px rounded-1 h-20px m-0"></p>
             </div>
             <div class="p-0 pb-6">
-              <div class="d-flex justify-content-between align-items-center p-3">
+              <div
+                class="d-flex justify-content-between align-items-center p-3"
+              >
                 <span class="skeleton rounded-1 w-90px h-30px"></span>
                 <div class="w-300px text-center">
                   <p class="skeleton w-200px h-30px rounded-1"></p>
                 </div>
               </div>
-              <div class="d-flex justify-content-between align-items-center p-3">
+              <div
+                class="d-flex justify-content-between align-items-center p-3"
+              >
                 <span class="skeleton rounded-1 w-90px h-30px"></span>
                 <div class="w-300px text-center">
                   <p class="skeleton w-200px h-30px rounded-1"></p>
                 </div>
               </div>
-              <div class="d-flex justify-content-between align-items-center p-3">
+              <div
+                class="d-flex justify-content-between align-items-center p-3"
+              >
                 <span class="skeleton rounded-1 w-90px h-30px"></span>
                 <div class="w-300px text-center">
                   <p class="skeleton w-200px h-30px rounded-1"></p>
                 </div>
               </div>
-              <div class="d-flex justify-content-between align-items-center p-3">
+              <div
+                class="d-flex justify-content-between align-items-center p-3"
+              >
                 <span class="skeleton rounded-1 w-90px h-30px"></span>
                 <div class="w-300px text-center">
                   <p class="skeleton w-200px h-30px rounded-1"></p>
                 </div>
               </div>
-              <div class="d-flex justify-content-between align-items-center p-3">
+              <div
+                class="d-flex justify-content-between align-items-center p-3"
+              >
                 <span class="skeleton rounded-1 w-90px h-30px"></span>
                 <div class="w-300px text-center">
                   <p class="skeleton w-200px h-30px rounded-1"></p>
@@ -65,7 +73,7 @@
           </div>
           <div class="my-4">
             <p class="skeleton rounded-1 my-6 w-125px h-20px"></p>
-            <div v-for="i in 4">
+            <div v-for="index in 4" :key="index">
               <SkeletonSubIssueCard />
             </div>
           </div>
@@ -89,7 +97,7 @@
                 </div>
               </div>
               <div v-for="(comment, index) in 4" :key="index">
-                <SkeletonCommentCard/>
+                <SkeletonCommentCard />
               </div>
             </div>
           </div>
@@ -101,10 +109,7 @@
 
 <script setup>
 
-import moment from "moment/moment";
-import Editor from "primevue/editor";
 </script>
 
 <style lang="scss" scoped>
-
 </style>
