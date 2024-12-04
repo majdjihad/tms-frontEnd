@@ -1,21 +1,33 @@
 import { defineStore } from "pinia";
 import { useProjects } from "~/composables/useProjects";
+import { useMember } from "~/composables/useMember";
 export const useProjectsStore = defineStore("useProjects", () => {
   const allProjects = ref(null);
   const allFavoriteProjects = ref(null);
   const allInviteProjects = ref(null);
   const allArchiveProjects = ref(null);
   const project = ref(null);
+  const allRoles = ref(null);
   const changeStatus = ref(true);
+  const { projects } = useProjects();
+  const { getRoles } = useMember();
   async function getAllProjects() {
-    const { projects } = useProjects();
     try {
       const response = await projects();
+
       allProjects.value = response?.projects;
       allFavoriteProjects.value = response?.FavoriteProjects;
       allInviteProjects.value = response?.inviteProjects;
       allArchiveProjects.value = response?.ArchiveProjects;
       changeStatus.value = false;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function getRoleOfProject(projectId) {
+    try {
+      const response = await getRoles(projectId);
+      allRoles.value = response?.roles;
     } catch (error) {
       console.log(error);
     }
@@ -29,6 +41,7 @@ export const useProjectsStore = defineStore("useProjects", () => {
     } catch (error) {
       console.log(error);
     }
+    getRoleOfProject(projectId);
   }
   return {
     allProjects,
@@ -37,7 +50,9 @@ export const useProjectsStore = defineStore("useProjects", () => {
     allArchiveProjects,
     changeStatus,
     project,
+    allRoles,
     getAllProjects,
+    getRoleOfProject,
     getProject,
   };
 });

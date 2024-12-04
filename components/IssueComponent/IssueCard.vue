@@ -6,12 +6,7 @@ import { useProjectsStore } from "~/stores/projectsStore";
 import { useToast } from "vue-toastification";
 import TieredMenu from "primevue/tieredmenu";
 
-const props = defineProps([
-  "issue",
-  "progress",
-  "input",
-  "sprint",
-]);
+const props = defineProps(["issue", "progress", "input", "sprint"]);
 const { moveIssue, deleteIssue, editIssue, editPriority } = useBacklog();
 const projectsStore = useProjectsStore();
 const backlogStore = useBacklogStore();
@@ -20,7 +15,7 @@ const model = defineModel();
 
 // define background color by user id
 const getColor = (index) => {
-  const colorList = ["dc3545", "d63384", "fd7e14", "ffc107", "20c997"];
+  const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
@@ -44,7 +39,7 @@ const handleDeleteIssue = () => {
   });
 };
 
-const { submit, inProgress } = useSubmit(
+const { submit } = useSubmit(
   async () => {
     return await deleteIssue(
       projectsStore?.project?.project_identify,
@@ -89,18 +84,21 @@ function showToast(statusCode, msg) {
 }
 // get issue description
 const getInfoIssue = async () => {
-  if(backlogStore?.issueInfoArray?.id !== props?.issue?.id) {
+  if (
+    backlogStore?.issueInfoArray?.id !== props?.issue?.id &&
+    !props?.progress
+  ) {
     backlogStore.issueInfoArray = null;
     backlogStore.issueCommentArray = null;
-  await backlogStore?.getIssueInfo(
-    projectsStore?.project?.project_identify,
-    props?.issue?.id
-  );
-  await backlogStore?.getIssueComments(
-    projectsStore?.project?.project_identify,
-    props?.issue?.id
-  );
-}
+    await backlogStore?.getIssueInfo(
+      projectsStore?.project?.project_identify,
+      props?.issue?.id
+    );
+    await backlogStore?.getIssueComments(
+      projectsStore?.project?.project_identify,
+      props?.issue?.id
+    );
+  }
 };
 // statuses menu functionality
 const statuses = ref(backlogStore?.statusesArray);
@@ -306,11 +304,12 @@ const closePrioritiesMenu = () => {
 <template>
   <div>
     <div
+      v-if="!progress"
       :class="{ 'issue-border': model?.includes(issue?.id) }"
-      class="issue-container row justify-content-between cursor-pointer px-8 m-0 border-bottom position-relative"
+      class="issue-container row justify-content-between px-8 m-0 border-bottom position-relative"
     >
       <div
-        class="issue-title row col-8 col-md-6 justify-content-around align-items-center form-check-sm"
+        class="issue-title row col-8 col-md-6 justify-content-around align-items-center form-check-sm cursor-pointer"
       >
         <div
           class="form-check col-1 w-auto p-0 py-3 ms-5 d-flex justify-content-end align-items-end"
@@ -323,10 +322,10 @@ const closePrioritiesMenu = () => {
           />
         </div>
         <div
-        class="col-11 h-100 d-flex align-items-center py-3"
-        data-bs-toggle="modal"
-        data-bs-target="#kt_modal_issue_info"
-        @click.self="getInfoIssue"
+          class="col-11 h-100 d-flex align-items-center py-3"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_issue_info"
+          @click="getInfoIssue"
         >
           <img
             v-if="issue?.type === 'task'"
@@ -355,12 +354,11 @@ const closePrioritiesMenu = () => {
         </div>
       </div>
       <div
-        v-if="!progress"
         class="issue-info py-3 col-auto row justify-content-end align-items-center"
       >
         <div class="position-relative col-auto">
           <div
-            class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
+            class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap cursor-pointer"
             :class="
               issue?.status?.name === 'TO DO'
                 ? 'bg-light-active'
@@ -393,7 +391,7 @@ const closePrioritiesMenu = () => {
           <Transition name="statusesMenu">
             <div
               v-if="statusesOpen"
-              class="statusesMenuWrapper position-absolute bg-white shadow p-3 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
+              class="statusesMenuWrapper position-absolute bg-white shadow p-1 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
               style="
                 min-width: 130px !important;
                 width: max-content !important;
@@ -409,7 +407,7 @@ const closePrioritiesMenu = () => {
                 v-else
                 v-for="(status, index) in backlogStore.statusesArray"
                 :key="index"
-                class="hover-bg-light hover-scale"
+                class="cursor-pointer"
               >
                 <div
                   v-if="status?.name !== issue?.status?.name"
@@ -432,7 +430,7 @@ const closePrioritiesMenu = () => {
         </div>
         <div class="position-relative col-auto">
           <div
-            class="d-flex justify-content-center align-items-center py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
+            class="d-flex justify-content-center align-items-center py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap cursor-pointer"
           >
             <div v-if="EditAssigneeLoading">
               <Icon
@@ -456,7 +454,7 @@ const closePrioritiesMenu = () => {
                 />
                 <span
                   v-else
-                  class="symbol-label text-inverse-warning fw-bold fs-2"
+                  class="symbol-label text-inverse-warning fs-2 hover-bg-light"
                   :style="{
                     backgroundColor: getColor(issue?.team_member?.user?.id),
                   }"
@@ -493,7 +491,7 @@ const closePrioritiesMenu = () => {
               </div>
               <div
                 @click="changeIssue({ assign_to: null })"
-                class="unAssignee w-100 d-flex justify-content-start align-items-center hover-bg-light p-2 border-bottom"
+                class="unAssignee w-100 d-flex justify-content-start align-items-center hover-bg-light cursor-pointer p-2 border-bottom"
                 v-if="issue?.assign_to"
               >
                 <div class="symbol symbol-circle symbol-30px overflow-hidden">
@@ -503,7 +501,7 @@ const closePrioritiesMenu = () => {
                     class="w-30px h-30px"
                   />
                 </div>
-                <span class="ms-3">unassignee</span>
+                <span class="ms-3 fs-5">unassignee</span>
               </div>
               <div
                 v-for="(
@@ -515,7 +513,7 @@ const closePrioritiesMenu = () => {
                 @click="changeIssue({ assign_to: member?.id })"
               >
                 <div
-                  class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2 border-bottom"
+                  class="w-100 d-flex justify-content-start align-items-center hover-bg-light cursor-pointer p-2 border-bottom"
                   v-if="issue?.assign_to != member?.id"
                 >
                   <div class="symbol symbol-circle symbol-30px overflow-hidden">
@@ -527,7 +525,7 @@ const closePrioritiesMenu = () => {
                     />
                     <span
                       v-else
-                      class="symbol-label text-inverse-warning fw-bold fs-2"
+                      class="symbol-label text-inverse-warning fs-2"
                       :style="{ backgroundColor: getColor(member?.user?.id) }"
                       >{{
                         member?.user?.name
@@ -536,14 +534,18 @@ const closePrioritiesMenu = () => {
                       }}</span
                     >
                   </div>
-                  <h4 class="m-0 ms-2 fw-normal">{{ member?.user?.name }}</h4>
+                  <h4 class="m-0 ms-2 fs-5 fw-normal">
+                    {{ member?.user?.name }}
+                  </h4>
                 </div>
               </div>
             </div>
           </Transition>
         </div>
         <div class="position-relative col-auto">
-          <div class="py-1 px-3 rounded-1 fw-bold fs-8 text-nowrap">
+          <div
+            class="py-1 px-3 rounded-1 fw-bold fs-8 text-nowrap cursor-pointer"
+          >
             <div v-if="EditPriorityLoading">
               <Icon
                 name="svg-spinners:180-ring-with-bg"
@@ -630,7 +632,7 @@ const closePrioritiesMenu = () => {
               <div
                 v-if="issue?.priority !== 'Highest'"
                 @click="changePriority({ priority: 'Highest' })"
-                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-danger"
+                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-danger cursor-pointer"
               >
                 <icon
                   v-if="issue?.priority !== 'Highest'"
@@ -642,7 +644,7 @@ const closePrioritiesMenu = () => {
               <div
                 v-if="issue?.priority !== 'High'"
                 @click="changePriority({ priority: 'High' })"
-                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-danger"
+                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-danger cursor-pointer"
               >
                 <icon
                   name="material-symbols:keyboard-arrow-up-rounded"
@@ -653,7 +655,7 @@ const closePrioritiesMenu = () => {
               <div
                 v-if="issue?.priority !== 'Medium'"
                 @click="changePriority({ priority: 'Medium' })"
-                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-warning"
+                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-warning cursor-pointer"
               >
                 <icon
                   name="iconamoon:sign-equal-fill"
@@ -664,7 +666,7 @@ const closePrioritiesMenu = () => {
               <div
                 v-if="issue?.priority !== 'Low'"
                 @click="changePriority({ priority: 'Low' })"
-                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-success"
+                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-success cursor-pointer"
               >
                 <icon
                   v-if="issue?.priority !== 'Low'"
@@ -676,7 +678,7 @@ const closePrioritiesMenu = () => {
               <div
                 v-if="issue?.priority !== 'Lowest'"
                 @click="changePriority({ priority: 'Lowest' })"
-                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-success"
+                class="d-flex justify-content-start align-items-center hover-bg-light p-2 my-2 ms-2 border-start border-3 border-success cursor-pointer"
               >
                 <icon
                   v-if="issue?.priority !== 'Lowest'"
@@ -712,16 +714,20 @@ const closePrioritiesMenu = () => {
           </Transition>
         </div>
       </div>
-      <div
-        v-else
-        class="col d-flex justify-content-end align-items-center py-3"
-      >
-        <icon
-          name="svg-spinners:ring-resize"
-          class="text-gray-600 me-3 p-2"
-          size="30"
-        />
-      </div>
+    </div>
+    <div
+      v-else
+      class="d-flex justify-content-between align-items-center py-3"
+      style="padding: 0 140px"
+    >
+      <span class="text-gray-800 me-2 truncate text-nowrap fs-6">{{
+        issue?.title
+      }}</span>
+      <icon
+        name="svg-spinners:ring-resize"
+        class="text-gray-600 me-3 p-2"
+        size="30"
+      />
     </div>
     <IssueComponentIssueModal />
   </div>
@@ -783,26 +789,4 @@ const closePrioritiesMenu = () => {
   top: 130%;
   opacity: 0;
 }
-
-/* @media screen and (max-width: 1400px) {
-  .issue-title {
-    max-width: 520px !important;
-  }
-}
-
-@media screen and (max-width: 1200px) {
-  .issue-title {
-    max-width: 400px !important;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .issue-info {
-    gap: 15px;
-  }
-
-  .issue-title {
-    max-width: 250px !important;
-  }
-} */
 </style>

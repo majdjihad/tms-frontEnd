@@ -7,10 +7,8 @@ const user = useUser();
 const { logout } = useAuth();
 const inProgress = ref(false);
 async function handleLogout() {
-  await navigateTo("/login", { replace: true });
   inProgress.value = true;
   await logout();
-  inProgress.value = false;
 }
 </script>
 
@@ -48,20 +46,20 @@ async function handleLogout() {
           <span>My Profile</span>
         </NuxtLink>
         <button
-          v-if="!inProgress"
           @click="handleLogout"
           class="w-100 btn btn-active-light-danger text-start"
+          :class="{'disabled': inProgress }"
         >
           <i class="pi pi-sign-out"></i>
           <span>Logout</span>
         </button>
-        <div class="w-100 text-center mx-2" v-else>
+        <!-- <div class="w-100 text-center mx-2" v-else>
           <icon
             name="svg-spinners:ring-resize"
             class="indicator-label"
             size="19"
           />
-        </div>
+        </div> -->
       </div>
     </div>
   </Transition>

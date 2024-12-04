@@ -66,7 +66,7 @@ const route = useRoute();
                       ><Icon name="ic:outline-keyboard-arrow-down" size="22"
                     /></span>
                   </span>
-                  <HeaderProjectsMenu :isProjectMenu="isProjectMenu" />
+                  <ProjectsMenu :isProjectMenu="isProjectMenu" />
                 </div>
                 <NuxtLink
                   :class="{
@@ -102,7 +102,7 @@ const route = useRoute();
                     src="../assets/media/avatars/blank.png"
                     :alt="user?.name"
                   />
-                  <HeaderAccountMenu :isAccountMenu="isAccountMenu" />
+                  <AccountMenu :isAccountMenu="isAccountMenu" />
                 </div>
               </div>
             </div>

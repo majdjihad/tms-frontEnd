@@ -3,9 +3,7 @@ import { useProfileStore } from "~/stores/profileStore";
 
 const user = useUser();
 const profileStore = useProfileStore();
-if (profileStore?.changeStatus) {
-  profileStore?.getProfileInfo(user?.value.identify_number);
-}
+
 </script>
 <template>
   <div class="profileInfo">

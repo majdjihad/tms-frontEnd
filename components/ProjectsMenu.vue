@@ -143,9 +143,6 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
                 <div
                   class="alert bg-light-info d-flex flex-column align-items-center flex-sm-row w-100"
                 >
-                  <!--                  <i class="ki-duotone ki-notification-bing fs-2hx text-primary me-4"><span-->
-                  <!--                      class="path1"></span><span class="path2"></span><span class="path3"></span></i>-->
-
                   <div class="d-flex flex-column w-100">
                     <h6 class="fw-semibold">You don't have any project.</h6>
                   </div>

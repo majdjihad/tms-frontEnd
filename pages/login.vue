@@ -115,9 +115,7 @@ function showToast(statusCode, msg) {
             <form class="form w-100" @submit.prevent="formHandle">
               <div class="text-center mb-11">
                 <h1 class="text-dark fw-bolder mb-3">Log in</h1>
-                <div class="text-gray-500 fw-semibold fs-6">
-                  Your Social Campaigns
-                </div>
+                <div class="text-gray-500 fw-semibold fs-6 fw-bold">welcome back</div>
               </div>
 
               <FormInput

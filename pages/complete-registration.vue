@@ -35,9 +35,8 @@ onBeforeMount(async () => {
     data.identify_number = response.identify_number;
     return response;
   } catch (error) {
-    console.log(error?.data?.message);
-    return navigateTo("/join", { replace: true });
     showToast("error", error?.data?.message);
+    return navigateTo("/join", { replace: true });
   }
 });
 

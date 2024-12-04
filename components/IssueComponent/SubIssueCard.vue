@@ -14,7 +14,7 @@ const toast = useToast();
 
 // define background color by user id
 const getColor = (index) => {
-  const colorList = ["dc3545", "d63384", "fd7e14", "ffc107", "20c997"];
+  const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
@@ -38,7 +38,7 @@ const handleDeleteSubIssue = () => {
   });
 };
 
-const { submit, inProgress } = useSubmit(
+const { submit } = useSubmit(
   async () => {
     return await deleteIssue(
       projectsStore?.project?.project_identify,
@@ -96,6 +96,7 @@ const getInfoSubIssue = async () => {
     props?.subIssue?.id
   );
 };
+
 // statuses menu functionality
 const statuses = ref(backlogStore?.statusesArray);
 const statusesOpen = ref(false);
@@ -278,11 +279,7 @@ const closePrioritiesMenu = () => {
             <div v-if="EditStatusLoading">
               <Icon name="svg-spinners:180-ring-with-bg" size="20" />
             </div>
-            <div
-              v-else
-              v-click-out-side="closeStatuses"
-              @click="statusesToggle"
-            >
+            <div v-else v-click-outside="closeStatuses" @click="statusesToggle">
               {{ subIssue?.status?.name }}
               <Icon
                 v-if="statusesOpen"
@@ -351,7 +348,7 @@ const closePrioritiesMenu = () => {
             </div>
             <div
               v-else
-              v-click-out-side="closeAssignee"
+              v-click-outside="closeAssignee"
               @click="assigneeToggle"
               class="symbol symbol-circle symbol-30px overflow-hidden"
             >
@@ -459,7 +456,7 @@ const closePrioritiesMenu = () => {
             </div>
             <div
               v-else
-              v-click-out-side="closeSubIssueMenu"
+              v-click-outside="closeSubIssueMenu"
               @click="subIssueMenuToggle"
               class="hover-bg-white p-2 rounded d-flex justify-content-center align-items-center overflow-hidden"
             >
@@ -485,7 +482,7 @@ const closePrioritiesMenu = () => {
         size="25"
       />
     </div>
-    <IssueComponentSubIssueModal />
+    <!-- <IssueComponentSubIssueModal /> -->
   </div>
 </template>
 

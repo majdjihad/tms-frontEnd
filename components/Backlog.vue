@@ -45,11 +45,7 @@ const createIssueToBacklog = async () => {
   await submit();
 };
 
-const {
-  submit,
-  inProgress,
-  validationErrors: errors,
-} = useSubmit(
+const { submit, inProgress } = useSubmit(
   async () => {
     createIssueInput.value = null;
     return await createIssue(projectsStore?.project?.project_identify, data);
@@ -144,7 +140,7 @@ const handleCreateSprint = async () => {
   try {
     await createSprint(projectsStore?.project?.project_identify);
   } catch (error) {
-    await showToast("error", "error in create sprint");
+    await showToast("error", error?.data?.message);
   }
   createSprintLoader.value = false;
 };
@@ -327,7 +323,7 @@ const handleMoveIssue = async (e) => {
   }
 };
 
-const newArray = ref([...backlogStore.backlogProject])
+const newArray = ref([...backlogStore.backlogProject]);
 </script>
 
 <template>
@@ -462,7 +458,7 @@ const newArray = ref([...backlogStore.backlogProject])
               ghost-class="ghost"
               itemKey="id"
             >
-            <template #item="{ element: issue }">
+              <template #item="{ element: issue }">
                 <IssueComponentIssueCard
                   v-model="selectedIssue"
                   :issue="issue"
@@ -470,13 +466,15 @@ const newArray = ref([...backlogStore.backlogProject])
               </template>
             </Draggable>
           </div>
-          <div v-if="inProgress || createProgress">
+          <div v-if="inProgress || createProgress" class="disabled">
             <IssueComponentIssueCard :issue="data" :progress="true" />
           </div>
 
           <div
             v-show="
-              !backlogStore?.backlogProject.length > 0 && !inProgress && !createProgress
+              !backlogStore?.backlogProject.length > 0 &&
+              !inProgress &&
+              !createProgress
             "
             class="alert bg-light-active px-5 py-10 text-center border-2 border-dashed"
           >

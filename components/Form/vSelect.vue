@@ -7,7 +7,7 @@ const optionsVisible = ref(false);
 
 // define background color to user
 const getColor = (index) => {
-  const colorList = ["dc3545", "d63384", "fd7e14", "ffc107", "20c997"];
+  const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
@@ -52,7 +52,7 @@ const closeOptions = () => {
       <div class="options" v-show="optionsVisible">
         <div
           class="option"
-          v-for="(option, index) in list"
+          v-for="(option, index) in list.filter((m) => m?.user?.name)"
           :key="index"
           @click="selectOption(option)"
         >
@@ -70,7 +70,7 @@ const closeOptions = () => {
               />
               <span
                 v-else
-                class="symbol-label text-inverse-warning fw-bold"
+                class="symbol-label text-inverse-warning fs-2 hover-bg-light"
                 :style="{ backgroundColor: getColor(option?.user?.id) }"
                 >{{
                   option?.user?.name ? option?.user?.name[0].toUpperCase() : "-"

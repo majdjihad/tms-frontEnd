@@ -101,7 +101,7 @@ const handleEditComment = async () => {
   editCommentStatus.value = false;
 };
 const getColor = (index) => {
-  const colorList = ["dc3545", "d63384", "fd7e14", "ffc107", "20c997"];
+  const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
@@ -134,10 +134,7 @@ function showToast(statusCode, msg) {
 
 <template>
   <div>
-    <div
-      v-if="!editCommentStatus"
-      class="comment-content row align-baseline py-3 my-4 rounded-1 overflow-hidden"
-    >
+    <div v-if="!editCommentStatus" class="comment-content">
       <div class="d-flex justify-content-between">
         <div class="d-flex align-items-center overflow-hidden cursor-pointer">
           <img
@@ -184,7 +181,7 @@ function showToast(statusCode, msg) {
         </div>
       </div>
       <div
-        class="content p-3 mt-3 ms-6 fs-5 bg-light rounded"
+        class="content p-3 mt-3 ms-6 me-4 fs-5 bg-light rounded"
         v-html="comment?.content"
       ></div>
     </div>

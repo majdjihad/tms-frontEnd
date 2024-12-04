@@ -478,7 +478,7 @@ computed(() => {
                 <div v-else>
                   <div
                     class="fw-semibold p-1 rounded-1 hover-bg-light"
-                    v-click-dside="closeSprintNameMenu"
+                    v-click-outside="closeSprintNameMenu"
                     @click="SprintNameMenuToggle"
                   >
                     <span v-if="backlogStore?.issueInfoArray?.sprint?.name">{{
@@ -557,7 +557,7 @@ computed(() => {
                 <div v-else>
                   <div
                     class="fw-semibold p-1 rounded-1 hover-bg-light"
-                    v-click-out-side="closeIssueTypeMenu"
+                    v-click-outside="closeIssueTypeMenu"
                     @click="issueTypeMenuToggle"
                   >
                     <img
@@ -688,7 +688,7 @@ computed(() => {
                   class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
                 >
                   <div
-                    v-click-out-side="descriptionActionMenuClose"
+                    v-click-outside="descriptionActionMenuClose"
                     @click="descriptionActionToggle"
                     class="btn btn-light p-1 rounded d-flex justify-content-center align-items-center overflow-hidden"
                   >
@@ -773,7 +773,7 @@ computed(() => {
                   <div
                     v-else
                     class="fw-bold fs-8 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
-                    v-click-out-side="assigneeMenuClose"
+                    v-click-outside="assigneeMenuClose"
                     @click="assigneeMenuToggle"
                   >
                     <div
@@ -946,7 +946,7 @@ computed(() => {
                   <div
                     v-else
                     class="fw-bold fs-9 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
-                    v-click-out-side="statusMenuClose"
+                    v-click-outside="statusMenuClose"
                     @click="statusMenuToggle"
                   >
                     <div
@@ -1250,7 +1250,7 @@ computed(() => {
               >
                 <div
                   v-if="openCreateSubIssueInput"
-                  v-click-out-side="closeCreateSubIssueInput"
+                  v-click-outside="closeCreateSubIssueInput"
                   class="d-flex align-items-center px-5 py-2"
                 >
                   <div class="position-relative">
@@ -1258,7 +1258,7 @@ computed(() => {
                       class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
                     >
                       <div
-                        v-click-out-side="closeTypeIssueMenu"
+                        v-click-outside="closeTypeIssueMenu"
                         @click="typeIssueMenuToggle"
                       >
                         <img

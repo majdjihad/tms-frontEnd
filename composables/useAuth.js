@@ -7,8 +7,6 @@ export const useUser = () => {
 };
 
 export const useAuth = () => {
-  const router = useRouter();
-
   const user = useUser();
   const isLoggedIn = computed(() => !!user.value);
 

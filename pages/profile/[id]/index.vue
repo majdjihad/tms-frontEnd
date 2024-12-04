@@ -9,22 +9,22 @@ definePageMeta({
 });
 const user = useUser();
 useHead({
-  title: user?.value?.name,
+  title: 'user',
 });
 const projectsStore = useProjectsStore();
 const profileStore = useProfileStore();
 const sectionActive = ref("Overview");
+const route = useRoute();
 const changeActive = (section) => {
-  if (profileStore?.profileInfo?.user) {
     sectionActive.value = section;
-  }
 };
 
 if (projectsStore?.changeStatus) {
   projectsStore?.getAllProjects();
 }
-if (profileStore?.changeStatus) {
-  profileStore?.getProfileInfo(user?.value?.identify_number);
+if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
+  profileStore.profileInfo = null;
+  profileStore?.getProfileInfo(route?.params?.id);
 }
 </script>
 <template>
@@ -201,7 +201,13 @@ if (profileStore?.changeStatus) {
                           >Overview</span
                         >
                       </li>
-                      <li class="nav-item mt-2">
+                      <li
+                        class="nav-item mt-2"
+                        v-if="
+                          profileStore?.profileInfo?.user?.identify_number ===
+                          user?.identify_number
+                        "
+                      >
                         <span
                           @click="changeActive('Setting')"
                           :class="{
@@ -213,7 +219,13 @@ if (profileStore?.changeStatus) {
                           >Setting</span
                         >
                       </li>
-                      <li class="nav-item mt-2">
+                      <li
+                        class="nav-item mt-2"
+                        v-if="
+                          profileStore?.profileInfo?.user?.identify_number ===
+                          user?.identify_number
+                        "
+                      >
                         <span
                           @click="changeActive('Reset Password')"
                           :class="{

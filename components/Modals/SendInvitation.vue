@@ -5,7 +5,6 @@ import { useSubmit } from "~/composables/useSubmit";
 import { useMember } from "~/composables/useMember";
 import { useToast } from "vue-toastification";
 
-const roleOptions = ref(["Admin"]);
 const user = useUser();
 const toast = useToast();
 const projectsStore = useProjectsStore();
@@ -34,6 +33,7 @@ function formHandle() {
     submit();
   }
 }
+
 const {
   submit,
   inProgress,
@@ -129,8 +129,25 @@ function showToast(statusCode, msg) {
               v-model="formData.message"
               :formDataError="errorMsg.errorMessage"
             />
-
-            <SelectMenu :options="roleOptions" />
+            <div class="card flex justify-center">
+              <select
+                v-model="formData.role_id"
+                class="form-select form-select-lg mb-3"
+              >
+                <option value="" disabled>Select Role</option>
+                <!-- Changed selected to disabled -->
+                <option
+                  v-for="(role, index) in projectsStore?.allRoles?.filter(
+                    (e) => e.key !== 'owner'
+                  )"
+                  :key="index"
+                  :value="role.id"
+                >
+                  {{ role.key }}
+                  <!-- Show the label instead of ID -->
+                </option>
+              </select>
+            </div>
 
             <button :disabled="inProgress" class="btn btn-primary w-100 mt-5">
               <span v-if="!inProgress" class="indicator-label mr-3"

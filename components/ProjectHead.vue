@@ -2,7 +2,7 @@
 import { useProjectsStore } from "~/stores/projectsStore";
 import { useProjects } from "~/composables/useProjects";
 const getColor = (index) => {
-  const colorList = ["dc3545", "d63384", "fd7e14", "ffc107", "20c997"];
+  const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
@@ -10,14 +10,12 @@ const user = useUser();
 const route = useRoute();
 const projectsStore = useProjectsStore();
 const projectId = ref(route?.params?.id);
-const countMemberShow = ref(2);
+const countMemberShow = ref(1);
 
 if (projectsStore?.project === null) {
   projectsStore?.getProject(user?.value?.project_identify);
-  console.log('test1')
 } else {
   projectsStore?.getProject(projectId.value);
-  console.log('test2')
 }
 const isMenuOpen = ref(false);
 const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value);
@@ -224,7 +222,8 @@ const handleArchiveProject = () => {
                       :key="index"
                       v-tooltip.top="{ value: member?.user?.name }"
                     >
-                      <div
+                      <NuxtLink
+                        :to="`/profile/${member?.user?.identify_number}`"
                         v-if="
                           index + 1 <= countMemberShow &&
                           member.invite_status === 'accept'
@@ -238,7 +237,7 @@ const handleArchiveProject = () => {
                         />
                         <span
                           v-else
-                          class="symbol-label fs-1 fw-bolder text-black"
+                          class="symbol-label fs-1 text-light"
                           :style="{
                             backgroundColor: getColor(member?.user?.id),
                           }"
@@ -248,7 +247,7 @@ const handleArchiveProject = () => {
                               : "-"
                           }}</span
                         >
-                      </div>
+                      </NuxtLink>
                     </div>
                     <div
                       class="symbol symbol-35px symbol-circle cursor-pointer"
@@ -265,7 +264,7 @@ const handleArchiveProject = () => {
                       <span
                         data-bs-toggle="modal"
                         data-bs-target="#kt_modal_view_users"
-                        class="symbol-label text-inverse-warning fw-bold bg-dark text-white"
+                        class="symbol-label text-inverse-warning fw-bold bg-dark text-white fs-3"
                         >+{{
                           projectsStore?.project?.team_members.reduce(
                             (count, member) =>

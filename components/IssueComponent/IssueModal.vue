@@ -8,95 +8,19 @@ import moment from "moment";
 
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
-const { editIssue, issueType, createLabel, createIssue, addComment } =
-  useBacklog();
-// Define sprintName function
-const openSprintNameMenu = ref(false);
-const editSprintNameLoading = ref(false);
-const sprintsName = computed(() => {
-  return backlogStore?.sprintsProject?.filter(
-    (sprint) => sprint?.name !== backlogStore?.issueInfoArray?.sprint?.name
-  );
-});
-const isTagifyInitialized = ref(false); // Flag to track initialization
-const inputLabels = document.querySelector("#labels");
+const { editIssue, createLabel, createIssue, addComment } = useBacklog();
 
-watch(ref(backlogStore?.issueInfoArray), () => {
-  if (!backlogStore?.issueInfoArray) {
-    historyComponent.value = false;
-    commentComponent.value = true;
-  }
-  if (!isTagifyInitialized.value) {
-    new Tagify(inputLabels);
-    isTagifyInitialized.value = true; // Set the flag to true after initialization
-  }
-});
-// Define tagify labels
-const SprintNameMenuToggle = () => {
-  openSprintNameMenu.value = !openSprintNameMenu.value;
-};
-const closeSprintNameMenu = () => {
-  openSprintNameMenu.value = false;
-};
-const moveIssueToAntherSprint = async (actionId) => {
-  closeSprintNameMenu();
-  editSprintNameLoading.value = true;
-  try {
-    await editIssue(
-      projectsStore?.project?.project_identify,
-      backlogStore?.issueInfoArray?.id,
-      actionId
-    );
-    // await backlogStore?.getBacklogProject(projectsStore?.project?.project_identify);
-  } catch (error) {
-    showToast(error?.data?.message);
-  }
-  editSprintNameLoading.value = false;
-};
-
-// Define issue type function
-const openIssueTypeMenu = ref(false);
-const IssueTypeLoading = ref(false);
-const editIssueTypeLoading = ref(false);
-const typeIssueArray = ref([]);
-const issueTypeMenuToggle = async () => {
-  openIssueTypeMenu.value = !openIssueTypeMenu.value;
-  if (openIssueTypeMenu.value) {
-    if (!typeIssueArray.value.length) {
-      IssueTypeLoading.value = true;
-      try {
-        const response = await issueType(
-          projectsStore?.project?.project_identify,
-          backlogStore?.issueInfoArray?.id
-        );
-        typeIssueArray.value = await response?.type;
-      } catch (error) {
-        showToast(error.data.message);
-      }
-      IssueTypeLoading.value = false;
-    }
-  }
-};
-const closeIssueTypeMenu = () => {
-  openIssueTypeMenu.value = false;
-};
-const changeTypeIssue = async (actionId) => {
-  closeIssueTypeMenu();
-  editIssueTypeLoading.value = true;
-  try {
-    await editIssue(
-      projectsStore?.project?.project_identify,
-      backlogStore?.issueInfoArray?.id,
-      actionId
-    );
-    await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
-    );
-  } catch (error) {
-    showToast(error?.data?.message);
-  }
-  editIssueTypeLoading.value = false;
-};
+// watch(
+//   () => backlogStore?.issueInfoArray,
+//   () => {
+//     if (!backlogStore?.issueInfoArray) {
+//       historyComponent.value = false;
+//       commentComponent.value = true;
+//     }
+//     const inputLabels = useTemplateRef("labels");
+//     new Tagify(inputLabels);
+//   }
+// );
 
 // define action descriptionAction menu
 const descriptionActionMenuOpen = ref(false);
@@ -106,13 +30,6 @@ const descriptionItems = ref([
     icon: "fa-regular fa-pen-to-square",
     command: () => {
       openDescription.value = true;
-    },
-  },
-  {
-    label: "Delete",
-    icon: "fa-regular fa-trash-can",
-    command: () => {
-      handleDeleteDescriptionAction();
     },
   },
 ]);
@@ -126,15 +43,8 @@ const descriptionActionMenuClose = () => {
 };
 // Define description function
 const openDescription = ref(false);
-const descriptionValue = ref(backlogStore?.issueInfoArray?.description);
 const descriptionIssueLoader = ref(false);
-// const toggleOpenDescription = () => {
-//   descriptionActionMenuOpen.value = false
-//   if (!descriptionValue.value) {
-//     descriptionValue.value = backlogStore?.issueInfoArray?.description
-//   }
-//   openDescription.value = !openDescription.value;
-// }
+
 // Define assignee to function
 const assigneeMenuOpen = ref(false);
 const assigneeMenuLoading = ref(false);
@@ -175,7 +85,10 @@ const changeIssue = async (actionId) => {
     ? (editEstimateTimeLoading.value = true)
     : false;
   if (Object.keys(actionId)[0] === "description") {
-    if (descriptionValue.value === backlogStore?.issueInfoArray?.description) {
+    if (
+      backlogStore?.issueInfoArray?.description !== "" &&
+      backlogStore?.issueInfoArray?.description !== null
+    ) {
       return;
     } else {
       descriptionIssueLoader.value = true;
@@ -398,13 +311,13 @@ const getIssueHistory = async () => {
     await backlogStore?.getIssueHistory(
       projectsStore?.project?.project_identify,
       backlogStore?.issueInfoArray?.id,
-      2
+      1
     );
   }
 };
 // define background color by user id
 const getColor = (index) => {
-  const colorList = ["dc3545", "d63384", "fd7e14", "ffc107", "20c997"];
+  const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
@@ -470,180 +383,37 @@ computed(() => {
         >
           <div class="d-flex align-items-center">
             <div class="position-relative">
-              <div class="py-1 px-3 fw-bold fs-3 text-nowrap cursor-pointer">
-                <div v-if="editSprintNameLoading">
-                  <Icon
-                    name="svg-spinners:180-ring-with-bg"
-                    class="p-2"
-                    size="30"
-                  />
-                </div>
-                <div v-else>
-                  <div
-                    class="fw-semibold p-1 rounded-1 hover-bg-light"
-                    v-click-outside="closeSprintNameMenu"
-                    @click="SprintNameMenuToggle"
-                  >
-                    <span v-if="backlogStore?.issueInfoArray?.sprint?.name">{{
-                      backlogStore?.issueInfoArray?.sprint?.name
-                    }}</span>
-                    <span v-else>Backlog</span>
-                    <Icon
-                      v-if="openSprintNameMenu"
-                      name="ic:outline-keyboard-arrow-up"
-                      size="25"
-                      class="m-0 fw-normal"
-                    />
-                    <Icon
-                      v-else
-                      name="ic:outline-keyboard-arrow-down"
-                      size="25"
-                      class="m-0 fw-normal"
-                    />
-                  </div>
+              <div class="py-1 px-3 fw-bold fs-3 text-nowrap">
+                <div class="fw-semibold p-1">
+                  <span v-if="backlogStore?.issueInfoArray?.sprint?.name">{{
+                    backlogStore?.issueInfoArray?.sprint?.name
+                  }}</span>
+                  <span v-else>Backlog</span>
                 </div>
               </div>
-              <Transition name="statusesMenu">
-                <div
-                  v-if="openSprintNameMenu"
-                  class="statusesMenuWrapper position-absolute bg-white border border-1 gap-2 rounded-1 overflow-y-auto z-1"
-                  style="min-width: 130px !important"
-                >
-                  <div
-                    v-if="backlogStore?.issueInfoArray?.sprint?.name"
-                    class="hover-bg-light"
-                  >
-                    <div
-                      class="py-1 px-3 rounded-1 fs-5 truncate cursor-pointer"
-                      style="max-width: 150px"
-                      @click="moveIssueToAntherSprint({ sprint_id: null })"
-                    >
-                      Backlog
-                    </div>
-                  </div>
-                  <div
-                    v-for="(sprint, index) in sprintsName"
-                    :key="index"
-                    class="hover-bg-light"
-                  >
-                    <div
-                      v-if="
-                        sprint !== backlogStore?.issueInfoArray?.sprint?.name
-                      "
-                      class="py-1 px-3 rounded-1 fs-5 truncate cursor-pointer"
-                      style="max-width: 150px"
-                      @click="
-                        moveIssueToAntherSprint({ sprint_id: sprint?.id })
-                      "
-                    >
-                      {{ sprint?.name }}
-                    </div>
-                  </div>
-                </div>
-              </Transition>
             </div>
             <span class="fs-1 fw-semibold">/</span>
             <div class="position-relative">
-              <div class="py-1 px-3 fw-bold fs-3 text-nowrap cursor-pointer">
-                <div v-if="editIssueTypeLoading">
-                  <Icon
-                    name="svg-spinners:180-ring-with-bg"
-                    class="p-2"
-                    size="30"
+              <div class="py-1 px-3 fs-3 text-nowrap">
+                <div class="fw-semibold p-1">
+                  <img
+                    v-if="backlogStore?.issueInfoArray?.type === 'task'"
+                    alt="task"
+                    src="~/assets/media/issue/type/task.svg"
                   />
-                </div>
-                <div v-else>
-                  <div
-                    class="fw-semibold p-1 rounded-1 hover-bg-light"
-                    v-click-outside="closeIssueTypeMenu"
-                    @click="issueTypeMenuToggle"
-                  >
-                    <img
-                      v-if="backlogStore?.issueInfoArray?.type === 'task'"
-                      alt="task"
-                      src="~/assets/media/issue/type/task.svg"
-                    />
-                    <img
-                      v-else-if="backlogStore?.issueInfoArray?.type === 'story'"
-                      alt="story"
-                      src="~/assets/media/issue/type/story.svg"
-                    />
-                    <img
-                      v-else-if="backlogStore?.issueInfoArray?.type === 'bug'"
-                      alt="bug"
-                      src="~/assets/media/issue/type/bug.svg"
-                    />
-                    {{ backlogStore?.issueInfoArray?.type }}
-                    <Icon
-                      v-if="openIssueTypeMenu"
-                      name="ic:outline-keyboard-arrow-up"
-                      size="25"
-                      class="m-0"
-                    />
-                    <Icon
-                      v-else
-                      name="ic:outline-keyboard-arrow-down"
-                      size="25"
-                      class="m-0"
-                    />
-                  </div>
+                  <img
+                    v-else-if="backlogStore?.issueInfoArray?.type === 'story'"
+                    alt="story"
+                    src="~/assets/media/issue/type/story.svg"
+                  />
+                  <img
+                    v-else-if="backlogStore?.issueInfoArray?.type === 'bug'"
+                    alt="bug"
+                    src="~/assets/media/issue/type/bug.svg"
+                  />
+                  {{ backlogStore?.issueInfoArray?.type }}
                 </div>
               </div>
-              <Transition name="statusesMenu">
-                <div
-                  v-if="openIssueTypeMenu"
-                  class="statusesMenuWrapper position-absolute bg-white border border-1 rounded-1 overflow-y-auto z-1"
-                  style="
-                    min-width: 110px !important;
-                    width: max-content !important;
-                    right: 0;
-                  "
-                >
-                  <div v-if="IssueTypeLoading" class="text-center">
-                    <Icon
-                      name="svg-spinners:180-ring-with-bg"
-                      class="p-2"
-                      size="30"
-                    />
-                  </div>
-                  <div
-                    v-else
-                    v-for="(type, index) in typeIssueArray"
-                    :key="index"
-                  >
-                    <div
-                      v-if="backlogStore?.issueInfoArray?.type !== type"
-                      class="p-1 hover-bg-light cursor-pointer"
-                    >
-                      <div
-                        class="fs-7 d-flex justify-content-start"
-                        style="max-width: 150px"
-                        @click="changeTypeIssue({ type: type })"
-                      >
-                        <img
-                          v-if="type === 'task'"
-                          class="py-1 px-1 rounded-1 me-1"
-                          alt="task"
-                          src="~/assets/media/issue/type/task.svg"
-                        />
-                        <img
-                          v-else-if="type === 'story'"
-                          class="py-1 px-1 rounded-1 me-1"
-                          alt="story"
-                          src="~/assets/media/issue/type/story.svg"
-                        />
-                        <img
-                          v-if="type === 'bug'"
-                          class="py-1 px-1 rounded-1 me-1"
-                          alt="bug"
-                          src="~/assets/media/issue/type/bug.svg"
-                        />
-                        <span class="fs-6 text-capitalize">{{ type }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Transition>
             </div>
           </div>
           <div
@@ -661,16 +431,12 @@ computed(() => {
               {{ backlogStore?.issueInfoArray?.title }}
             </h1>
             <div>
-              <p class="btn btn-success fs-7 py-2 px-3 me-3">
-                <i class="fa-solid fa-paperclip"></i>
-                <span>Attach files</span>
-              </p>
               <p
                 @click="openCreateIssueInput"
                 @click.stop
                 id="createIssueWrapper"
                 ref="inputFocus"
-                class="btn btn-primary fs-7 py-2 px-3"
+                class="btn btn-success fs-7 py-2 px-3"
               >
                 <i class="fa-solid fa-code-merge"></i>
                 <span>Create sub issue</span>
@@ -709,9 +475,12 @@ computed(() => {
                 backlogStore?.issueInfoArray?.description || 'add a description'
               "
             ></p>
-            <div class="" v-if="openDescription">
+            <div v-if="openDescription">
               <div>
-                <Editor v-model="backlogStore.issueInfoArray.description" editorStyle="height: 230px" />
+                <Editor
+                  v-model="backlogStore.issueInfoArray.description"
+                  editorStyle="height: 230px"
+                />
                 <div class="d-flex justify-content-end my-3">
                   <p
                     disabled="descriptionIssueLoader"
@@ -720,13 +489,13 @@ computed(() => {
                         description: backlogStore?.issueInfoArray?.description,
                       })
                     "
-                    class="btn btn-sm btn-light-primary mx-2"
+                    class="btn btn-sm btn-light-success mx-2"
                   >
                     <span v-if="!descriptionIssueLoader">save</span>
                     <Icon
                       v-else
                       name="svg-spinners:180-ring-with-bg"
-                      size="25"
+                      size="20"
                     />
                   </p>
                   <p
@@ -800,7 +569,7 @@ computed(() => {
                           />
                           <span
                             v-else
-                            class="symbol-label text-inverse-warning fs-2 fw-bold"
+                            class="symbol-label text-inverse-warning fs-2"
                             :style="{
                               backgroundColor: getColor(
                                 backlogStore?.issueInfoArray?.team_member?.user
@@ -1034,7 +803,11 @@ computed(() => {
                     v-else
                     @submit.prevent="
                       changeIssue({
-                        estimated_at: [dayTime, hourTime, minuteTime],
+                        estimated_at: [
+                          backlogStore?.issueInfoArray?.estimated_at[0],
+                          backlogStore?.issueInfoArray?.estimated_at[1],
+                          backlogStore?.issueInfoArray?.estimated_at[2],
+                        ],
                       })
                     "
                   >
@@ -1046,7 +819,7 @@ computed(() => {
                         <input
                           type="text"
                           class="form-control placeholder-sm p-0 ps-1"
-                          v-model="dayTime"
+                          v-model="backlogStore.issueInfoArray.estimated_at[0]"
                           placeholder="day"
                           aria-label="day"
                           aria-describedby="basic-addon1"
@@ -1059,7 +832,7 @@ computed(() => {
                         <input
                           type="text"
                           class="form-control placeholder-sm p-0 ps-1"
-                          v-model="hourTime"
+                          v-model="backlogStore.issueInfoArray.estimated_at[1]"
                           placeholder="hour"
                           aria-label="hour"
                           aria-describedby="basic-addon1"
@@ -1072,7 +845,7 @@ computed(() => {
                         <input
                           type="text"
                           class="form-control placeholder-sm p-0 ps-1"
-                          v-model="minuteTime"
+                          v-model="backlogStore.issueInfoArray.estimated_at[2]"
                           placeholder="minutes"
                           aria-label="minutes"
                           aria-describedby="basic-addon1"
@@ -1082,7 +855,7 @@ computed(() => {
                     <div class="d-flex justify-content-end mt-3">
                       <button
                         :disabled="editEstimateTimeLoading"
-                        class="btn btn-sm btn-light-primary mx-1"
+                        class="btn btn-sm btn-light-success mx-1"
                       >
                         <span v-if="!editEstimateTimeLoading">save</span>
                         <Icon
@@ -1102,7 +875,7 @@ computed(() => {
                   </form>
                 </div>
               </div>
-              <div
+              <!-- <div
                 class="d-flex justify-content-between align-items-center p-3"
               >
                 <p class="fs-6 fw-semibold">Labels</p>
@@ -1112,9 +885,10 @@ computed(() => {
                     @click="openAddLabels = true"
                   >
                     <input
-                      class="form-control"
+                      class="form-control form-control-solid"
                       :value="backlogStore?.issueInfoArray?.labelNames"
-                      id="labels"
+                      id="kt_tagify_1"
+                      ref="label"
                       placeholder="Enter labels"
                       type="text"
                       @change="onChange"
@@ -1128,7 +902,7 @@ computed(() => {
                     <button
                       :disabled="editLabelsLoading"
                       @click="createNewLabel"
-                      class="btn btn-sm btn-light-primary mx-2"
+                      class="btn btn-sm btn-light-success mx-2"
                     >
                       <span v-if="!editLabelsLoading">save</span>
                       <Icon
@@ -1146,7 +920,7 @@ computed(() => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div
                 class="d-flex justify-content-between align-items-center p-3"
               >
@@ -1168,7 +942,7 @@ computed(() => {
                       />
                       <span
                         v-else
-                        class="symbol-label text-inverse-warning fs-1 w-30px h-30px rounded-circle"
+                        class="symbol-label text-light fs-1 w-30px h-30px rounded-circle"
                         :style="{
                           backgroundColor: getColor(
                             backlogStore?.issueInfoArray?.user?.id
@@ -1181,7 +955,7 @@ computed(() => {
                         }}</span
                       >
                     </div>
-                    <span class="ms-3 fs-4 fw-semibold text-capitalize">{{
+                    <span class="ms-3 fs-4 text-capitalize">{{
                       backlogStore?.issueInfoArray?.user?.name
                     }}</span>
                   </div>
@@ -1254,7 +1028,7 @@ computed(() => {
                 >
                   <div class="position-relative">
                     <div
-                      class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
+                      class="py-1 px-3 rounded-1 fs-8 text-uppercase text-nowrap"
                     >
                       <div
                         v-click-outside="closeTypeIssueMenu"
@@ -1438,7 +1212,10 @@ computed(() => {
                   </p>
                   <div class="card border-0" v-if="openAddComment">
                     <form @submit.prevent="addCommentHandle">
-                      <Editor v-model="newComment" editorStyle="height: 320px"/>
+                      <Editor
+                        v-model="newComment"
+                        editorStyle="height: 320px"
+                      />
                       <div class="d-flex justify-content-end mt-3">
                         <button
                           :disabled="openAddCommentLoader"
@@ -1474,11 +1251,8 @@ computed(() => {
               </div>
             </div>
             <div v-if="historyComponent === true">
-              <div v-if="!backlogStore?.issueHistoryArray">
-                <SkeletonHistoryCard
-                  v-for="(skeletonHistory, index) in 7"
-                  :key="index"
-                />
+              <div v-if="!backlogStore?.issueHistoryArray[0]">
+                <SkeletonHistoryCard v-for="index in 3" :key="index" />
               </div>
               <div v-else>
                 <issueComponentIssueHistory

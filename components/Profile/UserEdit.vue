@@ -150,23 +150,6 @@ onMounted(() => {
           </div>
           <div class="row mb-6">
             <label class="col-lg-4 col-form-label required fw-semibold fs-6"
-              >Email</label
-            >
-            <div class="col-lg-8">
-              <div class="col-lg-6 fv-row">
-                <FormInput
-                  type="text"
-                  v-model="data.email"
-                  name="email"
-                  :formDataError="errorMsg.errorEmail"
-                  labelText="email"
-                  placeholder="Enter Email"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="row mb-6">
-            <label class="col-lg-4 col-form-label required fw-semibold fs-6"
               >Job Title</label
             >
             <div class="col-lg-8">

@@ -1,5 +1,6 @@
 <script setup>
 import { useProjectsStore } from "~/stores/projectsStore";
+import { useUser } from "~/composables/useAuth";
 
 useHead({
   title: "Team",
@@ -7,8 +8,8 @@ useHead({
 definePageMeta({
   middleware: ["auth"],
 });
+const user = useUser();
 const projectsStore = useProjectsStore();
-
 if (projectsStore?.changeStatus) {
   projectsStore?.getAllProjects();
 }
@@ -26,7 +27,10 @@ if (projectsStore?.changeStatus) {
                   <h1>Team Members</h1>
                 </div>
               </div>
-              <div class="card-toolbar">
+              <div
+                class="card-toolbar"
+                v-if="user?.id === projectsStore?.project?.user_id"
+              >
                 <div
                   class="d-flex justify-content-end"
                   data-kt-user-table-toolbar="base"
@@ -38,7 +42,7 @@ if (projectsStore?.changeStatus) {
                     data-bs-target="#kt_modal_invite_friends"
                   >
                     <Icon name="mdi:account-multiple-plus-outline" size="20" />
-                    <span>Invite Member</span>
+                    <span>Invite</span>
                   </button>
                 </div>
               </div>
