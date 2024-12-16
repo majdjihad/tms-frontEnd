@@ -62,9 +62,12 @@ if (projectsStore?.changeStatus) {
                   <SkeletonMemberRow v-for="m in 3" :key="m" />
                 </tbody>
                 <tbody v-else class="text-gray-600 fw-semibold">
-                  <MemberInfo
-                    v-for="(member, index) in projectsStore?.project
-                      ?.team_members"
+                  <ProjectComponentMemberInfo
+                    v-for="(
+                      member, index
+                    ) in projectsStore?.project?.team_members.filter(
+                      (m) => m.invite_status === 'accept'
+                    )"
                     :key="index"
                     :member="member"
                     :index="index"

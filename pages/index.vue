@@ -1,4 +1,6 @@
 <script setup>
+
+// Uses a custom layout with guest middleware to ensure only non-authenticated users can access
 definePageMeta({
   layout: "none",
   middleware: ["guest"],

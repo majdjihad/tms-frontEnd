@@ -11,7 +11,7 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
   <Transition name="projectsMenu">
     <div
       v-if="isProjectMenu"
-      class="bg-light rounded-2 shadow position-absolute p-0 w-100 w-lg-300px projects-menu"
+      class="bg-light rounded-2 shadow position-absolute p-0 w-300px projects-menu"
       style="z-index: 1000 !important"
     >
       <div class="menu-state-bg overflow-hidden">
@@ -56,7 +56,7 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
                   class="menu-item p-0 mb-3"
                 >
                   <NuxtLink
-                    :to="`/projects/${project?.project_identify}`"
+                    :to="`/projects/${project?.project_identify}/backlog`"
                     class="menu-link"
                   >
                     <span
@@ -99,10 +99,10 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
                   :key="index"
                   class="menu-item p-0 mb-3"
                 >
-                  <NuxtLink :to="`/projects/${project?.id}`" class="menu-link">
+                  <NuxtLink :to="`/projects/${project?.project_identify}/backlog`" class="menu-link">
                     <span
                       class="d-flex flex-center rounded w-40px h-40px me-3 overflow-hidden rounded-1"
-                    >
+                    >                    
                       <img
                         src="~/assets/media/avatars/project.png"
                         class="w-100 d-block"
@@ -141,7 +141,7 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
                 class="menu-item text-gray-800 d-flex align-items-center"
               >
                 <div
-                  class="alert bg-light-info d-flex flex-column align-items-center flex-sm-row w-100"
+                  class="alert d-flex flex-column align-items-center flex-sm-row w-100"
                 >
                   <div class="d-flex flex-column w-100">
                     <h6 class="fw-semibold">You don't have any project.</h6>

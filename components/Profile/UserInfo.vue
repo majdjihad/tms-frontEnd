@@ -19,47 +19,7 @@ const profileStore = useProfileStore();
       </div>
       <div class="card-body p-9">
         <div v-if="!profileStore?.profileInfo?.user">
-          <div class="mb-7">
-            <label
-              class="rounded skeleton skeleton-title w-70px h-25px"
-            ></label>
-            <div
-              class="col-lg-8 rounded skeleton skeleton-title w-150px h-25px"
-            ></div>
-          </div>
-          <div class="mb-7">
-            <label
-              class="rounded skeleton skeleton-title w-70px h-25px"
-            ></label>
-            <div
-              class="col-lg-8 rounded skeleton skeleton-title w-150px h-25px"
-            ></div>
-          </div>
-          <div class="mb-7">
-            <label
-              class="rounded skeleton skeleton-title w-70px h-25px"
-            ></label>
-            <div
-              class="col-lg-8 rounded skeleton skeleton-title w-150px h-25px"
-            ></div>
-          </div>
-          <div class="mb-7">
-            <label
-              class="rounded skeleton skeleton-title w-70px h-25px"
-            ></label>
-            <div
-              class="col-lg-8 rounded skeleton skeleton-title w-150px h-25px"
-            ></div>
-          </div>
-          <div class="mb-7">
-            <label
-              class="rounded skeleton skeleton-title w-70px h-25px"
-            ></label>
-            <div
-              class="col-lg-8 rounded skeleton skeleton-title w-150px h-25px"
-            ></div>
-          </div>
-          <div class="mb-7">
+          <div class="mb-7" v-for="index in 6" :key="index">
             <label
               class="rounded skeleton skeleton-title w-70px h-25px"
             ></label>

@@ -1,35 +1,43 @@
 <script setup>
+// Import required dependencies
 import { useToast } from "vue-toastification";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
 import { useInvitationStore } from "~/stores/invitationStore";
 
+// Configure page metadata - disable default layout and require guest middleware
 definePageMeta({
   layout: false,
   middleware: ["guest"],
 });
 
+// Set page title
 useHead({
   title: "Login",
 });
 
+// Initialize authentication composable
 const { login } = useAuth();
-const router = useRouter();
-const route = useRoute();
-const toast = useToast();
-const invitationStore = useInvitationStore();
 
-const errorMsg = reactive({
+// Initialize toast notifications and invitation store
+const toast = useToast();
+let invitationStore = useInvitationStore();
+
+// Form validation error messages
+let errorMsg = reactive({
   errorEmail: null,
   errorPassword: null,
 });
 
-const formData = reactive({
+// Form data state
+let formData = reactive({
   email: "",
   password: "",
 });
 
+// Handle form submission validation
 function formHandle() {
+  // Check for required fields
   !formData.email
     ? (errorMsg.errorEmail = "Email is required")
     : !formData.password
@@ -40,6 +48,7 @@ function formHandle() {
   }
 }
 
+// Initialize form submission handler with success and error callbacks
 const {
   submit,
   inProgress,
@@ -50,13 +59,12 @@ const {
   },
   {
     onSuccess: (response) => {
-      // Handle the response
+      // Check if user has pending invitation and redirect accordingly
       if (invitationStore?.invitationInfo?.invite_identify) {
         return navigateTo(
           `/invitation?invite_identify=${invitationStore?.invitationInfo?.invite_identify}`,
           { replace: true }
         );
-        invitationStore.invitationInfo.invite_identify = null;
       } else {
         return navigateTo("/projects", { replace: true });
       }
@@ -67,7 +75,11 @@ const {
   }
 );
 
+
+ //* Display toast notification with specified status and message
+
 function showToast(statusCode, msg) {
+  // Configure toast notification attributes
   const toastAttr = {
     position: "top-center",
     timeout: 5000,
@@ -82,6 +94,7 @@ function showToast(statusCode, msg) {
     rtl: false,
   };
 
+  // Display appropriate toast based on status
   if (statusCode === "success") {
     toast.success(msg, {
       ...toastAttr,
@@ -104,18 +117,18 @@ function showToast(statusCode, msg) {
         class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1 m-auto"
       >
         <div class="d-flex flex-center flex-column flex-lg-row-fluid">
-          <div class="w-500px p-10 border rounded-1 text-center">
-            <nuxt-link to="/">
+          <div class="w-400px p-10 border rounded-1 text-center shadow-sm">
+            <nuxt-link to="/" class="left-position-logo">
               <img
                 alt="Taskat Logo"
                 src="~/public/favicon.ico"
-                class="h-90px mb-12"
+                class="h-90px"
               />
             </nuxt-link>
             <form class="form w-100" @submit.prevent="formHandle">
               <div class="text-center mb-11">
-                <h1 class="text-dark fw-bolder mb-3">Log in</h1>
-                <div class="text-gray-500 fw-semibold fs-6 fw-bold">welcome back</div>
+                <h1 class="text-dark fw-bolder display-6 mb-3">welcome back</h1>
+                <div class="text-gray-500 fw-semibold fs-3 fw-bold">Log in</div>
               </div>
 
               <FormInput
@@ -173,5 +186,10 @@ function showToast(statusCode, msg) {
 <style scoped>
 body {
   display: block !important;
+}
+.left-position-logo {
+  position: absolute;
+  left: 50px;
+  top: 10px;
 }
 </style>

@@ -1,3 +1,9 @@
+/**
+ * @file create-project.vue
+ * @description Project creation page that allows authenticated users to create new projects
+ * Includes form validation, random key generation, and project data submission
+ * Uses auth middleware to ensure only authenticated users can access
+ */
 <script setup>
 import { useToast } from "vue-toastification";
 import { useProjectsStore } from "~/stores/projectsStore";
@@ -5,6 +11,7 @@ import { useProjects } from "~/composables/useProjects";
 import { useUser } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
 
+// Page metadata configuration
 definePageMeta({
   middleware: ["auth"],
 });
@@ -13,12 +20,15 @@ useHead({
   title: "Create Project",
 });
 
+// Initialize required composables and stores
 const user = useUser();
 const router = useRouter();
 const projectsStore = useProjectsStore();
 const { createProject } = useProjects();
 const { keyProjects } = useProjects();
 const toast = useToast();
+
+// Form data and state management
 const projectData = ref(null);
 const projectsKeys = ref(null);
 const data = reactive({
@@ -26,12 +36,18 @@ const data = reactive({
   description: "",
 });
 
+// Form validation error messages
 const errorMsg = reactive({
   photo: null,
   errorName: null,
   errorDescription: null,
 });
 
+/**
+ * Generates a random project key
+ * Ensures uniqueness by checking against existing project keys
+ * @returns {string} A unique project key of 3-5 uppercase letters
+ */
 function randomKey() {
   // Split the input into words
   const currentKey = ref("");
@@ -51,11 +67,17 @@ function randomKey() {
   }
 }
 
+// Fetch existing project keys before component mount
 onBeforeMount(async () => {
   const response = await keyProjects();
   projectsKeys.value = response?.key;
 });
 
+/**
+ * Handles form submission and validation
+ * Creates FormData object with project details and random key
+ * Validates required fields before submission
+ */
 function formHandle() {
   !data.title
     ? (errorMsg.errorName = "Title is required")
@@ -75,6 +97,7 @@ function formHandle() {
   }
 }
 
+// Initialize form submission handler with success and error callbacks
 const {
   submit,
   inProgress,
@@ -91,6 +114,11 @@ const {
   },
 });
 
+/**
+ * Displays toast notifications for success/error messages
+ * @param {string} statusCode - Type of toast ('success' or 'error')
+ * @param {string} msg - Message to display
+ */
 function showToast(statusCode, msg) {
   const toastAttr = {
     position: "top-center",
@@ -120,13 +148,17 @@ function showToast(statusCode, msg) {
 
 <template>
   <div>
+    <!-- Main container with full viewport height -->
     <div class="vh-100 d-flex flex-column flex-root" id="kt_app_root">
+      <!-- Two-column layout container -->
       <div class="d-flex flex-column flex-lg-row flex-column-fluid">
+        <!-- Left column: Project creation form -->
         <div
           class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1"
         >
           <div class="d-flex flex-center flex-column flex-lg-row-fluid">
             <div class="w-500px p-10">
+              <!-- Project creation form with validation -->
               <form
                 class="form w-100 text-center"
                 @submit.prevent="formHandle"
@@ -139,9 +171,10 @@ function showToast(statusCode, msg) {
                   </div>
                 </div>
 
+                <!-- Project icon upload -->
                 <FormAvatarInput from="project" name="icon" />
 
-                <!-- Start Input Fields -->
+                <!-- Project details input fields -->
                 <FormInput
                   type="text"
                   autocomplete="off"
@@ -161,8 +194,8 @@ function showToast(statusCode, msg) {
                   :formDataError="errorMsg.errorDescription"
                   class="mb-7"
                 />
-                <!-- End Input Fields -->
 
+                <!-- Submit button with loading state -->
                 <div class="d-grid mb-10">
                   <button
                     :disabled="inProgress"
@@ -185,9 +218,10 @@ function showToast(statusCode, msg) {
             </div>
           </div>
         </div>
+
+        <!-- Right column: Decorative section with logo -->
         <div
-          class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
-          style="background-image: url('../assets/media/misc/auth-bg.png')"
+          class="bg d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
         >
           <div
             class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100"
@@ -221,3 +255,9 @@ function showToast(statusCode, msg) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.bg {
+  background-image: url(~/assets/media/misc/auth-bg.png)
+}
+</style>

@@ -1,41 +1,48 @@
-import { $larafetch } from "~/utils/$larafetch";
+/**
+ * Member management composable providing functionality for adding, removing for amemeber
+ */
+import {$larafetch} from "~/utils/$larafetch";
 
 export const useMember = () => {
+  /** Get goles and permissions for a specific project information */
   async function getRoles(projectId) {
-    const response = await $larafetch(`api/projects/${projectId}/role`, {
+    return await $larafetch(`api/projects/${projectId}/role`, {
       method: "get",
     });
-    return response;
   }
+
+  /** Add a new member to a project */
   async function addMember(projectId, credentials) {
-    const response = await $larafetch(`api/projects/${projectId}/team/invite`, {
+    return await $larafetch(`api/projects/${projectId}/team/invite`, {
       method: "post",
       body: credentials,
     });
-    return response;
   }
+  
+  /** Get invitation details */
   async function getInvitation(invite_identify) {
-    const response = await $larafetch("api/invitation", {
+    return await $larafetch("api/invitation", {
       method: "post",
       body: invite_identify,
     });
-    return response;
   }
+
+  /** Accept invitation to join a project */
   async function invitationAccept(acceptStatus) {
-    const response = await $larafetch("api/invitation/accept", {
+    return await $larafetch("api/invitation/accept", {
       method: "post",
       body: acceptStatus,
     });
-    return response;
   }
+
+  /** Remove a member from a project */
   async function removeMember(projectId, teamMemberId) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/team/${teamMemberId}/delete`,
-      {
-        method: "post",
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/team/${teamMemberId}/delete`,
+        {
+          method: "post",
+        }
     );
-    return response;
   }
   return {
     getRoles,

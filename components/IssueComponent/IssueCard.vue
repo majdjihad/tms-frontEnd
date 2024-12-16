@@ -52,8 +52,8 @@ const { submit } = useSubmit(
         projectsStore?.project?.project_identify
       );
     },
-    onError: async (error) => {
-      await showToast("error", error.data.message);
+    onError: (error) => {
+      showToast("error", error.data.message);
     },
   }
 );

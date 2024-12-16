@@ -6,14 +6,13 @@ const getColor = (index) => {
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
-const user = useUser();
 const route = useRoute();
 const projectsStore = useProjectsStore();
 const projectId = ref(route?.params?.id);
 const countMemberShow = ref(1);
 
 if (projectsStore?.project === null) {
-  projectsStore?.getProject(user?.value?.project_identify);
+  projectsStore?.getProject(projectId.value);
 } else {
   projectsStore?.getProject(projectId.value);
 }
@@ -182,15 +181,6 @@ const handleArchiveProject = () => {
               >
                 <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
                   <NuxtLink
-                    :to="`/projects/${projectsStore?.project?.project_identify}`"
-                    class="menu-link"
-                    :class="{ active: route.name === 'projects-id' }"
-                  >
-                    <span class="menu-title">Board</span>
-                  </NuxtLink>
-                </div>
-                <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
-                  <NuxtLink
                     :to="`/projects/${projectsStore?.project?.project_identify}/backlog`"
                     class="menu-link"
                     :class="{ active: route.name === 'projects-id-backlog' }"
@@ -205,6 +195,15 @@ const handleArchiveProject = () => {
                     :class="{ active: route.name === 'projects-id-team' }"
                   >
                     <span class="menu-title">Team</span>
+                  </NuxtLink>
+                </div>
+                <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
+                  <NuxtLink
+                    :to="`/projects/${projectsStore?.project?.project_identify}/history`"
+                    class="menu-link"
+                    :class="{ active: route.name === 'projects-id-history' }"
+                  >
+                    <span class="menu-title">History</span>
                   </NuxtLink>
                 </div>
               </div>

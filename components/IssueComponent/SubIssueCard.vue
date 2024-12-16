@@ -52,8 +52,8 @@ const { submit } = useSubmit(
         props?.subIssue?.parent_id
       );
     },
-    onError: async (error) => {
-      await showToast("error", error.data.message);
+    onError: (error) => {
+      showToast("error", error.data.message);
     },
   }
 );
@@ -85,6 +85,7 @@ function showToast(statusCode, msg) {
 
 // get subIssue description
 const getInfoSubIssue = async () => {
+  document.getElementById("kt_modal_issue_info").click();
   backlogStore.subIssueInfoArray = null;
   backlogStore.subIssueCommentArray = null;
   await backlogStore?.getIssueInfo(
@@ -98,7 +99,6 @@ const getInfoSubIssue = async () => {
 };
 
 // statuses menu functionality
-const statuses = ref(backlogStore?.statusesArray);
 const statusesOpen = ref(false);
 const statusesLoading = ref(false);
 const EditStatusLoading = ref(false);
@@ -233,24 +233,24 @@ const closePrioritiesMenu = () => {
     >
       <div
         data-bs-toggle="modal"
-        data-bs-target="#kt_modal_subIssue_info"
         @click="getInfoSubIssue"
       >
+        <!-- data-bs-target="#kt_modal_subIssue_info" -->
         <img
           v-if="subIssue?.type === 'task'"
-          src="../../assets/media/issue/type/task.svg"
+          src="~/assets/media/issue/type/task.svg"
           class="me-2"
           alt="task"
         />
         <img
           v-else-if="subIssue?.type === 'story'"
-          src="../../assets/media/issue/type/story.svg"
+          src="~/assets/media/issue/type/story.svg"
           class="me-2"
           alt="story"
         />
         <img
           v-else-if="subIssue?.type === 'bug'"
-          src="../../assets/media/issue/type/bug.svg"
+          src="~/assets/media/issue/type/bug.svg"
           class="me-2"
           alt="bug"
         />
@@ -374,7 +374,7 @@ const closePrioritiesMenu = () => {
               </div>
               <div v-else>
                 <img
-                  src="../../assets/media/avatars/blank.png"
+                  src="~/assets/media/avatars/blank.png"
                   alt="Unassigned"
                   class="w-35px h-35px"
                 />
@@ -403,7 +403,7 @@ const closePrioritiesMenu = () => {
               >
                 <div class="symbol symbol-circle symbol-30px overflow-hidden">
                   <img
-                    src="../../assets/media/avatars/blank.png"
+                    src="~/assets/media/avatars/blank.png"
                     alt="Unassigned"
                     class="w-30px h-30px"
                   />
@@ -482,7 +482,7 @@ const closePrioritiesMenu = () => {
         size="25"
       />
     </div>
-    <!-- <IssueComponentSubIssueModal /> -->
+    <IssueComponentSubIssueModal />
   </div>
 </template>
 

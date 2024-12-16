@@ -1,5 +1,7 @@
 <script setup>
 const route = useRoute();
+
+// this  page you is content project head
 const diableProjectHeadList = [
   "projects",
   "login",
@@ -17,7 +19,7 @@ const diableProjectHeadList = [
 <template>
   <div>
     <MainHeader />
-    <ProjectHead v-if="!diableProjectHeadList.includes(route.name)" />
+    <ProjectComponentProjectHead v-if="!diableProjectHeadList.includes(route.name)" />
     <slot />
     
   </div>

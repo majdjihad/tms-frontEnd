@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 
 export const useInvitationStore = defineStore("useInvitationStore", () => {
-  const invitationInfo = reactive({});
+  // decler all invitation variables
+  let invitationInfo = reactive({});
   return {
     invitationInfo,
   };

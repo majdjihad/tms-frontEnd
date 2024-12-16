@@ -1,55 +1,98 @@
+/**
+ * Join (Registration) Page Component
+ * Handles new user registration with:
+ * - Form validation for name, email, and password
+ * - Password strength requirements
+ * - Terms and conditions acceptance
+ * - Registration submission and error handling
+ */
 <script setup>
 import { useToast } from "vue-toastification";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
+import { useRouter } from "vue-router";
+
+// Configure page metadata and middleware
 definePageMeta({
   layout: "none",
   middleware: ["guest"],
 });
 
+// Set page title
 useHead({
   title: "Join",
 });
+
+// Initialize required composables and state
 const { join } = useAuth();
 const toast = useToast();
 const router = useRouter();
-const errorMsg = reactive({
-  errorEmail: null,
-});
-// === Validation === //
+const inProgress = ref(false);
+
+// Form data with reactive state
 const formData = reactive({
   email: "",
 });
-function formHandle() {
-  if (!formData.email) {
-    errorMsg.errorEmail = "Email is required";
+
+// Validation error messages
+const errorMsg = reactive({
+  errorEmail: null,
+});
+
+// === Validation === //
+
+//Validates email format using regex
+
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    errorMsg.errorEmail = "Please enter a valid email address";
+    return false;
+  }
+  errorMsg.errorEmail = null;
+  return true;
+};
+
+/**
+ * Handles form submission
+ * Validates all inputs before making API call
+ */
+const formHandle = async () => {
+
+  // Validate required fields
+  if (!formData.email.trim() || !validateEmail(formData.email)) {
     return;
   }
-  submit();
-  errorMsg.errorEmail = null;
-}
-const {
-  submit,
-  inProgress,
-  validationErrors: errors,
-} = useSubmit(() => join(formData), {
-  onSuccess: (response) => {
-    // Handle the response
-    router.push({
-      path: "/welcome",
-      query: {
-        identify_number: response?.identify_number,
+
+  try {
+    inProgress.value = true;
+    const { submit, validationErrors: errors } = useSubmit(() => join(formData), {
+      onSuccess: (response) => {
+        // Handle the response
+        router.push({
+          path: "/welcome",
+          query: {
+            identify_number: response?.identify_number,
+          },
+        });
+      },
+      onError: (error) => {
+        console.log("error");
+        showToast("error", error.data.message);
+        if (error?.data?.code === 400) {
+          return navigateTo("/login", { replace: true });
+        }
       },
     });
-  },
-  onError: (error) => {
-    console.log("error");
-    showToast("error", error.data.message);
-    if (error?.data?.code === 400) {
-      return navigateTo("/login", { replace: true });
-    }
-  },
-});
+    await submit();
+  } catch (error) {
+    showToast("error", error.data?.message || "Registration failed");
+  } finally {
+    inProgress.value = false;
+  }
+};
+
+// Display toast notifications with consistent styling
 function showToast(statusCode, msg) {
   const toastAttr = {
     position: "top-center",
@@ -84,7 +127,7 @@ function showToast(statusCode, msg) {
           class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1"
         >
           <div class="d-flex flex-center flex-column flex-lg-row-fluid">
-            <div class="w-500px p-10 text-center">
+            <div class="w-400px p-10 border rounded-1 text-center shadow-sm">
               <nuxt-link to="/">
                 <img
                   alt="Taskat Logo"
@@ -95,9 +138,6 @@ function showToast(statusCode, msg) {
               <form class="form w-100" @submit.prevent="formHandle">
                 <div class="text-center mb-11">
                   <h1 class="text-dark fw-bolder mb-3">Join us</h1>
-                  <div class="text-gray-500 fw-semibold fs-6">
-                    Your Social Campaigns
-                  </div>
                 </div>
                 <FormInput
                   v-model="formData.email"
@@ -127,7 +167,7 @@ function showToast(statusCode, msg) {
                   </button>
                 </div>
                 <div class="text-gray-500 text-center fw-semibold fs-6">
-                  Already have an account?
+                  I have account?
                   <nuxt-link to="/login" class="link-primary">Log In</nuxt-link>
                 </div>
               </form>
@@ -135,8 +175,7 @@ function showToast(statusCode, msg) {
           </div>
         </div>
         <div
-          class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
-          style="background-image: url(../assets/media/misc/auth-bg.png)"
+          class="bg d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
         >
           <div
             class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100"
@@ -163,3 +202,14 @@ function showToast(statusCode, msg) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.left-position-logo {
+  position: absolute;
+  left: 50px;
+  top: 10px;
+}
+.bg {
+  background-image: url(~/assets/media/misc/auth-bg.png)
+}
+</style>

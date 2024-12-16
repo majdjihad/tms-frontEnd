@@ -1,26 +1,31 @@
+/**
+ * Welcome page component displayed after user registration
+ * Handles email verification and user onboarding process
+ */
 <script setup>
 import { useToast } from "vue-toastification";
 import { useAuth } from "~/composables/useAuth";
 
+// Configure page metadata and middleware
 definePageMeta({
   layout: "none",
   middleware: ["guest"],
 });
-const router = useRouter();
+
+// Initialize required composables and state
 const route = useRoute();
 const toast = useToast();
 const { welcome } = useAuth();
-const query = router.currentRoute.value.query;
 const mixCountOfRequest = 3;
-const emailImg = ref(null);
 const inProgress = ref(false);
 const data = reactive({
   email: null,
   countOfRequest: null,
 });
+
+// Fetch user data and initialize welcome process
 onBeforeMount(async () => {
   try {
-    // Handle success here
     inProgress.value = true;
     const response = await welcome({
       identify_number: route.query.identify_number,
@@ -29,7 +34,6 @@ onBeforeMount(async () => {
     data.countOfRequest = response.data.countOfRequest;
     inProgress.value = false;
   } catch (error) {
-    //Handle error here
     console.log("error");
     navigateTo("/login", { replace: true });
     showToast("error", error.data.message);
@@ -37,6 +41,7 @@ onBeforeMount(async () => {
   }
 });
 
+// Display toast notifications with consistent styling
 function showToast(statusCode, msg) {
   const toastAttr = {
     position: "top-center",
@@ -76,7 +81,7 @@ function showToast(statusCode, msg) {
         <div
           class="d-flex flex-column align-items-center text-center custom-img"
         >
-          <img src="assets/media/logos/logo-dark.png" width="200" />
+          <img src="~/assets/media/logos/logo-dark.png" width="200" />
           <div class="d-flex flex-column pt-24px align-items-center">
             <h5 class="fw-bold text-16 text-gray-700 line-height-20">
               Check your inbox to log in
@@ -118,10 +123,12 @@ function showToast(statusCode, msg) {
 </template>
 
 <style>
+/* Custom image styling for logo and email icon */
 .custom-img img {
   margin: 8px 0px 16px;
 }
 
+/* Hover effect for resend button */
 .resend-button button:hover {
   text-decoration: underline;
 }

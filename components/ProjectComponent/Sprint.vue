@@ -82,8 +82,8 @@ const {
       );
       createProgress.value = false;
     },
-    onError: async (error) => {
-      await showToast("error", error.data.message);
+    onError: (error) => {
+      showToast("error", error.data.message);
     },
   }
 );
@@ -227,9 +227,8 @@ const handleDeleteSprint = () => {
       );
     },
     {
-      onSuccess: async (response) => {},
-      onError: async (error) => {
-        await showToast("error", error.data.message);
+      onError: (error) => {
+        showToast("error", error.data.message);
       },
     }
   );
@@ -262,9 +261,8 @@ const handleMultipleDeleteIssue = () => {
       );
     },
     {
-      onSuccess: async (response) => {},
-      onError: async (error) => {
-        await showToast("error", error.data.message);
+      onError: (error) => {
+        showToast("error", error.data.message);
       },
     }
   );
@@ -318,9 +316,8 @@ const handleMultipleEditStatus = (keyParam, valueParam) => {
       );
     },
     {
-      onSuccess: async (response) => {},
-      onError: async (error) => {
-        await showToast("error", error.data.message);
+      onError: (error) => {
+        showToast("error", error.data.message);
       },
     }
   );
@@ -602,14 +599,17 @@ const handleMoveIssue = async (e) => {
                     >
                       <img
                         v-if="typeIssue === 'task'"
+                        alt="task"
                         src="~/assets/media/issue/type/task.svg"
                       />
                       <img
                         v-else-if="typeIssue === 'story'"
+                        alt="story"
                         src="~/assets/media/issue/type/story.svg"
                       />
                       <img
                         v-else-if="typeIssue === 'bug'"
+                        alt="bug"
                         src="~/assets/media/issue/type/bug.svg"
                       />
                       <Icon
@@ -646,6 +646,7 @@ const handleMoveIssue = async (e) => {
                         >
                           <img
                             class="py-1 px-1 rounded-1 me-1"
+                            alt="task"
                             src="~/assets/media/issue/type/task.svg"
                           />
                           <span class="fs-6">task</span>
@@ -662,6 +663,7 @@ const handleMoveIssue = async (e) => {
                         >
                           <img
                             class="py-1 px-1 rounded-1 me-1"
+                            alt="story"
                             src="~/assets/media/issue/type/story.svg"
                           />
                           <span class="fs-6">story</span>
@@ -678,6 +680,7 @@ const handleMoveIssue = async (e) => {
                         >
                           <img
                             class="py-1 px-1 rounded-1 me-1"
+                            alt="bug"
                             src="~/assets/media/issue/type/bug.svg"
                           />
                           <span class="fs-6">bug</span>
@@ -719,7 +722,7 @@ const handleMoveIssue = async (e) => {
   transition: all 0.3s ease;
 }
 
-.issueDetails-enter-active,
+/*.issueDetails-enter-active,
 .issueDetails-leave-active {
   transition: all 0.3s ease;
 }
@@ -736,5 +739,5 @@ const handleMoveIssue = async (e) => {
 .form-floating {
   width: 90%;
   margin-bottom: 0 !important;
-}
+}*/
 </style>

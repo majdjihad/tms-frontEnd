@@ -58,6 +58,20 @@ export const useAuth = () => {
     return response;
   }
 
+  async function checkCode(credentials) {
+    const response = await $larafetch("/check-code", {
+      method: "post",
+      body: credentials,
+    });
+    return response;
+  }
+
+  async function resetPassword(credentials) {
+    return await $larafetch("/reset-password", {
+      method: "post",
+      body: credentials,
+    });
+  }
   async function registerComplete(credentials) {
     const response = await $larafetch("/register-complete", {
       method: "post",
@@ -80,20 +94,6 @@ export const useAuth = () => {
   //     });
   // }
 
-  // async function forgotPassword(email) {
-  //     return await $larafetch("/forgot-password", {
-  //         method: "post",
-  //         body: { email },
-  //     });
-  // }
-
-  // async function resetPassword(credentials) {
-  //     return await $larafetch("/reset-password", {
-  //         method: "post",
-  //         body: credentials,
-  //     });
-  // }
-
   return {
     user,
     checkToken,
@@ -102,6 +102,8 @@ export const useAuth = () => {
     login,
     join,
     forgetPassword,
+    checkCode,
+    resetPassword,
     registerComplete,
     logout,
   };

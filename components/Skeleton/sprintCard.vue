@@ -1,3 +1,6 @@
+<script setup>
+import IssueCard from "~/components/Skeleton/IssueCard.vue";
+</script>
 <template>
   <div class="app-content">
     <div class="card">
@@ -28,6 +31,3 @@
 </template>
 <style scoped>
 </style>
-<script setup lang="ts">
-import IssueCard from "~/components/Skeleton/issueCard.vue";
-</script>

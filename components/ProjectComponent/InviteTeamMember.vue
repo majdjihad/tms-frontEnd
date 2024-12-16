@@ -44,10 +44,5 @@ const getColor = (index) => {
       <!--end::Details-->
     </div>
     <!--end::Details-->
-    <!--begin::Access menu-->
-    <div class="ms-2 w-100px">
-      <SelectMenu :options="roleOptions" disabled />
-    </div>
-    <!--end::Access menu-->
   </div>
 </template>

@@ -1,37 +1,22 @@
-import { definePreset } from "@primevue/themes";
+// Import PrimeVue theme utilities
 import Aura from "@primevue/themes/aura";
 
-const MyPreset = definePreset(Aura, {
-  semantic: {
-    colorScheme: {
-      light: {
-        surface: {
-          0: "#ffffff",
-          50: "{zinc.50}",
-          100: "{zinc.100}",
-          200: "{zinc.200}",
-          300: "{zinc.300}",
-          400: "{zinc.400}",
-          500: "{zinc.500}",
-          600: "{zinc.600}",
-          700: "{zinc.700}",
-          800: "{zinc.800}",
-          900: "{zinc.900}",
-          950: "{zinc.950}",
-        },
-      },
-    },
-  },
-});
-
 export default defineNuxtConfig({
+  // Enable Nuxt DevTools for development
   devtools: { enabled: true },
-  modules: ["@pinia/nuxt", "nuxt-icon", "@primevue/nuxt-module"],
 
+  // Register Nuxt modules
+  modules: [
+    "@pinia/nuxt", // State management
+    "nuxt-icon", // Icon system
+    "@primevue/nuxt-module", // UI component library
+  ],
+
+  // PrimeVue configuration
   primevue: {
     options: {
       theme: {
-        preset: MyPreset,
+        preset: Aura,
         option: {
           prefix: "p",
           cssLayer: false,
@@ -39,6 +24,8 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  // Global CSS imports
   css: [
     "bootstrap/dist/css/bootstrap.css",
     "~/assets/plugins/global/plugins.bundle.css",
@@ -47,22 +34,28 @@ export default defineNuxtConfig({
     "primeicons/primeicons.css",
   ],
 
-  plugins: ["~/plugins/toastification.js", "~/plugins/clickOutside.js"],
+  // Vue plugins
+  plugins: [
+    "~/plugins/toastification.js", // Toast notifications
+    "~/plugins/clickOutside.js", // Click outside directive
+  ],
 
+  // Build configuration
   build: {
     transpile: ["vue-toastification"],
   },
 
+  // App-wide head configuration
   app: {
     head: {
       script: [
         {
-          // metronic plugins bundle
+          // Metronic plugins bundle
           type: "text/javascript",
           src: "https://preview.keenthemes.com/metronic8/demo32/assets/plugins/global/plugins.bundle.js",
         },
         {
-          // metronic script bundle
+          // Metronic script bundle
           type: "text/javascript",
           src: "https://preview.keenthemes.com/metronic8/demo32/assets/js/scripts.bundle.js",
         },
@@ -70,6 +63,7 @@ export default defineNuxtConfig({
     },
   },
 
+  // Runtime configuration with environment variables
   runtimeConfig: {
     public: {
       backendUrl: process.env.NUXT_BACKEND_URL,
@@ -77,16 +71,19 @@ export default defineNuxtConfig({
     },
   },
 
+  // Auto-import utilities
   imports: {
     dirs: ["./utils"],
   },
 
+  // Disable server-side rendering globally
   ssr: false,
 
-  // allow the ssr only on landing page
+  // Route-specific SSR rules
   routeRules: {
-    "/": { ssr: true },
+    "/": { ssr: true }, // Enable SSR only for landing page
   },
 
+  // Set compatibility date for Nuxt features
   compatibilityDate: "2024-11-23",
 });

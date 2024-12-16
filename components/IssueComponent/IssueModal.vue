@@ -253,7 +253,7 @@ const createSubIssue = async () => {
       backlogStore?.issueInfoArray?.id
     );
   } catch (error) {
-    await showToast("error", error.data.message);
+    showToast("error", error.data.message);
   }
   createIssueInput.value = "";
   createSubIssueLoading.value = false;
@@ -373,7 +373,7 @@ computed(() => {
     aria-hidden="true"
   >
     <div class="modal-dialog m-0 position-absolute end-0 h-100">
-      <skeletonMainIssue
+      <SkeletonMainIssue
         v-if="!backlogStore?.issueInfoArray || !backlogStore?.issueCommentArray"
         class="fs-3 text-center"
       />

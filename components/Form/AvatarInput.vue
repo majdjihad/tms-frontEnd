@@ -22,7 +22,7 @@ const handleImageChange = (event) => {
 };
 
 // ===== computed ===== //
-const defaultImage = computed(() => props.from == "user" ? "../assets/media/avatars/blank.png" : "../assets/media/avatars/blank-project.png");
+const defaultImage = computed(() => props.from == "user" ? "~/assets/media/avatars/blank-project.png" : "~/assets/media/avatars/blank-project.png");
 </script>
 
 <template>

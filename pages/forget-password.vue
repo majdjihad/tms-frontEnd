@@ -1,26 +1,41 @@
+/**
+ * Uses guest middleware to ensure only non-authenticated users can access
+ */
 <script setup>
 import { useToast } from "vue-toastification";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
 
+// Page metadata configuration
 definePageMeta({
   layout: "none",
   middleware: ["guest"],
 });
 
+// Set page title
 useHead({
   title: "forget-password",
 });
+
+// Initialize authentication composable
 const { forgetPassword } = useAuth();
 const toast = useToast();
 const router = useRouter();
+
+// Form validation state
 const errorMsg = reactive({
   errorEmail: null,
 });
-// === Validation === //
+
+// Form data state management
 const formData = reactive({
   email: "",
 });
+
+/**
+ * Handles form submission and validation
+ * Validates email presence and triggers password reset process
+ */
 function formHandle() {
   if (!formData.email) {
     errorMsg.errorEmail = "Email is required";
@@ -29,20 +44,29 @@ function formHandle() {
   submit();
   errorMsg.errorEmail = null;
 }
+
+// Initialize form submission handler with success and error callbacks
 const {
   submit,
   inProgress,
   validationErrors: errors,
 } = useSubmit(() => forgetPassword(formData), {
   onSuccess: (response) => {
-    // Handle the response
-    console.log(response);
+    // Redirect to verification code page with identify number
+    return navigateTo(
+      `/verification-code?identify_number=${response?.identify_number}`
+    );
   },
   onError: (error) => {
-    console.log("error");
-    console.log(error);
+    showToast("error", error.data.message);
   },
 });
+
+/**
+ * Displays toast notifications for success/error messages
+ * @param {string} statusCode - Type of toast ('success' or 'error')
+ * @param {string} msg - Message to display
+ */
 function showToast(statusCode, msg) {
   const toastAttr = {
     position: "top-center",
@@ -73,10 +97,11 @@ function showToast(statusCode, msg) {
   <div>
     <div class="vh-100 d-flex flex-column flex-root" id="kt_app_root">
       <div class="d-flex flex-column flex-lg-row flex-column-fluid">
-        <div
-          class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1"
-        >
+        <!-- Left column: Form section -->
+        <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
+          <!-- Form content wrapper -->
           <div class="d-flex flex-center flex-column flex-lg-row-fluid">
+            <!-- Form container with logo and inputs -->
             <div class="w-500px p-10 text-center">
               <nuxt-link to="/">
                 <img
@@ -85,11 +110,12 @@ function showToast(statusCode, msg) {
                   class="h-90px mb-12"
                 />
               </nuxt-link>
+              <!-- Password reset form -->
               <form class="form w-100" @submit.prevent="formHandle">
                 <div class="text-center mb-11">
-                  <h1 class="text-dark fw-bolder mb-3">Forget Password</h1>
+                  <h1 class="text-dark fw-bolder mb-3">Forget Password ?</h1>
                   <div class="text-gray-500 fw-semibold fs-6">
-                    Your Social Campaigns
+                    Enter your email to reset your password.
                   </div>
                 </div>
                 <FormInput
@@ -129,6 +155,8 @@ function showToast(statusCode, msg) {
             </div>
           </div>
         </div>
+        
+        <!-- Right column: Decorative section with background image -->
         <div
           class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
           style="background-image: url(../assets/media/misc/auth-bg.png)"
@@ -144,7 +172,7 @@ function showToast(statusCode, msg) {
             <h1
               class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7"
             >
-              Join
+              Forgetpassword
             </h1>
             <div class="d-none d-lg-block text-white fs-base text-center w-75">
               Join our community of achievers at Taskat! Discover a smarter way

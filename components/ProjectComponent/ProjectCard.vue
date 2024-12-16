@@ -11,7 +11,7 @@ const getColor = (index) => {
   return `#${colorList[colorIndex]}`;
 };
 const projectsStore = useProjectsStore();
-const { favoriteProject, projects } = useProjects();
+const { favoriteProject } = useProjects();
 const toast = useToast();
 const inProgress = ref(false);
 
@@ -58,7 +58,7 @@ function showToast(statusCode, msg) {
             class="symbol symbol-50px w-50px bg-light"
           >
             <img
-              src="../assets/media/avatars/project.png"
+              src="~/assets/media/avatars/project.png"
               alt="image"
               class="w-100 object-cover"
             />

@@ -1,37 +1,80 @@
+/**
+ * Reset Password Page Component
+ * Handles the password reset flow including:
+ * - Email submission for reset link
+ * - Password reset form validation
+ * - New password confirmation
+ */
 <script setup>
 import { useToast } from "vue-toastification";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
 import { useInvitationStore } from "~/stores/invitationStore";
 
+// Configure page metadata and middleware
 definePageMeta({
   layout: "none",
 });
 
+// Set page title
 useHead({
   title: "Complete Registration",
 });
-const { checkToken, registerComplete } = useAuth();
+
+// Initialize required composables and state
+const { checkToken, resetPassword } = useAuth();
 const toast = useToast();
-const userData = ref(null);
 const route = useRoute();
-const invitationStore = useInvitationStore();
 const data = reactive({
-  photo: null,
-  identify_number: null,
-  name: "",
+  token: "",
   password: "",
-  password_confirmation: "",
+  confirm_password: "",
 });
 const errorMsg = reactive({
-  errorName: null,
   errorPassword: null,
-  errorConfirmPassword: null,
+  errorConfirm_Password: null,
 });
+
+// Password validation rules
+const passwordRules = {
+  minLength: 8,
+  requireUppercase: true,
+  requireLowercase: true,
+  requireNumber: true,
+  requireSpecial: true,
+};
+
+ // Validates password against security requirements
+
+const validatePassword = (password) => {
+  if (password.length < passwordRules.minLength) {
+    errorMsg.errorPassword = `Password must be at least ${passwordRules.minLength} characters`;
+    return false;
+  }
+  if (passwordRules.requireUppercase && !/[A-Z]/.test(password)) {
+    errorMsg.errorPassword = "Password must contain at least one uppercase letter";
+    return false;
+  }
+  if (passwordRules.requireLowercase && !/[a-z]/.test(password)) {
+    errorMsg.errorPassword = "Password must contain at least one lowercase letter";
+    return false;
+  }
+  if (passwordRules.requireNumber && !/\d/.test(password)) {
+    errorMsg.errorPassword = "Password must contain at least one number";
+    return false;
+  }
+  if (passwordRules.requireSpecial && !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    errorMsg.errorPassword = "Password must contain at least one special character";
+    return false;
+  }
+  errorMsg.errorPassword = null;
+  return true;
+};
+
 onBeforeMount(async () => {
   try {
     const response = await checkToken({ token: route.query.token });
-    data.identify_number = response.identify_number;
+    data.token = response.identify_number;
     return response;
   } catch (error) {
     showToast("error", error?.data?.message);
@@ -39,61 +82,56 @@ onBeforeMount(async () => {
   }
 });
 
-function formHandle() {
-  !data.name
-    ? (errorMsg.errorName = "UserName is required")
-    : !data.password
-    ? (errorMsg.errorPassword = "Password is required")
-    : !data.password_confirmation
-    ? (errorMsg.errorConfirmPassword = "Confirm Password is required")
-    : data.password !== data.confirmPassword
-    ? (errorMsg.errorConfirmPassword =
-        "Confirm password doesn't match the password")
-    : "";
-  userData.value = new FormData(document.getElementById("completeForm"));
-  userData.value?.append("identify_number", data.identify_number);
-  if (
-    data.password === data.password_confirmation &&
-    data.name &&
-    data.password
-  ) {
-    errorMsg.errorName = null;
-    errorMsg.errorPassword = null;
-    errorMsg.errorConfirmPassword = null;
-    submit();
+/**
+ * Handles form submission for password reset
+ * Validates input and calls API endpoint
+ */
+const formHandle = async () => {
+  // Reset previous errors
+  Object.keys(errorMsg).forEach(key => errorMsg[key] = null);
+  
+  // Validate password
+  if (!validatePassword(data.password)) {
+    return;
   }
-}
 
-const {
-  submit,
-  inProgress,
-  validationErrors: errors,
-} = useSubmit(
-  () => {
-    return registerComplete(userData.value);
-  },
-  {
-    onSuccess: (response) => {
-      // Handle the response
-      if (invitationStore?.invitationInfo?.invite_identify) {
-        return navigateTo(
-          `/invitation?invite_identify=${invitationStore?.invitationInfo?.invite_identify}`,
-          { replace: true }
-        );
-      } else {
+  // Validate password confirmation
+  if (data.password !== data.confirm_password) {
+    errorMsg.errorConfirm_Password = "Passwords do not match";
+    return;
+  }
+
+  const {
+    submit,
+    inProgress,
+    validationErrors: errors,
+  } = useSubmit(
+    () => {
+      return resetPassword(data);
+    },
+    {
+      onSuccess: (response) => {
+        // Handle the response
         return navigateTo("/projects", { replace: true });
-      }
-    },
-    onError: (error) => {
-      // Handle error
-      if (error.data.code === 400) {
-        return navigateTo("/login", { replace: true });
-      }
-      showToast("error", error.data.message);
-    },
-  }
-);
+      },
+      onError: (error) => {
+        // Handle error
+        if (error.data.code === 400) {
+          return navigateTo("/login", { replace: true });
+        }
+        showToast("error", error.data.message);
+      },
+    }
+  );
 
+  try {
+    await submit();
+  } catch (error) {
+    showToast("error", error.data?.message || "Failed to reset password");
+  }
+};
+
+// Display toast notifications with consistent styling
 function showToast(statusCode, msg) {
   const toastAttr = {
     position: "top-center",
@@ -108,7 +146,6 @@ function showToast(statusCode, msg) {
     icon: true,
     rtl: false,
   };
-
   if (statusCode === "success") {
     toast.success(msg, {
       ...toastAttr,
@@ -138,27 +175,11 @@ function showToast(statusCode, msg) {
                 id="completeForm"
               >
                 <div class="text-center mb-11">
-                  <h1 class="text-dark fw-bolder mb-3">
-                    Complete registration
-                  </h1>
+                  <h1 class="text-dark fw-bolder mb-3">Reset Password</h1>
                   <div class="text-gray-500 fw-semibold fs-6">
                     Your Social Campaigns
                   </div>
                 </div>
-                <FormAvatarInput from="user" name="photo" />
-
-                <!-- Start Input Fields -->
-                <FormInput
-                  type="text"
-                  autocomplete="off"
-                  labelText="Full Name"
-                  name="name"
-                  placeholder="Full Name"
-                  v-model="data.name"
-                  :formDataError="errorMsg.errorName"
-                  class="mb-7"
-                />
-
                 <FormPasswordInput
                   placeholder="Password"
                   autocomplete="off"
@@ -174,8 +195,8 @@ function showToast(statusCode, msg) {
                   autocomplete="off"
                   labelText="Confirm Password"
                   name="password_confirmation"
-                  v-model="data.password_confirmation"
-                  :formDataError="errorMsg.errorConfirmPassword"
+                  v-model="data.confirm_password"
+                  :formDataError="errorMsg.errorConfirm_Password"
                   class="mb-7"
                 />
                 <!-- End Input Fields -->
@@ -203,7 +224,8 @@ function showToast(statusCode, msg) {
           </div>
         </div>
         <div
-          class="bg d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
+          class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
+          style="background-image: url('../assets/media/misc/auth-bg.png')"
         >
           <div
             class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100"
@@ -237,8 +259,3 @@ function showToast(statusCode, msg) {
     </div>
   </div>
 </template>
-<style scoped>
-.bg {
-  background-image: url(~/assets/media/misc/auth-bg.png);
-}
-</style>

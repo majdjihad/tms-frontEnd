@@ -1,6 +1,7 @@
 <script setup>
+// define model to conent compoment with page that import
 const model = defineModel();
-
+// define props
 const props = defineProps([
   "name",
   "placeholder",
@@ -8,8 +9,6 @@ const props = defineProps([
   "formDataError",
 ]);
 
-// convert props values to refs
-const { name, placeholder, labelText, formDataError } = toRefs(props);
 </script>
 
 <template>

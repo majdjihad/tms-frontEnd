@@ -1,5 +1,8 @@
 <script setup>
+// define model to conent compoment with page that import
 const model = defineModel();
+
+// define props
 const props = defineProps([
   "type",
   "name",
@@ -9,8 +12,6 @@ const props = defineProps([
   "formDataError",
   "focus",
 ]);
-const { type, name, placeholder, labelText, autocomplete, focus } =
-  toRefs(props);
 </script>
 
 <template>

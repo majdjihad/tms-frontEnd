@@ -8,9 +8,6 @@ const activeTab = ref("all");
 
 const changeTab = (tabName) => (activeTab.value = tabName);
 
-if (projectsStore?.changeStatus) {
-  projectsStore?.getAllProjects();
-}
 </script>
 
 <template>
@@ -80,13 +77,13 @@ if (projectsStore?.changeStatus) {
                 "
               >
                 <div class="row" v-if="activeTab === 'all'">
-                  <ProjectCard
+                  <ProjectComponentProjectCard
                     v-for="(project, index) in projectsStore?.allProjects"
                     :key="index"
                     :project="project"
                     class="mb-10"
                   />
-                  <ProjectCard
+                  <ProjectComponentProjectCard
                     v-for="(project, index) in projectsStore?.allInviteProjects"
                     :key="index"
                     :project="project"
@@ -94,7 +91,7 @@ if (projectsStore?.changeStatus) {
                   />
                 </div>
                 <div class="row" v-else-if="activeTab === 'favorite'">
-                  <ProjectCard
+                  <ProjectComponentProjectCard
                     v-for="(
                       project, index
                     ) in projectsStore?.allFavoriteProjects"
@@ -104,7 +101,7 @@ if (projectsStore?.changeStatus) {
                   />
                 </div>
                 <div class="row" v-else-if="activeTab === 'myProjects'">
-                  <ProjectCard
+                  <ProjectComponentProjectCard
                     v-for="(project, index) in projectsStore?.allProjects"
                     :key="index"
                     :project="project"

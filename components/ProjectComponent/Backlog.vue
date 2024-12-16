@@ -20,10 +20,10 @@ const {
   deleteMultipleIssues,
   editMultipleIssue,
 } = useBacklog();
-const createIssueInput = ref(null);
-const createProgress = ref(false);
-const inputFocus = ref(null);
-const errorMsg = reactive({
+let createIssueInput = ref(null);
+let createProgress = ref(false);
+let inputFocus = ref(null);
+let errorMsg = reactive({
   errorTitle: null,
 });
 const data = reactive({
@@ -140,7 +140,7 @@ const handleCreateSprint = async () => {
   try {
     await createSprint(projectsStore?.project?.project_identify);
   } catch (error) {
-    await showToast("error", error?.data?.message);
+    showToast("error", error?.data?.message);
   }
   createSprintLoader.value = false;
 };
@@ -207,8 +207,8 @@ const handleMultipleDeleteIssue = () => {
     },
     {
       onSuccess: async (response) => {},
-      onError: async (error) => {
-        await showToast("error", error.data.message);
+      onError: (error) => {
+        showToast("error", error.data.message);
       },
     }
   );
@@ -262,8 +262,8 @@ const handleMultipleEditStatus = (keyParam, valueParam) => {
     },
     {
       onSuccess: async (response) => {},
-      onError: async (error) => {
-        await showToast("error", error.data.message);
+      onError: (error) => {
+         howToast("error", error.data.message);
       },
     }
   );
@@ -322,8 +322,6 @@ const handleMoveIssue = async (e) => {
     );
   }
 };
-
-const newArray = ref([...backlogStore.backlogProject]);
 </script>
 
 <template>
@@ -523,7 +521,7 @@ const newArray = ref([...backlogStore.backlogProject]);
   background: var(--bs-gray-200);
 }
 
-.issueDetails-enter-active,
+/*.issueDetails-enter-active,
 .issueDetails-leave-active {
   transition: all 0.3s ease;
 }
@@ -531,10 +529,9 @@ const newArray = ref([...backlogStore.backlogProject]);
 .issueDetails-enter-from,
 .issueDetails-leave-to {
   right: -100% !important;
-}
 
 .project-backlog div:last-child .teamMembersContainer .assignMenuWrapper {
   top: 0 !important;
   background-color: red !important;
-}
+}*/
 </style>

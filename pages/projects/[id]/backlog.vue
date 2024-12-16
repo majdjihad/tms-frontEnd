@@ -1,7 +1,5 @@
 <script setup>
-import { useBacklog } from "~/composables/useBacklog";
 import { useBacklogStore } from "~/stores/backlogStore";
-import { useProjectsStore } from "~/stores/projectsStore";
 
 useHead({
   title: "Backlog",
@@ -30,17 +28,17 @@ const updateSelectedIssue = (value) => {
     <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
       <div class="d-flex flex-column flex-column-fluid">
         <div v-if="!backlogStore?.sprintsProject">
-          <skeletonSprintCard v-for="index in 3" :key="index" />
+          <SkeletonSprintCard v-for="index in 3" :key="index" />
         </div>
         <div v-else>
-          <Sprint
+          <ProjectComponentSprint
             v-for="(sprint, index) in backlogStore?.sprintsProject"
             :selectedIssue="selectedIssue"
             @update:selectedIssue="updateSelectedIssue"
             :key="index"
             :sprint="sprint"
           />
-          <Backlog
+          <ProjectComponentBacklog
             :selectedIssue="selectedIssue"
             @update:selectedIssue="updateSelectedIssue"
           />

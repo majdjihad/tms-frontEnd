@@ -97,7 +97,7 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                           <div class="d-flex flex-column flex-grow-1 pe-8">
                             <div class="d-flex flex-wrap align-items-center">
                               <div
-                                v-if="!profileStore?.profileInfo?.Projects"
+                                v-if="profileStore?.profileInfo?.Projects == null"
                                 class="rounded skeleton skeleton-title w-125px h-70px ms-2 me-2"
                               ></div>
                               <div
@@ -112,7 +112,7 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                                 </div>
                               </div>
                               <div
-                                v-if="!profileStore?.profileInfo?.Projects"
+                                v-if="profileStore?.profileInfo?.ActiveIssues == null"
                                 class="rounded skeleton skeleton-title w-125px h-70px ms-2 me-2"
                               ></div>
                               <div
@@ -127,7 +127,7 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                                 </div>
                               </div>
                               <div
-                                v-if="!profileStore?.profileInfo?.Projects"
+                                v-if="!profileStore?.profileInfo?.issuesAssignToMe == null"
                                 class="rounded skeleton skeleton-title w-125px h-70px ms-2 me-2"
                               ></div>
                               <div
@@ -146,7 +146,7 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                             </div>
                           </div>
                           <div
-                            v-if="!profileStore?.profileInfo?.Projects"
+                            v-if="!profileStore?.profileInfo?.user?.created_at"
                             class="rounded skeleton skeleton-title w-70px h-20px"
                           ></div>
                           <div v-else class="mt-3">

@@ -13,10 +13,9 @@ async function handleLogout() {
 </script>
 
 <template>
-  <Transition name="accountMenu">
+  <Transition name="menu-transition" v-if="isAccountMenu">
     <div
-      v-if="isAccountMenu"
-      class="menu-gray-800 menu-state-bg bg-light rounded-2 menu-state-color fw-semibold py-4 fs-6 w-275px position-absolute account-menu shadow"
+      class="account-menu menu-state-bg bg-gray-100 rounded-2 menu-state-color py-4 fs-6 w-275px position-absolute shadow"
       style="z-index: 1000 !important"
     >
       <div class="menu-item px-3">
@@ -27,7 +26,7 @@ async function handleLogout() {
               :alt="user?.name"
               :src="user?.url_photo"
             />
-            <img v-else alt="Logo" src="../../assets/media/avatars/blank.png" />
+            <img v-else alt="Logo" src="~/assets/media/avatars/blank.png" />
           </div>
           <div class="d-flex flex-column">
             <div class="fw-bold d-flex align-items-center fs-5">
@@ -41,14 +40,14 @@ async function handleLogout() {
       <div class="menu-item mx-2">
         <NuxtLink
           :to="`/profile/${user?.identify_number}`"
-          class="w-100 btn btn-light mb-1 text-dark text-start"
+          class="w-100 btn btn-light mb-1 text-dark rounded-0 text-start"
         >
-          <span>My Profile</span>
+          <span>Account manager</span>
         </NuxtLink>
         <button
           @click="handleLogout"
-          class="w-100 btn btn-active-light-danger text-start"
-          :class="{'disabled': inProgress }"
+          class="w-100 btn btn-active-light-danger rounded-0  text-start"
+          :class="{ disabled: inProgress }"
         >
           <i class="pi pi-sign-out"></i>
           <span>Logout</span>
@@ -79,16 +78,5 @@ async function handleLogout() {
 
 .menu-item a:hover {
   background-color: #f5f5f5 !important;
-}
-
-.accountMenu-enter-active,
-.accountMenu-leave-active {
-  transition: all 0.3s ease;
-}
-
-.accountMenu-enter-from,
-.accountMenu-leave-to {
-  opacity: 0;
-  top: 75px;
 }
 </style>

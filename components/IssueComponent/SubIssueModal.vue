@@ -19,18 +19,19 @@ const sprintsName = computed(() => {
     (sprint) => sprint?.name !== backlogStore?.issueInfoArray?.sprint?.name
   );
 });
-const isTagifyInitialized = ref(false); // Flag to track initialization
+// // Flag to track initialization
+// const isTagifyInitialized = ref(false); 
 
-watch(backlogStore?.issueInfoArray, () => {
-  if (!backlogStore?.issueInfoArray) {
-    historyComponent.value = false;
-    commentComponent.value = true;
-  }
-  if (!isTagifyInitialized.value) {
-    // new Tagify(inputLabels);
-    isTagifyInitialized.value = true; // Set the flag to true after initialization
-  }
-});
+// watch(backlogStore?.issueInfoArray, () => {
+//   if (!backlogStore?.issueInfoArray) {
+//     historyComponent.value = false;
+//     commentComponent.value = true;
+//   }
+//   if (!isTagifyInitialized.value) {
+//     // new Tagify(inputLabels);
+//     isTagifyInitialized.value = true; // Set the flag to true after initialization
+//   }
+// });
 // Define tagify labels
 const SprintNameMenuToggle = () => {
   openSprintNameMenu.value = !openSprintNameMenu.value;
@@ -342,7 +343,7 @@ const createSubIssue = async () => {
       backlogStore?.issueInfoArray?.id
     );
   } catch (error) {
-    await showToast("error", error.data.message);
+    showToast("error", error.data.message);
   }
   createIssueInput.value = "";
   createSubIssueLoading.value = false;
@@ -455,10 +456,15 @@ computed(() => {
 </script>
 
 <template>
-  <div class="modal d-block">
+  <div
+    class="modal fade"
+    id="kt_modal_subIssue_info"
+    tabindex="-1"
+    aria-hidden="true"
+  >
     <div class="modal-dialog m-0 position-absolute end-0 h-100">
-      <skeletonMainIssue
-        v-if="!backlogStore?.issueInfoArray || !backlogStore?.issueCommentArray"
+      <SkeletonMainIssue
+        v-if="!backlogStore?.subIssueInfoArray || !backlogStore?.subIssueCommentArray"
         class="fs-3 text-center"
       />
       <div v-else class="modal-content w-650px position-absolute end-0 h-100">
@@ -530,7 +536,7 @@ computed(() => {
                   >
                     <div
                       v-if="
-                        sprint !== backlogStore?.issueInfoArray?.sprint?.name
+                        sprint !== backlogStore?.subIssueInfoArray?.sprint?.name
                       "
                       class="py-1 px-3 rounded-1 fs-5 truncate cursor-pointer"
                       style="max-width: 150px"
@@ -1103,7 +1109,7 @@ computed(() => {
                   </form>
                 </div>
               </div>
-              <div
+              <!-- <div
                 class="d-flex justify-content-between align-items-center p-3"
               >
                 <p class="fs-6 fw-semibold">Labels</p>
@@ -1147,7 +1153,7 @@ computed(() => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div
                 class="d-flex justify-content-between align-items-center p-3"
               >

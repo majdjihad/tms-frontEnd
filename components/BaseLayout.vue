@@ -8,7 +8,7 @@
               <NuxtLink to="/products">
                 <img
                   alt="Logo"
-                  src="/assets/media/logos/logo-dark.png"
+                  src="~/assets/media/logos/logo-dark.png"
                   class="h-60px"
                 />
               </NuxtLink>
@@ -36,6 +36,6 @@ defineProps(["message"]);
 
 <style scoped>
 body {
-  background-image: url("../assets/media/auth/bg3.jpg");
+  background-image: url("~/assets/media/auth/bg3.jpg");
 }
 </style>

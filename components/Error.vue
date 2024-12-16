@@ -5,13 +5,13 @@ const props = defineProps(["message", "errType", "statusCode"]);
 // === computed === //
 const errorImage = computed(() => {
   if (props.statusCode === 404) {
-    return "../assets/media/auth/404-error.svg";
+    return "~/assets/media/auth/404-error.svg";
   } else if (props.statusCode === 500) {
-    return "../assets/media/auth/500-error.png";
+    return "~/assets/media/auth/500-error.png";
   } else if (props.statusCode === 403) {
-    return "/assets/media/auth/403-error.svg";
+    return "~/assets/media/auth/403-error.svg";
   }
-  return "../assets/media/auth/404-error.svg";
+  return "~/assets/media/auth/404-error.svg";
 });
 
 const isMobileError = computed(() =>
@@ -35,28 +35,27 @@ const handleClearError = () => clearError({ redirect: "/projects" });
         <div class="card card-flush w-lg-650px py-5">
           <div class="card-body py-15 py-lg-20">
             <!--begin::Title-->
-            <h1 class="fw-bolder fs-2hx text-gray-900 mb-4">Oops!</h1>
+            <h1 class="fw-bolder fs-2hx text-gray-900 mb-4">Sorry!</h1>
             <!--end::Title-->
             <!--begin::Text-->
-            <p
+            <div
               v-if="isMobileError"
-              class="fw-bold text-gray-500 fs-1 text-capitalize text-center"
+              class="fw-bold fs-1 text-capitalize text-center mb-6"
             >
-              <span class="text-primary gradient-text">Taskat Softwatre</span>
-              Does Not Allowed for mobile devices
-            </p>
+              <p class="text-primary">Taskat Softwatre</p>
+              <span>Does Not Allowed for mobile devices</span>
+            </div>
             <div v-else class="fw-semibold fs-6 text-gray-500 mb-7">
               {{ message }}
             </div>
             <!--end::Text-->
             <!--begin::Illustration-->
             <div class="mb-3">
-              <img
+              <i
                 v-if="isMobileError"
-                src="~/assets/media/auth/mobile-error.png"
-                alt=""
-                class="mw-100 mh-300px theme-light-show"
-              />
+                class="pi pi-exclamation-circle mw-100 mh-300px text-warning"
+                style="font-size: 200px;"
+              ></i>
               <img
                 v-else
                 :src="errorImage"

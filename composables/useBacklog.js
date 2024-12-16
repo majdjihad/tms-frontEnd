@@ -1,15 +1,21 @@
-import { $larafetch } from "~/utils/$larafetch";
-import { useBacklogStore } from "~/stores/backlogStore";
+/**
+ * Backlog management composable providing functionality for managing sprints,
+ * issues, labels, and comments within a project's backlog
+ */
+import {$larafetch} from "~/utils/$larafetch";
+import {useBacklogStore} from "~/stores/backlogStore";
+
 export const useBacklog = () => {
   const backlogStore = useBacklogStore();
 
+  /** Fetch project backlog data including sprints and issues */
   async function backlog(projectId) {
-    const response = await $larafetch(`api/projects/${projectId}/backlog`, {
+    return await $larafetch(`api/projects/${projectId}/backlog`, {
       method: "get",
     });
-    return response;
   }
 
+  /** Create a new sprint in the project and refresh backlog data */
   async function createSprint(projectId) {
     const response = await $larafetch(
       `api/projects/${projectId}/backlog/sprints/create`,
@@ -21,6 +27,7 @@ export const useBacklog = () => {
     return response;
   }
 
+  /** Update sprint details and refresh backlog data */
   async function editSprint(projectId, sprintId, credentials) {
     const response = await $larafetch(
       `api/projects/${projectId}/backlog/sprints/${sprintId}/edit`,
@@ -33,6 +40,7 @@ export const useBacklog = () => {
     return response;
   }
 
+  /** Delete a sprint and refresh backlog data */
   async function deleteSprint(projectId, sprintId, credentials) {
     const response = await $larafetch(
       `api/projects/${projectId}/backlog/sprints/${sprintId}/delete`,
@@ -45,60 +53,61 @@ export const useBacklog = () => {
     return response;
   }
 
+  /** Create a new issue in the project */
   async function createIssue(projectId, credentials) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/issues/create`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/issues/create`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
 
+  /** Add a label to an existing issue */
   async function createLabel(projectId, issueId, credentials) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/issue/${issueId}/label/create`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/issue/${issueId}/label/create`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
 
+  /** Move an issue to a different sprint or backlog */
   async function moveIssue(projectId, issueId, credentials) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/move`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/move`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
 
+  /** Move multiple issues in bulk */
   async function moveMultipleIssue(projectId, credentials) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/bulk-issues/move`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/bulk-issues/move`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
 
+  /** Delete a single issue */
   async function deleteIssue(projectId, issueId) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/delete`,
-      {
-        method: "post",
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/delete`,
+        {
+          method: "post",
+        }
     );
-    return response;
   }
 
+  /** Delete multiple issues in bulk and refresh backlog data */
   async function deleteMultipleIssues(projectId, credentials) {
     const response = await $larafetch(
       `api/projects/${projectId}/backlog/bulk-issues/delete`,
@@ -111,6 +120,7 @@ export const useBacklog = () => {
     return response;
   }
 
+  /** Edit multiple issues in bulk and refresh backlog data */
   async function editMultipleIssue(projectId, credentials) {
     const response = await $larafetch(
       `api/projects/${projectId}/backlog/bulk-issues/edit`,
@@ -123,101 +133,108 @@ export const useBacklog = () => {
     return response;
   }
 
+  /** Get issue type information */
   async function issueType(projectId, issueId) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/issues/${issueId}/type-issue`,
-      {
-        method: "get",
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/issues/${issueId}/type-issue`,
+        {
+          method: "get",
+        }
     );
-    return response;
   }
 
+  /** Get all available issue statuses */
   async function statuses(projectId) {
-    const response = await $larafetch(`api/projects/${projectId}/statuses`, {
+    return await $larafetch(`api/projects/${projectId}/statuses`, {
       method: "get",
     });
-    return response;
   }
+
+  /** Get detailed issue description */
   async function issueDescription(projectId, issueId) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/show`,
-      {
-        method: "get",
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/show`,
+        {
+          method: "get",
+        }
     );
-    return response;
   }
+
+  /** Get issue comments */
   async function issueComments(projectId, issueId) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/comments`,
-      {
-        method: "get",
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/comments`,
+        {
+          method: "get",
+        }
     );
-    return response;
   }
 
+  /** Edit issue details */
   async function editIssue(projectId, issueId, credentials) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/edit`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/edit`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
+
+  /** Edit issue priority */
   async function editPriority(projectId, issueId, credentials) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/edit-priority`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/edit-priority`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
 
+  /** Add a comment to an issue */
   async function addComment(projectId, issueId, credentials) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/comments/create`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/comments/create`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
 
+  /** Edit an existing comment */
   async function editComment(projectId, issueId, commentId, credentials) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/comments/${commentId}/edit`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/comments/${commentId}/edit`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
+
+  /** Delete a comment */
   async function deleteComment(projectId, issueId, commentId) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/comments/${commentId}/delete`,
-      {
-        method: "post",
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/comments/${commentId}/delete`,
+        {
+          method: "post",
+        }
     );
-    return response;
   }
+
+  /** Get paginated issue history */
   async function issueHistory(projectId, issueId, pageNum) {
-    const response = await $larafetch(
-      `api/projects/${projectId}/backlog/issues/${issueId}/history/?page=${pageNum}`,
-      {
-        method: "get",
-      }
+    return await $larafetch(
+        `api/projects/${projectId}/backlog/issues/${issueId}/history/?page=${pageNum}`,
+        {
+          method: "get",
+        }
     );
-    return response;
   }
+
+  // Return all backlog management functions
   return {
     backlog,
     createSprint,

@@ -248,7 +248,17 @@ tbody tr:hover {
     animation: loading 4s infinite;
 
 }
+/* transition */ 
+  .menu-transition-enter-active,
+  .menu-transition-leave-active {
+    transition: all 0.3s ease;
+  }
 
+  .menu-transition-enter-from,
+  .menu-transition-leave-to {
+    opacity: 0;
+    top: 50px;
+  }  
 /* Media Query */
 
 @media (max-width: 868px) {

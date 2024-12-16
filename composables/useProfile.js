@@ -1,29 +1,37 @@
-import { $larafetch } from "~/utils/$larafetch";
+/**
+ * User profile management composable providing functionality for 
+ * viewing and updating user profile information
+ */
+import {$larafetch} from "~/utils/$larafetch";
 
 export const useProfile = () => {
+  /** Get user profile information by user identifier */
   async function getProfile(userIdentify) {
-    const response = await $larafetch(`api/profile/${userIdentify}`, {
+    return await $larafetch(`api/profile/${userIdentify}`, {
       method: "get",
     });
-    return response;
   }
+
+  /** Update user profile information with new data */
   async function editProfile(userIdentify, credentials) {
-    const response = await $larafetch(`api/profile/${userIdentify}/edit`, {
+    return await $larafetch(`api/profile/${userIdentify}/edit`, {
       method: "post",
       body: credentials,
     });
-    return response;
   }
+
+  /** Change user password with new credentials */
   async function resetPassword(userIdentify, credentials) {
-    const response = await $larafetch(
-      `api/profile/${userIdentify}/change-password`,
-      {
-        method: "post",
-        body: credentials,
-      }
+    return await $larafetch(
+        `api/profile/${userIdentify}/change-password`,
+        {
+          method: "post",
+          body: credentials,
+        }
     );
-    return response;
   }
+
+  // Return all profile management functions
   return {
     getProfile,
     editProfile,

@@ -28,7 +28,7 @@ function formHandle() {
     ? (errorMsg.errorMessage = "Message is required")
     : "";
   if (formData.email && formData.message) {
-    formData.user_id = user?.value?.id;
+    formData.user_id = user.value.id;
     formData.project_identify = projectsStore?.project?.project_identify;
     submit();
   }
@@ -165,7 +165,7 @@ function showToast(statusCode, msg) {
           <div class="mb-10">
             <div class="fs-6 fw-semibold mb-2 team-list">Team Members</div>
             <div class="mh-200px scroll-y me-n7 pe-7">
-              <InviteTeamMember
+              <ProjectComponentInviteTeamMember
                 v-for="(member, index) in projectsStore?.project?.team_members"
                 :key="index"
                 :member="member"

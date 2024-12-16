@@ -18,30 +18,34 @@
 </template>
 
 <script setup>
-// if the page have title put it and add "- Taskat", if not
+// Configure global page title template
+// If a page has a title, it will be displayed as "[title] - Taskat"
+// If no title is provided, it will display just "Taskat"
 useHead({
   titleTemplate: (title) => (title ? `${title} - Taskat` : "Taskat"),
 });
 
+// State to track if the device is mobile
 const isMobile = ref(null);
 
-// ====== methods ====== //
-// check if the window size is less than 768 to stop the app
+/**
+ * Check if the current screen width is mobile-sized (<=768px)
+ * Updates isMobile state accordingly to show mobile error view
+ */
 const checkScreen = () => {
   if (window.innerWidth <= 768) {
     isMobile.value = true;
     return;
   }
-
   isMobile.value = false;
 };
 
-// ====== hooks ====== //
+// Lifecycle hooks
 onBeforeMount(() => {
-  // check screen size before mount the app
+  // Check screen size before mounting the app
   checkScreen();
 
-  // check screen size on resize app window
+  // Add window resize listener to handle screen size changes dynamically
   window.addEventListener("resize", checkScreen);
 });
 </script>

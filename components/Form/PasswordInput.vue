@@ -1,5 +1,8 @@
 <script setup>
+// define model to conent compoment with page that import
 const model = defineModel();
+
+// define props
 const props = defineProps([
   "name",
   "placeholder",
@@ -8,8 +11,7 @@ const props = defineProps([
   "focus",
 ]);
 
-// convert props values to refs
-const { name, placeholder, labelText } = toRefs(props);
+// handle eye toggle
 const eye = ref("eye-outline");
 const inputType = ref("password");
 // === computed === //

@@ -2,7 +2,10 @@ import { defineStore } from "pinia";
 import { useProfile } from "~/composables/useProfile";
 
 export const useProfileStore = defineStore("useProfile", () => {
+  // declear all profile variables
   const profileInfo = ref(null);
+
+  // get profile info
   async function getProfileInfo(userIdentify) {
     const { getProfile } = useProfile();
     try {
@@ -11,7 +14,7 @@ export const useProfileStore = defineStore("useProfile", () => {
       return response;
     } catch (error) {
       // showError;
-      console.log()
+      console.log(error)
       return navigateTo("/projects");
     }
   }

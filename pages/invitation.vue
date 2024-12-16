@@ -1,3 +1,10 @@
+/**
+ * Invitation Page Component
+ * Handles project invitation acceptance flow:
+ * - Validates invitation token
+ * - Handles user registration/login
+ * - Manages project access granting
+ */
 <script setup>
 import moment from "moment";
 import { useMember } from "~/composables/useMember";
@@ -6,16 +13,29 @@ import { useSubmit } from "~/composables/useSubmit";
 import { useToast } from "vue-toastification";
 import { useUser } from "~/composables/useAuth";
 
+// Configure page metadata and middleware
 definePageMeta({
   layout: "none",
   middleware: ["check-invitation-number"],
 });
+
+// Set page title
+useHead({
+  title: "Invitation",
+});
+
+// Initialize required composables and state
+const { getInvitation } = useMember();
+const toast = useToast();
+const route = useRoute();
+const invitationStore = useInvitationStore();
+const invitationStatus = ref(null);
+
+// Validate invitation token on component mount
 onBeforeMount(async () => {
   const data = route.query;
   const statusCode = ref(null);
   const statusMsg = ref("");
-  const invitationStore = useInvitationStore();
-  const { getInvitation } = useMember();
   const token = ref(null);
   await getInvitation(data)
     .then((response) => {
@@ -47,15 +67,13 @@ useHead({
   title: "Invitation",
 });
 const { invitationAccept } = useMember();
-const route = useRoute();
-const invitationStore = useInvitationStore();
-const toast = useToast();
-const invitationStatus = ref(null);
 
 const sendInvitationStatus = (status) => {
   invitationStatus.value = status;
   submit();
 };
+
+// Form submission handler
 const {
   submit,
   inProgress,
@@ -78,6 +96,7 @@ const {
   }
 );
 
+// Display toast notifications with consistent styling
 function showToast(statusCode, msg) {
   const toastAttr = {
     position: "top-center",

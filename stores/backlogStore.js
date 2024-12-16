@@ -1,7 +1,10 @@
+
 import { defineStore } from "pinia";
 import { useBacklog } from "~/composables/useBacklog";
 
+
 export const useBacklogStore = defineStore("useBacklog", () => {
+  // declear all backlog variables
   const backlogProject = ref([]);
   const sprintsProject = ref(null);
   const statusesArray = ref(null);
@@ -13,7 +16,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
   const subIssueHistoryArray = ref(null);
   const { backlog, statuses, issueDescription, issueComments, issueHistory } =
     useBacklog();
-
+// get backlogProject details
   const getBacklogProject = async (projectId) => {
     try {
       const backlogResponse = await backlog(projectId);
@@ -25,10 +28,10 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       getStatusProject(projectId);
     } catch (error) {
       console.log(error);
-      return navigateTo("/projects", { replace: false });
+      return navigateTo("/projects", { replace: true });
     }
   };
-
+// get statuses details
   const getStatusProject = async (projectId) => {
     try {
       const statusResponse = await statuses(projectId);
@@ -37,7 +40,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       console.log(error);
     }
   };
-
+// get issue details
   const getIssueInfo = async (projectId, issueId) => {
     issueHistoryArray.value = [];
     try {
@@ -47,7 +50,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       console.log(error);
     }
   };
-
+// get issue comments
   const getIssueComments = async (projectId, issueId) => {
     try {
       const issueCommentsResponse = await issueComments(projectId, issueId);
@@ -56,7 +59,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       console.log(error);
     }
   };
-
+// get issue history
   const getIssueHistory = async (projectId, issueId, pageNumber) => {
     try {
       const issueHistoryResponse = await issueHistory(
@@ -69,7 +72,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       console.log(error);
     }
   };
-
+// get subIssue details
   const getSubIssueInfo = async (projectId, issueId) => {
     issueHistoryArray.value = [];
     try {
@@ -79,7 +82,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       console.log(error);
     }
   };
-
+// get subIssue comments
   const getSubIssueComments = async (projectId, issueId) => {
     try {
       const subIssueCommentsResponse = await issueComments(projectId, issueId);
@@ -88,7 +91,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       console.log(error);
     }
   };
-
+// get subIssue history
   const getSubIssueHistory = async (projectId, issueId, pageNumber) => {
     try {
       const subIssueHistoryResponse = await issueHistory(
@@ -101,7 +104,6 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       console.log(error);
     }
   };
-
   return {
     backlogProject,
     sprintsProject,

@@ -93,7 +93,7 @@ const handleEditComment = async () => {
         backlogStore?.issueInfoArray?.id
       );
     } catch (error) {
-      await showToast("error", error.data.message);
+      showToast("error", error.data.message);
     }
   }
   commentMenuToggle();
