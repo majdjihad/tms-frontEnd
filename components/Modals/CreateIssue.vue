@@ -2,23 +2,26 @@
 import { useSubmit } from "~/composables/useSubmit";
 import { useBacklogStore } from "~/stores/backlogStore";
 import { useBacklog } from "~/composables/useBacklog";
-import { useToast } from "vue-toastification";
 import { useProjectsStore } from "~/stores/projectsStore";
+import { showToast } from "~/composables/useToast";
 
 const createIssueInput = ref("");
 const backlogStore = useBacklogStore();
 const { createIssue } = useBacklog();
 const projectsStore = useProjectsStore();
-const toast = useToast();
+
 const closeBtn = ref(false);
+
 const errorMsg = reactive({
   errorTitle: null,
 });
+
 const data = reactive({
   title: null,
   sprint_id: null,
   type: "task",
 });
+
 const createIssueToBacklog = () => {
   !createIssueInput.value.trim()
     ? (errorMsg.errorTitle = "issue title is required")
@@ -50,36 +53,11 @@ const { submit, inProgress } = useSubmit(
   }
 );
 
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
   <div
-    class="modal fade"
+    class="modal fade createIssueModal"
     id="kt_modal_create_issue"
     tabindex="-1"
     aria-hidden="true"
@@ -104,7 +82,7 @@ function showToast(statusCode, msg) {
             type="text"
             autocomplete="off"
             labelText="Issue Title"
-            name="title"
+            name="issueTitle"
             @keyup.enter="createIssueToBacklog"
             placeholder="Issue Title"
             v-model="createIssueInput"

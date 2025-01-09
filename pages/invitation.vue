@@ -10,8 +10,7 @@ import moment from "moment";
 import { useMember } from "~/composables/useMember";
 import { useInvitationStore } from "~/stores/invitationStore";
 import { useSubmit } from "~/composables/useSubmit";
-import { useToast } from "vue-toastification";
-import { useUser } from "~/composables/useAuth";
+import { showToast } from "~/composables/useToast";
 
 // Configure page metadata and middleware
 definePageMeta({
@@ -26,7 +25,6 @@ useHead({
 
 // Initialize required composables and state
 const { getInvitation } = useMember();
-const toast = useToast();
 const route = useRoute();
 const invitationStore = useInvitationStore();
 const invitationStatus = ref(null);
@@ -96,32 +94,6 @@ const {
   }
 );
 
-// Display toast notifications with consistent styling
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>

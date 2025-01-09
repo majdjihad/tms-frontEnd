@@ -29,6 +29,7 @@ const changeEyeStatus = () => {
 <template>
   <div class="form-floating mb-7">
     <input
+      :id="name"
       :type="inputType"
       class="form-control"
       :name="name"
@@ -43,10 +44,10 @@ const changeEyeStatus = () => {
       size="20"
       class="icon-eye text-secondary cursor-pointer position-absolute end-0 top-50"
     />
-    <label for="floatingInput" :class="{ 'text-danger': formDataError }">{{
+    <label :for="name" :class="{ 'text-danger': formDataError }">{{
       labelText
     }}</label>
-    <div v-if="formDataError" class="w-100 text-start mt-1">
+    <div v-if="formDataError != null" class="w-100 text-start mt-1">
       <span class="form-data-error">{{
         typeof formDataError == "string" ? formDataError : formDataError[0]
       }}</span>

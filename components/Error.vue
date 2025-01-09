@@ -42,7 +42,7 @@ const handleClearError = () => clearError({ redirect: "/projects" });
               v-if="isMobileError"
               class="fw-bold fs-1 text-capitalize text-center mb-6"
             >
-              <p class="text-primary">Taskat Softwatre</p>
+              <p class="text-primary">TaskSwift Softwatre</p>
               <span>Does Not Allowed for mobile devices</span>
             </div>
             <div v-else class="fw-semibold fs-6 text-gray-500 mb-7">

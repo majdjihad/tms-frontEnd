@@ -2,12 +2,13 @@
 import { useProjectsStore } from "~/stores/projectsStore";
 import { useUser } from "~/composables/useAuth";
 
-const user = useUser();
 const projectsStore = useProjectsStore();
 const activeTab = ref("all");
 
 const changeTab = (tabName) => (activeTab.value = tabName);
-
+if (projectsStore?.changeStatus) {
+  projectsStore?.getAllProjects();
+}
 </script>
 
 <template>
@@ -58,7 +59,7 @@ const changeTab = (tabName) => (activeTab.value = tabName);
           </li>
         </ul>
         <NuxtLink to="/create-project" class="btn btn-flex btn-primary mb-7"
-          >Create Project</NuxtLink
+          ><i class='ki-outline ki-plus fs-3'></i>Create Project</NuxtLink
         >
       </div>
     </div>
@@ -77,13 +78,13 @@ const changeTab = (tabName) => (activeTab.value = tabName);
                 "
               >
                 <div class="row" v-if="activeTab === 'all'">
-                  <ProjectComponentProjectCard
+                  <ProjectCompProjectCard
                     v-for="(project, index) in projectsStore?.allProjects"
                     :key="index"
                     :project="project"
                     class="mb-10"
                   />
-                  <ProjectComponentProjectCard
+                  <ProjectCompProjectCard
                     v-for="(project, index) in projectsStore?.allInviteProjects"
                     :key="index"
                     :project="project"
@@ -91,7 +92,7 @@ const changeTab = (tabName) => (activeTab.value = tabName);
                   />
                 </div>
                 <div class="row" v-else-if="activeTab === 'favorite'">
-                  <ProjectComponentProjectCard
+                  <ProjectCompProjectCard
                     v-for="(
                       project, index
                     ) in projectsStore?.allFavoriteProjects"
@@ -101,7 +102,7 @@ const changeTab = (tabName) => (activeTab.value = tabName);
                   />
                 </div>
                 <div class="row" v-else-if="activeTab === 'myProjects'">
-                  <ProjectComponentProjectCard
+                  <ProjectCompProjectCard
                     v-for="(project, index) in projectsStore?.allProjects"
                     :key="index"
                     :project="project"

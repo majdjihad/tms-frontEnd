@@ -5,7 +5,7 @@
     class="landing-hero-bg d-flex align-items-center justify-content-center"
   >
     <Error
-      message="Taskat Softwatre Does Not Allowed for mobile devices"
+      message="TaskSwift Softwatre Does Not Allowed for mobile devices"
       errType="mobile"
     />
   </div>
@@ -19,10 +19,10 @@
 
 <script setup>
 // Configure global page title template
-// If a page has a title, it will be displayed as "[title] - Taskat"
-// If no title is provided, it will display just "Taskat"
+// If a page has a title, it will be displayed as "[title] - TaskSwift"
+// If no title is provided, it will display just "TaskSwift"
 useHead({
-  titleTemplate: (title) => (title ? `${title} - Taskat` : "Taskat"),
+  titleTemplate: (title) => (title ? `${title} - TaskSwift` : "TaskSwift"),
 });
 
 // State to track if the device is mobile

@@ -19,7 +19,7 @@ const diableProjectHeadList = [
 <template>
   <div>
     <MainHeader />
-    <ProjectComponentProjectHead v-if="!diableProjectHeadList.includes(route.name)" />
+    <ProjectCompProjectHead v-if="!diableProjectHeadList.includes(route.name)" />
     <slot />
     
   </div>

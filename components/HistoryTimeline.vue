@@ -73,7 +73,7 @@ function getClass(action) {
         >
         <span class="fs-5"> a {{ history.status }}</span>
         <p class="fs-5">from {{ history.project.name }}</p>
-        <nuxtLink :to="`/projects/${history.project.project_identify}/backlog`"
+        <nuxtLink :to="`/projects/${history.project.project_identify}/backlog`" class="link"
           >Project link</nuxtLink
         >
       </div>
@@ -139,5 +139,8 @@ function getClass(action) {
 }
 .history-content:hover {
   background-color: var(--bs-app-bg-color);
+}
+.link:hover {
+  text-decoration: underline !important;
 }
 </style>

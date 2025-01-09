@@ -1,16 +1,15 @@
 // Import required dependencies
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 import { useMember } from "~/composables/useMember";
 import { useInvitationStore } from "~/stores/invitationStore";
 
 export default defineNuxtRouteMiddleware(async (context) => {
   // Extract query parameters from route
   const data = context.query;
-  
+
   // Initialize reactive state variables
   let statusCode = ref();
   let statusMsg = ref();
-  const toast = useToast();
   let invitationStore = useInvitationStore();
   const { getInvitation } = useMember();
   let token = ref();
@@ -45,29 +44,5 @@ export default defineNuxtRouteMiddleware(async (context) => {
   } else if ([200].includes(statusCode.value)) {
     // Valid invitation
     showToast("success", statusMsg.value);
-  }
-
-  function showToast(toastType, msg) {
-    // Configure toast notification attributes
-    const toastAttr = reactive({
-      position: "top-center",
-      timeout: 5000,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-      draggable: false,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: false,
-      icon: true,
-      rtl: false,
-    });
-
-    // Display appropriate toast type
-    if (toastType === "info") {
-      toast.info(msg, toastAttr);
-    } else if (toastType === "error") {
-      toast.error(msg, toastAttr);
-    }
   }
 });

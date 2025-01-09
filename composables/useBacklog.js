@@ -2,8 +2,8 @@
  * Backlog management composable providing functionality for managing sprints,
  * issues, labels, and comments within a project's backlog
  */
-import {$larafetch} from "~/utils/$larafetch";
-import {useBacklogStore} from "~/stores/backlogStore";
+import { $larafetch } from "~/utils/$larafetch";
+import { useBacklogStore } from "~/stores/backlogStore";
 
 export const useBacklog = () => {
   const backlogStore = useBacklogStore();
@@ -55,55 +55,52 @@ export const useBacklog = () => {
 
   /** Create a new issue in the project */
   async function createIssue(projectId, credentials) {
-    return await $larafetch(
-        `api/projects/${projectId}/issues/create`,
-        {
-          method: "post",
-          body: credentials,
-        }
-    );
+    return await $larafetch(`api/projects/${projectId}/issues/create`, {
+      method: "post",
+      body: credentials,
+    });
   }
 
   /** Add a label to an existing issue */
   async function createLabel(projectId, issueId, credentials) {
     return await $larafetch(
-        `api/projects/${projectId}/issue/${issueId}/label/create`,
-        {
-          method: "post",
-          body: credentials,
-        }
+      `api/projects/${projectId}/issue/${issueId}/label/create`,
+      {
+        method: "post",
+        body: credentials,
+      }
     );
   }
 
   /** Move an issue to a different sprint or backlog */
   async function moveIssue(projectId, issueId, credentials) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/move`,
-        {
-          method: "post",
-          body: credentials,
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/move`,
+      {
+        method: "post",
+        body: credentials,
+      }
     );
   }
 
   /** Move multiple issues in bulk */
   async function moveMultipleIssue(projectId, credentials) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/bulk-issues/move`,
-        {
-          method: "post",
-          body: credentials,
-        }
+      `api/projects/${projectId}/backlog/bulk-issues/move`,
+      {
+        method: "post",
+        body: credentials,
+      }
     );
   }
 
   /** Delete a single issue */
   async function deleteIssue(projectId, issueId) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/delete`,
-        {
-          method: "post",
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/delete`,
+      {
+        method: "post",
+      }
     );
   }
 
@@ -136,10 +133,10 @@ export const useBacklog = () => {
   /** Get issue type information */
   async function issueType(projectId, issueId) {
     return await $larafetch(
-        `api/projects/${projectId}/issues/${issueId}/type-issue`,
-        {
-          method: "get",
-        }
+      `api/projects/${projectId}/issues/${issueId}/type-issue`,
+      {
+        method: "get",
+      }
     );
   }
 
@@ -150,87 +147,137 @@ export const useBacklog = () => {
     });
   }
 
+  /** Create a new status in the project */
+  async function createStatus(projectId, credentials) {
+    return await $larafetch(`api/projects/${projectId}/statuses/create`, {
+      method: "post",
+      body: credentials,
+    });
+  }
+
+  /** Update status details */
+  async function editStatus(projectId, statusId, credentials) {
+    return await $larafetch(
+      `api/projects/${projectId}/statuses/${statusId}/edit`,
+      {
+        method: "post",
+        body: credentials,
+      }
+    );
+  }
+  /** Move an Issue For Status */
+  async function moveIssueForStatus(projectId, issueId, credentials) {
+    return await $larafetch(
+      `api/projects/${projectId}/board/issues/${issueId}/move`,
+      {
+        method: "post",
+        body: credentials,
+      }
+    );
+  }
+
+  /** Move an status */
+  async function moveStatus(projectId, statusId, credentials) {
+    return await $larafetch(
+      `api/projects/${projectId}/statuses/${statusId}/move`,
+      {
+        method: "post",
+        body: credentials,
+      }
+    );
+  }
+  /** Delete a status */
+  async function deleteStatus(projectId, statusId, credentials) {
+    return await $larafetch(
+      `api/projects/${projectId}/statuses/${statusId}/delete`,
+      {
+        method: "post",
+        body: credentials,
+      }
+    );
+  }
+
   /** Get detailed issue description */
   async function issueDescription(projectId, issueId) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/show`,
-        {
-          method: "get",
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/show`,
+      {
+        method: "get",
+      }
     );
   }
 
   /** Get issue comments */
   async function issueComments(projectId, issueId) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/comments`,
-        {
-          method: "get",
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/comments`,
+      {
+        method: "get",
+      }
     );
   }
 
   /** Edit issue details */
   async function editIssue(projectId, issueId, credentials) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/edit`,
-        {
-          method: "post",
-          body: credentials,
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/edit`,
+      {
+        method: "post",
+        body: credentials,
+      }
     );
   }
 
   /** Edit issue priority */
   async function editPriority(projectId, issueId, credentials) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/edit-priority`,
-        {
-          method: "post",
-          body: credentials,
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/edit-priority`,
+      {
+        method: "post",
+        body: credentials,
+      }
     );
   }
 
   /** Add a comment to an issue */
   async function addComment(projectId, issueId, credentials) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/comments/create`,
-        {
-          method: "post",
-          body: credentials,
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/comments/create`,
+      {
+        method: "post",
+        body: credentials,
+      }
     );
   }
 
   /** Edit an existing comment */
   async function editComment(projectId, issueId, commentId, credentials) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/comments/${commentId}/edit`,
-        {
-          method: "post",
-          body: credentials,
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/comments/${commentId}/edit`,
+      {
+        method: "post",
+        body: credentials,
+      }
     );
   }
 
   /** Delete a comment */
   async function deleteComment(projectId, issueId, commentId) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/comments/${commentId}/delete`,
-        {
-          method: "post",
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/comments/${commentId}/delete`,
+      {
+        method: "post",
+      }
     );
   }
 
   /** Get paginated issue history */
   async function issueHistory(projectId, issueId, pageNum) {
     return await $larafetch(
-        `api/projects/${projectId}/backlog/issues/${issueId}/history/?page=${pageNum}`,
-        {
-          method: "get",
-        }
+      `api/projects/${projectId}/backlog/issues/${issueId}/history/?page=${pageNum}`,
+      {
+        method: "get",
+      }
     );
   }
 
@@ -249,6 +296,11 @@ export const useBacklog = () => {
     editMultipleIssue,
     issueType,
     statuses,
+    createStatus,
+    editStatus,
+    moveStatus,
+    moveIssueForStatus,
+    deleteStatus,
     issueDescription,
     issueComments,
     editIssue,

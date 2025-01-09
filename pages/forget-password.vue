@@ -2,9 +2,9 @@
  * Uses guest middleware to ensure only non-authenticated users can access
  */
 <script setup>
-import { useToast } from "vue-toastification";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
+import { showToast } from "~/composables/useToast";
 
 // Page metadata configuration
 definePageMeta({
@@ -19,7 +19,6 @@ useHead({
 
 // Initialize authentication composable
 const { forgetPassword } = useAuth();
-const toast = useToast();
 const router = useRouter();
 
 // Form validation state
@@ -62,35 +61,6 @@ const {
   },
 });
 
-/**
- * Displays toast notifications for success/error messages
- * @param {string} statusCode - Type of toast ('success' or 'error')
- * @param {string} msg - Message to display
- */
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
@@ -105,10 +75,11 @@ function showToast(statusCode, msg) {
             <div class="w-500px p-10 text-center">
               <nuxt-link to="/">
                 <img
-                  alt="Taskat Logo"
-                  src="~/public/favicon.ico"
-                  class="h-90px mb-12"
-                />
+                alt="TaskSwift Logo"
+                src="~/assets/media/logos/logo-dark.png"
+                class="h-70px mb-12"
+              />
+
               </nuxt-link>
               <!-- Password reset form -->
               <form class="form w-100" @submit.prevent="formHandle">
@@ -158,8 +129,7 @@ function showToast(statusCode, msg) {
         
         <!-- Right column: Decorative section with background image -->
         <div
-          class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
-          style="background-image: url(../assets/media/misc/auth-bg.png)"
+          class="bg d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
         >
           <div
             class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100"
@@ -172,10 +142,10 @@ function showToast(statusCode, msg) {
             <h1
               class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7"
             >
-              Forgetpassword
+              Forget password
             </h1>
             <div class="d-none d-lg-block text-white fs-base text-center w-75">
-              Join our community of achievers at Taskat! Discover a smarter way
+              Join our community of achievers at TaskSwift! Discover a smarter way
               to manage tasks, enhance productivity, and collaborate seamlessly.
               Whether you're a professional or student, together we'll conquer
               goals and stay organized. Join now for a more efficient tomorrow.
@@ -188,4 +158,6 @@ function showToast(statusCode, msg) {
 </template>
 
 <style scoped>
-</style>
+.bg {
+  background-image: url(~/assets/media/misc/auth-bg.png)
+}</style>

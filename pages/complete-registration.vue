@@ -1,5 +1,5 @@
 <script setup>
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
 import { useInvitationStore } from "~/stores/invitationStore";
@@ -12,7 +12,6 @@ useHead({
   title: "Complete Registration",
 });
 const { checkToken, registerComplete } = useAuth();
-const toast = useToast();
 const userData = ref(null);
 const route = useRoute();
 const invitationStore = useInvitationStore();
@@ -94,31 +93,6 @@ const {
   }
 );
 
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>

@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { useProjects } from "~/composables/useProjects";
 import { useMember } from "~/composables/useMember";
-import a from "~/assets/plugins/custom/prismjs/prismjs.bundle";
 export const useProjectsStore = defineStore("useProjects", () => {
   // decler all projects variables
   const allProjects = ref(null);
@@ -29,7 +28,7 @@ export const useProjectsStore = defineStore("useProjects", () => {
       return navigateTo(``, { replace: true });
     }
   }
-// get roles of project
+  // get roles of project
   async function getRoleOfProject(projectId) {
     try {
       const response = await getRoles(projectId);
@@ -39,7 +38,7 @@ export const useProjectsStore = defineStore("useProjects", () => {
       return navigateTo(`/projects`, { replace: true });
     }
   }
-// get project details
+  // get project details
   async function getProject(projectId) {
     const { detailsProject } = useProjects();
     try {

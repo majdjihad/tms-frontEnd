@@ -2,17 +2,14 @@
 import { useSubmit } from "~/composables/useSubmit";
 import { useProfileStore } from "~/stores/profileStore";
 import { useProfile } from "~/composables/useProfile";
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 
-const user = useUser();
 const userData = ref(null);
-const toast = useToast();
 const profileStore = useProfileStore();
 const { editProfile } = useProfile();
 
 const errorMsg = reactive({
   errorName: null,
-  errorEmail: null,
   errorJobTitle: null,
   errorLocation: null,
   errorSkills: null,
@@ -21,7 +18,6 @@ const errorMsg = reactive({
 const data = reactive({
   photo: profileStore?.profileInfo?.user?.url_photo,
   name: profileStore?.profileInfo?.user?.name,
-  email: profileStore?.profileInfo?.user?.email,
   jobTitle: profileStore?.profileInfo?.user?.job_title,
   location: profileStore?.profileInfo?.user?.location,
   phone: profileStore?.profileInfo?.user?.phone,
@@ -32,17 +28,32 @@ const handleEditProfile = () => {
   if (!data.name) {
     errorMsg.errorName = "UserName is required";
     return;
-  } else if (!data.email) {
-    errorMsg.errorEmail = "Email is required";
-    return;
   }
+  // Create FormData from the form
   userData.value = new FormData(document.getElementById("editData"));
+  userData.value?.append("phone", data.phone);
+  // Initialize an empty array for skills
   data.skills = [];
-  // JSON.parse(userData.value?.getAll('skills')).forEach((skill) => {
-  //   data.skills?.push(skill.value)
-  // })
-  // userData.value?.delete('skills')
-  // userData.value?.append('skills', JSON.stringify(data.skills))
+  userData.value;
+  // Get the 'skills' value from FormData
+  const skillsRaw = userData.value?.get("skills");
+  if (skillsRaw) {
+    try {
+      // Parse the JSON string and extract skills
+      const parsedSkills = JSON.parse(skillsRaw);
+      parsedSkills.forEach((skill) => {
+        data.skills.push(skill.value);
+      });
+    } catch (error) {
+      console.error("Failed to parse skills JSON:", error);
+      return;
+    }
+  }
+
+  // Replace the old 'skills' value in FormData
+  userData.value?.delete("skills");
+  userData.value?.append("skills", JSON.stringify(data.skills));
+  // Submit the form
   submit();
 };
 
@@ -51,15 +62,18 @@ const {
   inProgress,
   validationErrors: errors,
 } = useSubmit(
-  () => {
-    return editProfile(
+  async () => {
+    return await editProfile(
       profileStore?.profileInfo?.user?.identify_number,
       userData.value
     );
   },
   {
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       // Handle the response
+      await profileStore?.getProfileInfo(
+        profileStore?.profileInfo?.user?.identify_number
+      );
       profileStore.changeStatus = true;
       document.querySelector(".overview").click();
       showToast("success", response.message);
@@ -72,35 +86,10 @@ const {
 const goToOverview = () => {
   document.querySelector(".overview").click();
 };
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 
 onMounted(() => {
   const inputSkills = document.querySelector("#skills");
-  // new Tagify(inputSkills);
+  new Tagify(inputSkills);
 });
 </script>
 
@@ -119,7 +108,7 @@ onMounted(() => {
       </div>
     </div>
     <div id="kt_account_settings_profile_details" class="collapse show">
-      <form class="form" @submit.prevent="handleEditProfile" id="editData">
+      <form class="form" @submit.prevent id="editData">
         <div class="card-body border-top p-9">
           <div class="row mb-6">
             <label class="col-lg-4 col-form-label fw-semibold fs-6"
@@ -215,10 +204,12 @@ onMounted(() => {
             <div class="col-lg-8">
               <div class="col-lg-6 fv-row">
                 <InputMask
+                  class="w-100 p-4 form-control"
                   id="basic"
+                  name="phone"
                   v-model="data.phone"
                   mask="999-999-9999"
-                  placeholder="000_000_0000"
+                  placeholder="999-999-9999"
                 />
               </div>
             </div>
@@ -235,21 +226,10 @@ onMounted(() => {
           <button
             type="submit"
             :disabled="inProgress"
-            class="me-2"
-            :class="
-              data.photo === profileStore?.profileInfo?.user?.url_photo &&
-              data.name === profileStore?.profileInfo?.user?.name &&
-              data.email === profileStore?.profileInfo?.user?.email &&
-              data.jobTitle === profileStore?.profileInfo?.user?.job_title &&
-              data.location === profileStore?.profileInfo?.user?.location &&
-              data.phone === profileStore?.profileInfo?.user?.phone &&
-              data.skills === profileStore?.profileInfo?.user?.skills
-                ? 'btn btn-light btn-active-color-gray-500 disabled'
-                : 'btn btn-light-primary'
-            "
+            class="me-2 btn btn-light-primary"
             id="kt_account_profile_details_submit"
           >
-            <span v-if="!inProgress">Save Edit</span>
+            <span v-if="!inProgress" @click="handleEditProfile">Save Edit</span>
             <icon
               v-else
               class="mx-6"
@@ -267,4 +247,9 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+.p-inputtext {
+  background-color: white;
+  color: black;
+  border: #DBDFE9 solid 1px
+}
 </style>

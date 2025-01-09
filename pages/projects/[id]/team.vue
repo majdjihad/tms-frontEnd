@@ -62,7 +62,7 @@ if (projectsStore?.changeStatus) {
                   <SkeletonMemberRow v-for="m in 3" :key="m" />
                 </tbody>
                 <tbody v-else class="text-gray-600 fw-semibold">
-                  <ProjectComponentMemberInfo
+                  <ProjectCompMemberInfo
                     v-for="(
                       member, index
                     ) in projectsStore?.project?.team_members.filter(

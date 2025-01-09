@@ -7,7 +7,7 @@
  * - Registration submission and error handling
  */
 <script setup>
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
 import { useRouter } from "vue-router";
@@ -25,7 +25,6 @@ useHead({
 
 // Initialize required composables and state
 const { join } = useAuth();
-const toast = useToast();
 const router = useRouter();
 const inProgress = ref(false);
 
@@ -92,31 +91,6 @@ const formHandle = async () => {
   }
 };
 
-// Display toast notifications with consistent styling
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
@@ -130,14 +104,15 @@ function showToast(statusCode, msg) {
             <div class="w-400px p-10 border rounded-1 text-center shadow-sm">
               <nuxt-link to="/">
                 <img
-                  alt="Taskat Logo"
-                  src="~/public/favicon.ico"
-                  class="h-90px mb-12"
-                />
+                alt="TaskSwift Logo"
+                src="~/assets/media/logos/logo-dark.png"
+                class="h-70px mb-12"
+              />
+
               </nuxt-link>
               <form class="form w-100" @submit.prevent="formHandle">
                 <div class="text-center mb-11">
-                  <h1 class="text-dark fw-bolder mb-3">Join us</h1>
+                  <h1 class="text-dark fw-bolder mb-3">Welcome</h1>
                 </div>
                 <FormInput
                   v-model="formData.email"
@@ -191,7 +166,7 @@ function showToast(statusCode, msg) {
               Join
             </h1>
             <div class="d-none d-lg-block text-white fs-base text-center w-75">
-              Join our community of achievers at Taskat! Discover a smarter way
+              Join our community of achievers at TaskSwift! Discover a smarter way
               to manage tasks, enhance productivity, and collaborate seamlessly.
               Whether you're a professional or student, together we'll conquer
               goals and stay organized. Join now for a more efficient tomorrow.

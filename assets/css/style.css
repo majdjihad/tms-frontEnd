@@ -248,6 +248,19 @@ tbody tr:hover {
     animation: loading 4s infinite;
 
 }
+.p-tieredmenu,
+.p-tieredmenu-submenu {
+    background-color: white !important;
+    left: -100%;
+    border: none !important;
+}
+.p-tieredmenu li div {
+    color: black;
+}
+.p-tieredmenu li div:hover {
+    color: black !important;
+    background-color: var(--bs-gray-200) !important;
+}
 /* transition */ 
   .menu-transition-enter-active,
   .menu-transition-leave-active {

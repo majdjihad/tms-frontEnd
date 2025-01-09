@@ -1,5 +1,4 @@
 <script setup>
-
 const emits = defineEmits(["update:modelValue"]);
 const props = defineProps(["selectTitle", "list", "type", "selected"]);
 const selectedOption = ref(props.selectTitle);
@@ -50,36 +49,45 @@ const closeOptions = () => {
     </div>
     <Transition name="menu">
       <div class="options" v-show="optionsVisible">
-        <div
-          class="option"
-          v-for="(option, index) in list.filter((m) => m?.user?.name)"
-          :key="index"
-          @click="selectOption(option)"
-        >
-          <span v-if="type === 'statusMenu'">{{ option?.name }}</span>
+        <div v-if="type === 'assigneeMenu'">
           <div
-            v-else-if="type === 'assigneeMenu'"
-            class="w-100 d-flex justify-content-start align-items-center"
+            class="option"
+            v-for="option in list.filter((m) => m?.user?.name)"
+            :key="option.user.id"
+            @click="selectOption(option)"
           >
-            <div class="symbol symbol-circle symbol-30px overflow-hidden">
-              <img
-                v-if="option?.user?.photo"
-                :src="option?.user?.url_photo"
-                :alt="option?.user?.name"
-                class="w-100"
-              />
-              <span
-                v-else
-                class="symbol-label text-inverse-warning fs-2 hover-bg-light"
-                :style="{ backgroundColor: getColor(option?.user?.id) }"
-                >{{
-                  option?.user?.name ? option?.user?.name[0].toUpperCase() : "-"
-                }}</span
-              >
+            <div class="w-100 d-flex justify-content-start align-items-center">
+              <div class="symbol symbol-circle symbol-30px overflow-hidden">
+                <img
+                  v-if="option?.user?.photo"
+                  :src="option?.user?.url_photo"
+                  :alt="option?.user?.name"
+                  class="w-100"
+                />
+                <span
+                  v-else
+                  class="symbol-label text-inverse-warning fs-2 hover-bg-light"
+                  :style="{ backgroundColor: getColor(option?.user?.id) }"
+                  >{{
+                    option?.user?.name
+                      ? option?.user?.name[0].toUpperCase()
+                      : "-"
+                  }}</span
+                >
+              </div>
+              <span class="ms-5 fs-6">{{ option?.user?.name }}</span>
             </div>
-            <span class="ms-5 fs-6">{{ option?.user?.name }}</span>
           </div>
-          <span v-else>{{ option }}</span>
+        </div>
+        <div v-else-if="type === 'statusMenu'">
+          <span
+            v-for="option in list"
+            @click="selectOption(option)"
+            :key="option.id"
+            class="option"
+          >
+            {{ option.name }}
+          </span>
         </div>
       </div>
     </Transition>

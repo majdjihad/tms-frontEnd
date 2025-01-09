@@ -1,6 +1,6 @@
 <script setup>
 // Import required dependencies
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
 import { useInvitationStore } from "~/stores/invitationStore";
@@ -19,8 +19,7 @@ useHead({
 // Initialize authentication composable
 const { login } = useAuth();
 
-// Initialize toast notifications and invitation store
-const toast = useToast();
+// Initialize invitation store
 let invitationStore = useInvitationStore();
 
 // Form validation error messages
@@ -75,36 +74,6 @@ const {
   }
 );
 
-
- //* Display toast notification with specified status and message
-
-function showToast(statusCode, msg) {
-  // Configure toast notification attributes
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-
-  // Display appropriate toast based on status
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
@@ -120,9 +89,9 @@ function showToast(statusCode, msg) {
           <div class="w-400px p-10 border rounded-1 text-center shadow-sm">
             <nuxt-link to="/" class="left-position-logo">
               <img
-                alt="Taskat Logo"
-                src="~/public/favicon.ico"
-                class="h-90px"
+                alt="TaskSwift Logo"
+                src="~/assets/media/logos/logo-dark.png"
+                class="h-70px"
               />
             </nuxt-link>
             <form class="form w-100" @submit.prevent="formHandle">

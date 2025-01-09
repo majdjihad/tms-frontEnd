@@ -7,11 +7,6 @@
             <span class="w-100 object-cover" />
           </p>
         </div>
-        <!-- <div class="card-toolbar">
-                    <span class="project-fav badge fw-bold me-auto px-4 py-3 Skeleton ">
-                        <span style="width: 22px; height: 22px;"></span>
-                    </span>
-                </div> -->
       </div>
       <div class="card-body p-7">
         <div

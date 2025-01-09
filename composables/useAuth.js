@@ -1,6 +1,5 @@
 // Value is initialized in: ~/plugins/auth.js
 import { $larafetch } from "~/utils/$larafetch";
-import { useProjectsStore } from "~/stores/projectsStore";
 
 export const useUser = () => {
   return useState("user", () => undefined);

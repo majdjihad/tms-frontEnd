@@ -8,22 +8,22 @@ const props = defineProps([
   "labelText",
   "formDataError",
 ]);
-
 </script>
 
 <template>
   <div class="form-floating mb-7">
     <textarea
+      :id="name"
       :name="name"
       :placeholder="placeholder"
       class="form-control h-100px"
       :class="{ 'input-error': formDataError }"
       v-model="model"
     ></textarea>
-    <label for="floatingInput" :class="{ 'text-danger': formDataError }">{{
+    <label :for="name" :class="{ 'text-danger': formDataError }">{{
       labelText
     }}</label>
-    <div v-if="formDataError" class="w-100 text-start mt-1">
+    <div v-if="formDataError != null" class="w-100 text-start mt-1">
       <span class="form-data-error">{{
         typeof formDataError == "string" ? formDataError : formDataError[0]
       }}</span>

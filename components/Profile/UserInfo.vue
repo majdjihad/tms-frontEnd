@@ -3,7 +3,6 @@ import { useProfileStore } from "~/stores/profileStore";
 
 const user = useUser();
 const profileStore = useProfileStore();
-
 </script>
 <template>
   <div class="profileInfo">
@@ -73,14 +72,17 @@ const profileStore = useProfileStore();
             <label class="col-lg-4 fw-semibold text-muted">Skills</label>
             <div class="col-lg-8">
               <div class="fw-semibold fs-6 text-gray-800 mt-3">
-                <span
-                  class="py-2 px-4 me-1 bg-light-success rounded-3"
-                  v-for="(skill, index) in profileStore?.profileInfo?.user
-                    ?.skills"
-                  :key="index"
-                >
-                  {{ skill }}
-                </span>
+                <div v-if="profileStore?.profileInfo?.user?.skills">
+                  <span
+                    class="py-2 px-4 me-1 bg-light-success rounded-3"
+                    v-for="(skill, index) in profileStore?.profileInfo?.user
+                      ?.skills"
+                    :key="index"
+                  >
+                    {{ skill }}
+                  </span>
+                </div>
+                <p v-else>---</p>
               </div>
             </div>
           </div>

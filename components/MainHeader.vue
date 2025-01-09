@@ -23,7 +23,7 @@ const route = useRoute();
               <img
                 alt="Logo"
                 src="~/assets/media/logos/logo-light.png"
-                class="logo-sticky h-20px h-lg-40px h-sm-40px"
+                class="logo-sticky h-20px h-lg-55px h-sm-40px"
               />
             </NuxtLink>
             <div
@@ -43,7 +43,7 @@ const route = useRoute();
                       ><Icon name="ic:outline-keyboard-arrow-down" size="22"
                     /></span>
                   </span>
-                  <ProjectComponentProjectsMenu :isProjectMenu="isProjectMenu" />
+                  <ProjectCompProjectsMenu :isProjectMenu="isProjectMenu" />
                 </div>
                 <NuxtLink
                   :class="{

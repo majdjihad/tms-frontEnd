@@ -3,7 +3,7 @@
  * Handles email verification and user onboarding process
  */
 <script setup>
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 import { useAuth } from "~/composables/useAuth";
 
 // Configure page metadata and middleware
@@ -14,7 +14,6 @@ definePageMeta({
 
 // Initialize required composables and state
 const route = useRoute();
-const toast = useToast();
 const { welcome } = useAuth();
 const mixCountOfRequest = 3;
 const inProgress = ref(false);
@@ -41,31 +40,6 @@ onBeforeMount(async () => {
   }
 });
 
-// Display toast notifications with consistent styling
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>

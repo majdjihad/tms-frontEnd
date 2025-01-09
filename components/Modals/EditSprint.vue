@@ -1,13 +1,12 @@
 <script setup>
 import { useSubmit } from "~/composables/useSubmit";
-import { useToast } from "vue-toastification";
 import { useProjectsStore } from "~/stores/projectsStore";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { useBacklog } from "~/composables/useBacklog";
+import { showToast } from "~/composables/useToast";
 
 const props = defineProps(["sprint"]);
-const toast = useToast();
 const projectsStore = useProjectsStore();
 const { editSprint } = useBacklog();
 
@@ -74,32 +73,6 @@ const { submit, inProgress } = useSubmit(
     },
   }
 );
-
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-right",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
@@ -134,9 +107,9 @@ function showToast(statusCode, msg) {
               type="text"
               class="my-6"
               autocomplete="off"
-              labelText="Sprint Name"
-              name="name"
-              placeholder="Sprint Name"
+              labelText="Sprint Title"
+              name="sprintTitle"
+              placeholder="Sprint Title"
               v-model="data.name"
               :formDataError="errorMsg.errorName"
             />

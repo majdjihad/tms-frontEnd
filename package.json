@@ -1,5 +1,5 @@
 {
-  "name": "taskat-app",
+  "name": "TaskSwift-app",
   "private": true,
   "scripts": {
     "build": "nuxt build",

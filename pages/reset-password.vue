@@ -6,10 +6,9 @@
  * - New password confirmation
  */
 <script setup>
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
-import { useInvitationStore } from "~/stores/invitationStore";
 
 // Configure page metadata and middleware
 definePageMeta({
@@ -23,12 +22,10 @@ useHead({
 
 // Initialize required composables and state
 const { checkToken, resetPassword } = useAuth();
-const toast = useToast();
-const route = useRoute();
 const data = reactive({
-  token: "",
+  identify_number: "592b6c1a-2d02-4cc0-ac93-157ed28f7c27",
   password: "",
-  confirm_password: "",
+  password_confirmation: "",
 });
 const errorMsg = reactive({
   errorPassword: null,
@@ -71,14 +68,15 @@ const validatePassword = (password) => {
   return true;
 };
 
-onBeforeMount(async () => {
+onMounted(async () => {
   try {
     const response = await checkToken({ token: route.query.token });
+    console.log(response);
     data.token = response.identify_number;
     return response;
   } catch (error) {
     showToast("error", error?.data?.message);
-    return navigateTo("/join", { replace: true });
+    // return navigateTo("/join", { replace: true });
   }
 });
 
@@ -96,15 +94,14 @@ const formHandle = async () => {
   }
 
   // Validate password confirmation
-  if (data.password !== data.confirm_password) {
-    errorMsg.errorConfirm_Password = "Passwords do not match";
+  if (data.password !== data.password_confirmation) {
+    errorMsg.errorConfirm_Password = "confirm password not same Password";
     return;
   }
 
   const {
     submit,
     inProgress,
-    validationErrors: errors,
   } = useSubmit(
     () => {
       return resetPassword(data);
@@ -112,7 +109,7 @@ const formHandle = async () => {
     {
       onSuccess: (response) => {
         // Handle the response
-        return navigateTo("/projects", { replace: true });
+        return navigateTo("/login", { replace: true });
       },
       onError: (error) => {
         // Handle error
@@ -131,31 +128,6 @@ const formHandle = async () => {
   }
 };
 
-// Display toast notifications with consistent styling
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
@@ -195,7 +167,7 @@ function showToast(statusCode, msg) {
                   autocomplete="off"
                   labelText="Confirm Password"
                   name="password_confirmation"
-                  v-model="data.confirm_password"
+                  v-model="data.password_confirmation"
                   :formDataError="errorMsg.errorConfirm_Password"
                   class="mb-7"
                 />
@@ -224,8 +196,8 @@ function showToast(statusCode, msg) {
           </div>
         </div>
         <div
-          class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
-          style="background-image: url('../assets/media/misc/auth-bg.png')"
+          class="bg d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
+          style="background-image: url('~/assets/media/misc/auth-bg.png')"
         >
           <div
             class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100"
@@ -240,14 +212,13 @@ function showToast(statusCode, msg) {
 
             <img
               class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
-              src="../assets/media/illustrations/misc/complete.png"
+              src="~/assets/media/illustrations/misc/complete.png"
               alt=""
             />
             <h1
               class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7"
             >
-              Complete Registration
-            </h1>
+Reset Password            </h1>
             <div class="d-none d-lg-block text-white fs-base text-center w-75">
               Doloremque in quam et at corrupti cupiditate quis quibusdam
               nemo,voluptates, voluptatum rem inventore? Nulla quia dolor eos
@@ -259,3 +230,8 @@ function showToast(statusCode, msg) {
     </div>
   </div>
 </template>
+<style scoped>
+.bg {
+  background-image: url(~/assets/media/misc/auth-bg.png)
+}
+</style>

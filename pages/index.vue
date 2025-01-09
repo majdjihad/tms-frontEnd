@@ -1,9 +1,7 @@
 <script setup>
-
 // Uses a custom layout with guest middleware to ensure only non-authenticated users can access
 definePageMeta({
   layout: "none",
-  middleware: ["guest"],
 });
 </script>
 
@@ -55,7 +53,7 @@ definePageMeta({
                     <img
                       alt="Logo"
                       src="~/assets/media/logos/logo-light.png"
-                      class="logo-sticky h-20px h-lg-40px h-sm-40px"
+                      class="logo-sticky h-20px h-lg-50px h-sm-40px"
                     />
                   </NuxtLink>
                   <!--end::Logo image-->
@@ -131,171 +129,129 @@ definePageMeta({
           </div>
           <!--end::Header-->
           <!--begin::Landing hero-->
-          <div class="d-flex flex-column flex-center w-100 min-h-350px px-9">
-            <!--begin::Heading-->
-            <div class="text-center mb-5 mb-lg-10 py-10 py-lg-20">
-              <!--begin::Title-->
-              <h1 class="text-white lh-base fw-bold fs-2x fs-lg-3x mb-15">
-                Build And Manage Your Projects With<br />
-                <span class="gradient-text">
-                  <span id="kt_landing_hero_text"
-                    >The Best Task Management System Ever</span
-                  >
-                </span>
+          <section class="d-flex justify-content-center p-7 text-center">
+            <div class="hero-content text-center">
+              <h1 class="btn-show">
+                Streamline Your Tasks, Amplify Your Productivity
               </h1>
-              <!--end::Title-->
-              <!--begin::Action-->
-              <NuxtLink to="/join" class="btn btn-light-primary"
-                >Sign up for free
-              </NuxtLink>
-              <!--end::Action-->
+              <p class="text-white">
+                The intelligent task management system that helps teams work
+                smarter and achieve more together.
+              </p>
+              <div class="cta-buttons">
+                <NuxtLink to="/join" class="btn btn-lg btn-primary"
+                  >Start Free Trial</NuxtLink
+                >
+              </div>
             </div>
-            <!--end::Heading-->
-          </div>
+          </section>
           <!--end::Landing hero-->
         </div>
         <!--end::Wrapper-->
       </div>
       <!--end::Header Section-->
       <!--begin::How It Works Section-->
-      <div class="mb-n10 mb-lg-n20 z-index-2 py-20">
+      <section class="mb-n10 mb-lg-n20 z-index-2 py-20">
         <!--begin::Container-->
         <div class="container">
           <!--begin::Heading-->
           <div class="text-center mb-17">
             <!--begin::Title-->
             <h3
-              class="fs-2hx text-dark mb-5"
+              class="btn-show display-4 mb-5"
               id="how-it-works"
               data-kt-scroll-offset="{default: 100, lg: 150}"
             >
-              How it Works?!
+              How it Works?
             </h3>
             <!--end::Title-->
             <!--begin::Text-->
             <div class="fs-5 text-muted fw-bold">
-              Taskat is a Task Management System and it's <br />
+              TaskSwift is a Task Management System and it's <br />
               easy-to-use software for different type of projects.
             </div>
             <!--end::Text-->
           </div>
-          <!--end::Heading-->
-          <!--begin::Row-->
-          <div class="row w-100 gy-10 mb-md-20">
-            <!--begin::Col-->
-            <div class="col-md-4 px-5">
-              <!--begin::Story-->
-              <div class="text-center mb-10 mb-md-0">
-                <!--begin::Illustration-->
-                <img
-                  src="~/assets/media/illustrations/sketchy-1/2.png"
-                  class="mh-125px mb-9"
-                  alt=""
-                />
-                <!--end::Illustration-->
-                <!--begin::Heading-->
-                <div class="d-flex flex-center mb-5">
-                  <!--begin::Badge-->
-                  <span
-                    class="badge badge-circle badge-primary fw-bold p-5 me-3 fs-3"
-                    >1</span
-                  >
-                  <!--end::Badge-->
-                  <!--begin::Title-->
-                  <div class="fs-5 fs-lg-3 fw-bold text-dark">Join Taskat</div>
-                  <!--end::Title-->
-                </div>
-                <!--end::Heading-->
-                <!--begin::Description-->
-                <div class="fw-semibold fs-6 fs-lg-4 text-muted">
-                  Join to taskat software by using <br />
-                  your email address.
-                </div>
-                <!--end::Description-->
-              </div>
-              <!--end::Story-->
-            </div>
-            <!--end::Col-->
-            <!--begin::Col-->
-            <div class="col-md-4 px-5">
-              <!--begin::Story-->
-              <div class="text-center mb-10 mb-md-0">
-                <!--begin::Illustration-->
-                <img
-                  src="~/assets/media/illustrations/sketchy-1/8.png"
-                  class="mh-125px mb-9"
-                  alt=""
-                />
-                <!--end::Illustration-->
-                <!--begin::Heading-->
-                <div class="d-flex flex-center mb-5">
-                  <!--begin::Badge-->
-                  <span
-                    class="badge badge-circle badge-primary fw-bold p-5 me-3 fs-3"
-                    >2</span
-                  >
-                  <!--end::Badge-->
-                  <!--begin::Title-->
+          <div class="timeline">
+            <div>
+              <span class="btn btn-success fs-3 p-3 rounded ms-3">Join</span>
+              <div
+                class="row justify-content-between align-items-center"
+                style="margin: 9rem 0"
+              >
+                <div class="col-12 col-lg-6 text-center mb-5 p-6">
                   <div class="fs-5 fs-lg-3 fw-bold text-dark">
-                    Setup Your Project
+                    <h3 class="display-4">Join TaskSwif</h3>
                   </div>
                   <!--end::Title-->
+                  <div class="fw-semibold fs-6 fs-lg-4 text-muted">
+                    Join to TaskSwift software by using your email address.
+                  </div>
                 </div>
-                <!--end::Heading-->
-                <!--begin::Description-->
-                <div class="fw-semibold fs-6 fs-lg-4 text-muted">
-                  Create your project so easy <br />
-                  just by 2 clicks and enjoy with the<br />
-                  amazing features.
+                <div class="col-12 col-lg-6 text-center te">
+                  <img
+                    src="~/assets\media\images-desgin\wellcome-desgin.png"
+                    class="w-300px img-fluid rounded shadow text-center"
+                    alt=""
+                  />
                 </div>
-                <!--end::Description-->
               </div>
-              <!--end::Story-->
             </div>
-            <!--end::Col-->
-            <!--begin::Col-->
-            <div class="col-md-4 px-5">
-              <!--begin::Story-->
-              <div class="text-center mb-10 mb-md-0">
-                <!--begin::Illustration-->
-                <img
-                  src="~/assets/media/illustrations/sketchy-1/12.png"
-                  class="mh-125px mb-9"
-                  alt=""
-                />
-                <!--end::Illustration-->
-                <!--begin::Heading-->
-                <div class="d-flex flex-center mb-5">
-                  <!--begin::Badge-->
-                  <span
-                    class="badge badge-circle badge-primary fw-bold p-5 me-3 fs-3"
-                    >3</span
-                  >
-                  <!--end::Badge-->
-                  <!--begin::Title-->
+            <div>
+              <span class="btn btn-success fs-3 p-3 rounded ms-3">Startup</span>
+              <div
+                class="row justify-content-between align-items-center"
+                style="margin: 9rem 0"
+              >
+                <div class="col-12 col-lg-6 text-center mb-5 p-6">
                   <div class="fs-5 fs-lg-3 fw-bold text-dark">
-                    Manage Your Project
+                    <h3 class="display-4">Setup Your Project</h3>
                   </div>
                   <!--end::Title-->
+                  <div class="fw-semibold fs-6 fs-lg-4 text-muted">
+                    Create your project so easy just by 2 clicks and enjoy with
+                    the amazing features.
+                  </div>
                 </div>
-                <!--end::Heading-->
-                <!--begin::Description-->
-                <div class="fw-semibold fs-6 fs-lg-4 text-muted">
-                  Start your project development journey <br />invite your team
-                  members, create tasks, assign it<br />
-                  and a lot more with
-                  <span class="gradient-text">Taskat Software.</span>
+                <div class="col-12 col-lg-6 text-center shadow text-center">
+                  <img
+                    src="~/assets\media\images-desgin\projects-desgin.png"
+                    class="img-fluid rounded"
+                    alt=""
+                  />
                 </div>
-                <!--end::Description-->
               </div>
-              <!--end::Story-->
             </div>
-            <!--end::Col-->
+            <div>
+              <span class="btn btn-success fs-3 p-3 rounded ms-3">Manager</span>
+              <div
+                class="row justify-content-between align-items-center"
+                style="margin: 9rem 0"
+              >
+                <div class="col-12 col-lg-6 text-center mb-5 p-6">
+                  <div class="fs-5 fs-lg-3 fw-bold text-dark">
+                    <h3 class="display-4">Manage Your Project</h3>
+                  </div>
+                  <!--end::Title-->
+                  <div class="fw-semibold fs-6 fs-lg-4 text-muted">
+                    Start your project development journey invite your team
+                    members, create tasks, assign it and a lot more with TaskSwift
+                    Software.
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6 text-center shadow text-center">
+                  <img
+                    src="~/assets\media\images-desgin\board-desgin.png"
+                    class="img-fluid rounded"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <!--end::Row-->
         </div>
         <!--end::Container-->
-      </div>
+      </section>
       <!--end::How It Works Section-->
       <!--begin::Footer Section-->
       <div class="mb-0">
@@ -328,7 +284,7 @@ definePageMeta({
               </div>
               <div>
                 <span class="mx-5 fs-6 fw-semibold text-gray-600 pt-1" href="#"
-                  >&copy; 2023 Taskat Software.</span
+                  >&copy; 2023-2025 copyright in TaskSwift Software.</span
                 >
               </div>
               <!--end::Copyright-->
@@ -340,23 +296,64 @@ definePageMeta({
         <!--end::Wrapper-->
       </div>
       <!--end::Footer Section-->
-      <!--begin::Scrolltop-->
-      <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
-        <i class="ki-duotone ki-arrow-up">
-          <span class="path1"></span>
-          <span class="path2"></span>
-        </i>
-      </div>
-      <!--end::Scrolltop-->
     </div>
-    <!--end::Root-->
-    <!--begin::Scrolltop-->
-    <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
-      <i class="ki-duotone ki-arrow-up">
-        <span class="path1"></span>
-        <span class="path2"></span>
-      </i>
-    </div>
-    <!--end::Scrolltop-->
   </div>
 </template>
+<style scoped>
+.hero-content {
+  max-width: 600px;
+}
+
+.btn-show {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #5fb751 0%, #14f88b 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #99a1b7;
+  z-index: 1;
+}
+.timeline-icon {
+  position: absolute;
+  color: white;
+  left: -34px;
+  top: -4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: 6rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+}
+</style>

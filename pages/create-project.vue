@@ -5,7 +5,7 @@
  * Uses auth middleware to ensure only authenticated users can access
  */
 <script setup>
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 import { useProjectsStore } from "~/stores/projectsStore";
 import { useProjects } from "~/composables/useProjects";
 import { useUser } from "~/composables/useAuth";
@@ -26,7 +26,6 @@ const router = useRouter();
 const projectsStore = useProjectsStore();
 const { createProject } = useProjects();
 const { keyProjects } = useProjects();
-const toast = useToast();
 
 // Form data and state management
 const projectData = ref(null);
@@ -119,31 +118,7 @@ const {
  * @param {string} statusCode - Type of toast ('success' or 'error')
  * @param {string} msg - Message to display
  */
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
 
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
@@ -178,9 +153,9 @@ function showToast(statusCode, msg) {
                 <FormInput
                   type="text"
                   autocomplete="off"
-                  labelText="Project Name"
+                  labelText="Project Title"
                   name="name"
-                  placeholder="Full Name"
+                  placeholder="Project Title"
                   v-model="data.title"
                   :formDataError="errorMsg.errorName"
                   class="mb-7"

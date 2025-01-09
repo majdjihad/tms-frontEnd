@@ -3,10 +3,9 @@ import { useUser } from "~/composables/useAuth";
 import { useProjectsStore } from "~/stores/projectsStore";
 import { useSubmit } from "~/composables/useSubmit";
 import { useMember } from "~/composables/useMember";
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 
 const user = useUser();
-const toast = useToast();
 const projectsStore = useProjectsStore();
 const { addMember } = useMember();
 const closeBtn = ref(null);
@@ -57,31 +56,7 @@ const {
     },
   }
 );
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
 
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
@@ -165,7 +140,7 @@ function showToast(statusCode, msg) {
           <div class="mb-10">
             <div class="fs-6 fw-semibold mb-2 team-list">Team Members</div>
             <div class="mh-200px scroll-y me-n7 pe-7">
-              <ProjectComponentInviteTeamMember
+              <ProjectCompInviteTeamMember
                 v-for="(member, index) in projectsStore?.project?.team_members"
                 :key="index"
                 :member="member"

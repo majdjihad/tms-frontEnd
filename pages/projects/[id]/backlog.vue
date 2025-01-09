@@ -7,13 +7,18 @@ useHead({
 definePageMeta({
   middleware: ["auth"],
 });
+
 const route = useRoute();
 const projectId = ref(route?.params?.id);
 const backlogStore = useBacklogStore();
 
+// before render page 
 onMounted(() => {
-  backlogStore?.getBacklogProject(projectId.value);
+  if (backlogStore?.backlogProject === null) {
+    backlogStore?.getBacklogProject(projectId.value);
+  }
 });
+// declear selected issues array for select issue
 const selectedIssue = ref([]);
 
 // Function to update the selectedIssue value when emitted from SprintComponent
@@ -31,14 +36,14 @@ const updateSelectedIssue = (value) => {
           <SkeletonSprintCard v-for="index in 3" :key="index" />
         </div>
         <div v-else>
-          <ProjectComponentSprint
+          <ProjectCompSprint
             v-for="(sprint, index) in backlogStore?.sprintsProject"
             :selectedIssue="selectedIssue"
             @update:selectedIssue="updateSelectedIssue"
             :key="index"
             :sprint="sprint"
           />
-          <ProjectComponentBacklog
+          <ProjectCompBacklog
             :selectedIssue="selectedIssue"
             @update:selectedIssue="updateSelectedIssue"
           />

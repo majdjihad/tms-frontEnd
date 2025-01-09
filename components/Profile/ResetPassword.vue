@@ -3,6 +3,7 @@ import {useSubmit} from "~/composables/useSubmit";
 import {useProfileStore} from "~/stores/profileStore";
 import {useProfile} from "~/composables/useProfile";
 import {useToast} from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 
 const user = useUser()
 const toast = useToast()
@@ -48,31 +49,7 @@ const {submit, inProgress, validationErrors: errors,} = useSubmit(() => {
   }
 });
 
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false
-  }
 
-  if (statusCode === 'success') {
-    toast.success(msg, {
-      ...toastAttr
-    });
-  } else if (statusCode === 'error') {
-    toast.error(msg, {
-      ...toastAttr
-    });
-  }
-}
 </script>
 
 <template>
@@ -89,8 +66,8 @@ function showToast(statusCode, msg) {
           <label class="col-lg-4 col-form-label required fw-semibold fs-6">Current Password</label>
           <div class="col-lg-8">
             <div class="col-lg-6 fv-row">
-              <FormPasswordInput v-model="data.old_password" placeholder="password" autocomplete="off"
-                                 labelText="Password" name="password" :formDataError="errorMsg.errorOldPassword"/>
+              <FormPasswordInput v-model="data.old_password" placeholder="password" autocomplete="off" name="oldPassword"
+                                 labelText="Password" :formDataError="errorMsg.errorOldPassword"/>
             </div>
           </div>
         </div>
@@ -98,8 +75,8 @@ function showToast(statusCode, msg) {
           <label class="col-lg-4 col-form-label required fw-semibold fs-6">new password</label>
           <div class="col-lg-8">
             <div class="col-lg-6 fv-row">
-              <FormPasswordInput v-model="data.password" placeholder="new password" autocomplete="off"
-                                 labelText="new Password" name="newPassword" :formDataError="errorMsg.errorPassword"/>
+              <FormPasswordInput v-model="data.password" placeholder="new password" autocomplete="off" name="newPassword"
+                                 labelText="new Password" :formDataError="errorMsg.errorPassword"/>
             </div>
           </div>
         </div>
@@ -107,9 +84,9 @@ function showToast(statusCode, msg) {
           <label class="col-lg-4 col-form-label required fw-semibold fs-6">confirm password</label>
           <div class="col-lg-8">
             <div class="col-lg-6 fv-row">
-              <FormPasswordInput v-model="data.password_confirmation" placeholder="confirm password"
+              <FormPasswordInput v-model="data.password_confirmation" placeholder="confirm password" name="confirmPassword"
                                  autocomplete="off"
-                                 labelText="confirm Password" name="confirmPassword"
+                                 labelText="confirm Password"
                                  :formDataError="errorMsg.errorConfirmPassword"/>
             </div>
           </div>

@@ -17,7 +17,7 @@ const props = defineProps([
 <template>
   <div class="form-floating">
     <input
-      id="floatingInput"
+      :id="name"
       :type="type"
       class="form-control"
       :name="name"
@@ -26,10 +26,10 @@ const props = defineProps([
       v-model="model"
       :class="{ 'input-error': formDataError }"
     />
-    <label for="floatingInput" :class="{ 'text-danger': formDataError }">{{
+    <label :for="name" :class="{ 'text-danger': formDataError }">{{
       labelText
     }}</label>
-    <div v-if="formDataError" class="w-100 text-start mt-1">
+    <div v-if="formDataError != null" class="w-100 text-start mt-1">
       <span class="form-data-error">{{
         typeof formDataError == "string" ? formDataError : formDataError[0]
       }}</span>

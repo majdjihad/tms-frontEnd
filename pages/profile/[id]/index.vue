@@ -9,20 +9,20 @@ definePageMeta({
 });
 const user = useUser();
 useHead({
-  title: 'user',
+  title: "user",
 });
 const projectsStore = useProjectsStore();
 const profileStore = useProfileStore();
 const sectionActive = ref("Overview");
 const route = useRoute();
 const changeActive = (section) => {
-    sectionActive.value = section;
+  sectionActive.value = section;
 };
 
 if (projectsStore?.changeStatus) {
   projectsStore?.getAllProjects();
 }
-if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
+if (profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
   profileStore.profileInfo = null;
   profileStore?.getProfileInfo(route?.params?.id);
 }
@@ -56,6 +56,18 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                       </div>
                       <div class="flex-grow-1">
                         <div
+                          v-if="!profileStore?.profileInfo?.user"
+                          class="mb-2 pt-5 h-100px"
+                        >
+                          <p
+                            class="rounded skeleton skeleton-title w-70px h-15px"
+                          ></p>
+                          <p
+                            class="w-100px h-15px rounded skeleton skeleton-title mt-1"
+                          ></p>
+                        </div>
+                        <div
+                          v-else
                           class="d-flex justify-content-between align-items-start flex-wrap mb-2"
                         >
                           <div class="d-flex flex-column">
@@ -97,7 +109,9 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                           <div class="d-flex flex-column flex-grow-1 pe-8">
                             <div class="d-flex flex-wrap align-items-center">
                               <div
-                                v-if="profileStore?.profileInfo?.Projects == null"
+                                v-if="
+                                  profileStore?.profileInfo?.Projects == null
+                                "
                                 class="rounded skeleton skeleton-title w-125px h-70px ms-2 me-2"
                               ></div>
                               <div
@@ -112,7 +126,10 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                                 </div>
                               </div>
                               <div
-                                v-if="profileStore?.profileInfo?.ActiveIssues == null"
+                                v-if="
+                                  profileStore?.profileInfo?.ActiveIssues ==
+                                  null
+                                "
                                 class="rounded skeleton skeleton-title w-125px h-70px ms-2 me-2"
                               ></div>
                               <div
@@ -127,7 +144,10 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                                 </div>
                               </div>
                               <div
-                                v-if="!profileStore?.profileInfo?.issuesAssignToMe == null"
+                                v-if="
+                                  profileStore?.profileInfo?.issuesAssignToMe ==
+                                  null
+                                "
                                 class="rounded skeleton skeleton-title w-125px h-70px ms-2 me-2"
                               ></div>
                               <div
@@ -147,9 +167,8 @@ if(profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                           </div>
                           <div
                             v-if="!profileStore?.profileInfo?.user?.created_at"
-                            class="rounded skeleton skeleton-title w-70px h-20px"
-                          ></div>
-                          <div v-else class="mt-3">
+                            class="mt-3"
+                          >
                             <span
                               class="d-block py-2 px-4 bg-light-success rounded-1 fw-semibold fs-7 text-success"
                               >{{

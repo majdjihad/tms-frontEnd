@@ -4,7 +4,7 @@
  * Provides resend functionality and validation for the verification code
  */
 <script setup>
-import { useToast } from "vue-toastification";
+import { showToast } from "~/composables/useToast";
 import { useAuth } from "~/composables/useAuth";
 import { useSubmit } from "~/composables/useSubmit";
 import { useInvitationStore } from "~/stores/invitationStore";
@@ -17,7 +17,6 @@ definePageMeta({
 
 // Initialize required composables and state
 const { checkCode } = useAuth();
-const toast = useToast();
 let invitationStore = useInvitationStore();
 let errorMsg = reactive({
   errorEmail: null,
@@ -51,31 +50,6 @@ const { submit, inProgress, validationErrors: errors } = useSubmit(
   }
 );
 
-// Display toast notifications with consistent styling
-function showToast(statusCode, msg) {
-  const toastAttr = {
-    position: "top-center",
-    timeout: 5000,
-    pauseOnFocusLoss: false,
-    pauseOnHover: false,
-    draggable: false,
-    draggablePercent: 0.6,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: false,
-    icon: true,
-    rtl: false,
-  };
-  if (statusCode === "success") {
-    toast.success(msg, {
-      ...toastAttr,
-    });
-  } else if (statusCode === "error") {
-    toast.error(msg, {
-      ...toastAttr,
-    });
-  }
-}
 </script>
 
 <template>
@@ -91,11 +65,15 @@ function showToast(statusCode, msg) {
           <div class="w-400px p-10 border rounded-1 text-center shadow-sm">
             <nuxt-link to="/" class="left-position-logo">
               <img
-                alt="Taskat Logo"
+                alt="TaskSwift Logo"
                 src="~/public/favicon.ico"
                 class="h-90px"
               />
             </nuxt-link>
+            <img
+              src="~/assets/media/logos/logo-dark.png"
+              style="height: 88px; margin: 8px 0px 16px"
+            />
             <img
               src="~/assets/media/email/email.svg"
               style="height: 88px; margin: 8px 0px 16px"
