@@ -205,11 +205,7 @@ const closePrioritiesMenu = () => {
     <div
       class="subIssue-container d-flex align-items-center justify-content-between cursor-pointer py-2 px-8 border-bottom position-relative"
     >
-      <div
-        data-bs-toggle="modal"
-        @click="getInfoSubIssue"
-      >
-        <!-- data-bs-target="#kt_modal_subIssue_info" -->
+      <div>
         <img
           v-if="subIssue?.type === 'task'"
           src="~/assets/media/issue/type/task.svg"
@@ -456,7 +452,6 @@ const closePrioritiesMenu = () => {
         size="25"
       />
     </div>
-    <IssueCompSubIssueModal />
   </div>
 </template>
 

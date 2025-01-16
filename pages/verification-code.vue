@@ -39,7 +39,6 @@ const { submit, inProgress, validationErrors: errors } = useSubmit(
   {
     onSuccess: (response) => {
       // Handle the response
-      console.log(response);
       return navigateTo(
         `/reset-password?token=${route?.query?.identify_number}`
       );

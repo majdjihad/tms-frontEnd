@@ -2,6 +2,7 @@
 // Import required store and composable for project management
 import { useProjectsStore } from "~/stores/projectsStore";
 import { useProjects } from "~/composables/useProjects";
+import { showToast } from "~/composables/useToast";
 
 // Set page metadata with title
 useHead({
@@ -21,17 +22,17 @@ const projectId = ref(route?.params?.id);
 
 // Fetch project history data when component is mounted
 onMounted(async () => {
-  if(!projectStore.history) {
+  if (!projectStore.history) {
     try {
-    // Attempt to fetch project history for the current project
-    const response = await projectHistory(projectId.value, 1);
-    // Update store with fetched history data
-    projectStore.history = response.projectHistory;
-  } catch (error) {
-    console.log(error.data.message);
-    // Redirect to projects page if history fetch fails
-    return navigateTo(`/projects`, { replace: true });
-  }
+      // Attempt to fetch project history for the current project
+      const response = await projectHistory(projectId.value, 1);
+      // Update store with fetched history data
+      projectStore.history = response.projectHistory;
+    } catch (error) {
+      // Redirect to projects page if history fetch fails
+      showToast("error", error.data.message);
+      return navigateTo(`/projects`, { replace: true });
+    }
   }
 });
 </script>
@@ -48,13 +49,11 @@ onMounted(async () => {
             v-for="history in projectStore.history"
             :key="history.id"
             :history="history"
-          >
-          </HistoryTimeline>
+          />
         </div>
         <!-- Show skeleton loading state while data is being fetched -->
         <div v-else class="history-timeline">
-          <SkeletonHistoryTimeline v-for="index in 10" :key="index">
-          </SkeletonHistoryTimeline>
+          <SkeletonHistoryTimeline v-for="index in 10" :key="index"/>
         </div>
       </div>
     </div>

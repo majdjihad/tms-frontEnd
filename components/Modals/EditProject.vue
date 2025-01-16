@@ -14,6 +14,7 @@ const errorMsg = reactive({
 });
 
 const data = reactive({
+  photo: null,
   name: null,
   description: null,
 });
@@ -24,6 +25,7 @@ watch(
   (newProject, oldProject) => {
     if (newProject !== oldProject) {
       // Update data properties once the project data is available
+      data.photo = newProject?.icon;
       data.name = newProject?.name;
       data.description = newProject?.description;
     }
@@ -95,7 +97,7 @@ const {
             class="text-center"
             id="editProjectForm"
           >
-            <FormAvatarInput currentImage="" from="project" formDataError="" />
+          <FormAvatarInput :currentImage="data.photo" from="project" />
 
             <FormInput
               type="text"
@@ -111,6 +113,7 @@ const {
               placeholder="Project Description"
               labelText="Project Description"
               name="description"
+              class="mt-3"
               v-model="data.description"
               :formDataError="errorMsg.errorDescription"
             />

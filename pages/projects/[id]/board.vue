@@ -20,7 +20,6 @@ const route = useRoute();
 const projectId = ref(route?.params?.id);
 // before render page
 onMounted(() => {
-  console.log(backlogStore?.backlogProject);
   if (backlogStore?.backlogProject === null) {
     backlogStore?.getBacklogProject(projectId.value);
   }

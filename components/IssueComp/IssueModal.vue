@@ -89,9 +89,9 @@ const changeIssue = async (actionId) => {
       backlogStore?.issueInfoArray?.description !== "" &&
       backlogStore?.issueInfoArray?.description !== null
     ) {
-      return;
-    } else {
       descriptionIssueLoader.value = true;
+    } else {
+      return;
     }
   }
   if (Object.keys(actionId)[0] === "estimated_at") {
@@ -330,11 +330,15 @@ const toggleArrowDetalis = () => {
     : (arrowIcon.value = "ep:arrow-up-bold");
 };
 
-computed(() => {
-  if (!backlogStore?.issueInfoArray) {
-    historyComponent.value = false;
+watch(
+  () => backlogStore?.issueInfoArray,
+  () => {
+    if (!backlogStore?.issueInfoArray) {
+      historyComponent.value = false;
+      commentComponent.value = true;
+    }
   }
-});
+);
 </script>
 
 <template>
@@ -399,9 +403,9 @@ computed(() => {
         </div>
         <div class="modal-body fw-300 overflow-auto ms-5 pt-0 pb-15">
           <div class="text-start mt-5">
-            <h1 class="my-6 text-capitalize fw-300">
+            <p class="my-6 fs-1 text-capitalize">
               {{ backlogStore?.issueInfoArray?.title }}
-            </h1>
+            </p>
             <div>
               <p
                 @click="openCreateIssueInput"

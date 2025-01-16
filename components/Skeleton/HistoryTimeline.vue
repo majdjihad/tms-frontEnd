@@ -10,7 +10,7 @@
 <style scoped>
 .history-item {
   position: relative;
-  width: 300px;
+  width: 400px;
   height: 130px;
   padding-bottom: 1.5rem;
   padding-left: 1rem;

@@ -1,15 +1,18 @@
 <script setup>
 import { useProjectsStore } from "~/stores/projectsStore";
 import { useProjects } from "~/composables/useProjects";
+import { useUser } from "~/composables/useAuth";
+
 const getColor = (index) => {
   const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
+const user = useUser();
 const route = useRoute();
 const projectsStore = useProjectsStore();
 const projectId = ref(route?.params?.id);
-const countMemberShow = ref(1);
+const countMemberShow = ref(7);
 
 if (projectsStore?.project === null) {
   projectsStore?.getProject(projectId.value);
@@ -28,14 +31,14 @@ const { submit, inProgress } = useSubmit(
       );
     },
     onError: async (error) => {
-      console.log(error.data.massage);
+      showToast("error", error.data.message);
     },
   }
 );
 
 const handleArchiveProject = () => {
   Swal.fire({
-    html: `Are you sure you want to Archive <strong><div class="truncate lh-lg" >${projectsStore?.project?.name}<span>(${projectsStore?.project?.key})</span</div></strong>`,
+    html: `Are you sure you want to delete <strong><div class="truncate lh-lg" >${projectsStore?.project?.name}<span>(${projectsStore?.project?.key})</span</div></strong>`,
     icon: "warning",
     buttonsStyling: false,
     showCancelButton: true,
@@ -94,11 +97,14 @@ const handleArchiveProject = () => {
                   ></span>
                   <div class="position-relative">
                     <span
-                      v-if="projectsStore?.project"
+                      v-if="
+                        projectsStore?.project &&
+                        user.id === projectsStore?.project.user_id
+                      "
                       id="projectActionsButton"
                       class="edit-icon text-gray-400 cursor-pointer"
                       @click="isMenuOpen = true"
-                      v-click-outside="() => isMenuOpen = false"
+                      v-click-outside="() => (isMenuOpen = false)"
                     >
                       <i class="pi pi-ellipsis-v" style="font-size: 16px"> </i>
                     </span>
@@ -124,12 +130,18 @@ const handleArchiveProject = () => {
                             Edit Project</span
                           >
                         </div>
-                        <div class="menu-item p-0" @click="handleArchiveProject">
+                        <div
+                          class="menu-item p-0"
+                          @click="handleArchiveProject"
+                        >
                           <span
                             class="btn btn-sm btn-light-danger rounded-0 fs-6 w-100 text-start"
                           >
-                            <i class="pi pi-inbox" style="font-size: 1rem"></i>
-                            Archive Project</span
+                            <i
+                              class="fa-regular fa-trash-can"
+                              style="font-size: 1rem"
+                            ></i>
+                            Delete Project</span
                           >
                         </div>
                       </div>

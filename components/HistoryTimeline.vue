@@ -79,13 +79,13 @@ function getClass(action) {
       </div>
 
       <div class="text-sm text-indigo-500 fs-5 mt-0.5">
-        <template v-if="history.type === 'sprint'">
+        <p v-if="history.type === 'sprint'">
           Sprint Title: {{ history.sprint_which_received_action?.name }}
-        </template>
-        <template v-if="history.type === 'Issue'">
+        </p>
+        <p v-if="history.type === 'Issue'">
           Issue Title: {{ history.issue?.title }}
           <span class="text-gray-400">({{ history.issue?.key }})</span>
-        </template>
+        </p>
       </div>
     </div>
   </div>

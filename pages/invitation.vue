@@ -101,18 +101,26 @@ const {
     <div class="d-flex flex-column flex-root vh-100" id="kt_app_root">
       <div class="d-flex flex-column flex-center flex-column-fluid">
         <div class="d-flex flex-column flex-center text-center p-10">
+          <nuxtLink to="/">
+            <img
+              src="~/assets/media/logos/logo-light.png"
+              class="h-75px"
+              alt="logo"
+            />
+          </nuxtLink>
           <div class="card card-flush mb-10 w-md-650px">
             <div class="card-header pt-9">
+              <h1 class="fw-light mb-3 text-dark">invation massage:</h1>
               <div class="d-flex align-items-center">
                 <div class="symbol symbol-50px me-5">
                   <img
-                    src="../assets/media/avatars/project.png"
+                    src="~/assets/media/avatars/project.png"
                     class=""
-                    alt=""
+                    alt="project-logo"
                   />
                 </div>
                 <div class="flex-grow-1 text-start">
-                  <div class="text-gray-800 fs-4 fw-bold">
+                  <div class="text-gray-800 fs-4">
                     {{ invitationStore?.invitationInfo?.project?.name }}
                   </div>
                   <div class="text-gray-400 fw-semibold d-block">
@@ -124,31 +132,23 @@ const {
                   </div>
                 </div>
               </div>
-              <!--              <div class="card-toolbar">-->
-              <!--                <div class="m-0">-->
-              <!--                  <button class="btn btn-icon btn-color-gray-400 btn-active-color-primary me-n4">-->
-              <!--                    <i class="ki-outline ki-information fs-1"></i>-->
-              <!--                  </button>-->
-              <!--                </div>-->
-              <!--              </div>-->
             </div>
             <div class="card-body">
               <div
-                class="fs-6 fw-normal text-gray-700 text-start border-bottom pb-6"
+                class="fs-5 fw-normal text-gray-700 text-start border-bottom pb-6"
               >
                 {{ invitationStore?.invitationInfo?.project?.description }}
               </div>
             </div>
-            <div class="card-footer pt-0 mt-10">
+            <div class="card-footer pt-0">
               <div
                 class="collapse show"
                 id="kt_social_feeds_comments_2"
-                style=""
               >
                 <div class="d-flex align-center">
                   <div class="symbol symbol-45px me-5">
                     <img
-                      src="../assets/media/avatars/blank.png"
+                      src="~/assets/media/avatars/blank.png"
                       :alt="invitationStore?.invitationInfo?.project?.name"
                       class="object-fit-cover"
                     />
@@ -169,34 +169,34 @@ const {
                   {{ invitationStore?.invitationInfo?.message }}
                 </div>
               </div>
-              <div class="mt-8 border-top pt-6">
+              <div class="mt-8 pt-3 border-top text-end">
                 <button
                   :disabled="inProgress"
                   type="submit"
-                  @click="sendInvitationStatus(false)"
+                  @click="sendInvitationStatus(0)"
                   id="kt_sign_in_submit"
-                  class="btn btn-danger btn-flex btn-center cursor-pointer fw-normal fs-3"
+                  class="btn btn-light-danger btn-sm"
                 >
                   <icon
                     v-if="inProgress && invitationStatus === false"
                     name="svg-spinners:ring-resize"
-                    size="25"
+                    size="16"
                   />
-                  <span v-else>Reject</span>
+                  <span v-else class="fs-4">reject</span>
                 </button>
                 <button
                   :disabled="inProgress"
                   type="submit"
-                  @click="sendInvitationStatus(true)"
+                  @click="sendInvitationStatus(1)"
                   id="kt_sign_in_submit"
-                  class="btn btn-primary btn-flex btn-center cursor-pointer fw-normal fs-3 ms-5"
+                  class="btn btn-sm btn-light-success ms-2"
                 >
                   <icon
                     v-if="inProgress && invitationStatus === true"
                     name="svg-spinners:ring-resize"
                     size="25"
                   />
-                  <span v-else>Accept</span>
+                  <span v-else class="fs-4">accept</span>
                 </button>
               </div>
             </div>

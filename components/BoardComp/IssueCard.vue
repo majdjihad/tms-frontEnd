@@ -72,15 +72,16 @@ const toggleIssueMenu = (event) => {
 };
 const issueActionMenu = ref();
 const statusActionItems = ref([
-  {
-    label: "Edit",
-    icon: "pi pi-fw pi-pencil",
-    command: () => {},
+{
+    label: "Preview",
+    icon: "fa-regular fa-eye",
+    command: () => {
+      document.querySelector(".issue-title").click();
+    },
   },
   {
-    label: "Archive",
-    icon: "pi pi-fw pi-calendar-minus",
-    command: () => {},
+    label: "Copy",
+    icon: "fa-regular fa-copy",
   },
   {
     label: "Delete",
@@ -123,7 +124,7 @@ const changeAssigneeIssue = async (AssigneeValue) => {
       projectsStore?.project?.project_identify
     );
   } catch (error) {
-    console.log(error);
+    showToast("error", error.data.message);
   }
   EditAssigneeLoading.value = false;
 };
@@ -132,7 +133,7 @@ const changeAssigneeIssue = async (AssigneeValue) => {
   <div>
     <div
       v-if="!props.createIssueProgress"
-      class="h-150px d-flex flex-column justify-content-evenly bg-light p-4 mt-3 shadow-sm rounded-1"
+      class="issue-card h-150px d-flex flex-column justify-content-evenly bg-light p-4 mt-3 shadow-sm rounded-1 "
     >
       <div class="d-flex justify-content-between align-items-center">
         <p
@@ -341,6 +342,9 @@ const changeAssigneeIssue = async (AssigneeValue) => {
   </div>
 </template>
 <style scoped>
+.issue-card {
+  cursor: grab;
+}
 .issue-title:hover {
   text-decoration: underline;
   cursor: pointer;

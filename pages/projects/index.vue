@@ -1,14 +1,10 @@
 <script setup>
 import { useProjectsStore } from "~/stores/projectsStore";
-import { useUser } from "~/composables/useAuth";
 
 const projectsStore = useProjectsStore();
 const activeTab = ref("all");
 
 const changeTab = (tabName) => (activeTab.value = tabName);
-if (projectsStore?.changeStatus) {
-  projectsStore?.getAllProjects();
-}
 </script>
 
 <template>
@@ -59,7 +55,7 @@ if (projectsStore?.changeStatus) {
           </li>
         </ul>
         <NuxtLink to="/create-project" class="btn btn-flex btn-primary mb-7"
-          ><i class='ki-outline ki-plus fs-3'></i>Create Project</NuxtLink
+          ><i class="ki-outline ki-plus fs-3"></i>Create Project</NuxtLink
         >
       </div>
     </div>
@@ -92,22 +88,44 @@ if (projectsStore?.changeStatus) {
                   />
                 </div>
                 <div class="row" v-else-if="activeTab === 'favorite'">
-                  <ProjectCompProjectCard
-                    v-for="(
-                      project, index
-                    ) in projectsStore?.allFavoriteProjects"
-                    :key="index"
-                    :project="project"
-                    class="mb-10"
-                  />
+                  <div v-if="projectsStore?.allFavoriteProjects.length > 0">
+                    <ProjectCompProjectCard
+                      v-for="(
+                        project, index
+                      ) in projectsStore?.allFavoriteProjects"
+                      :key="index"
+                      :project="project"
+                      class="mb-10"
+                    />
+                  </div>
+                  <div
+                    v-else
+                    class="d-flex justify-content-center algin-items-center"
+                    style="height: 385px"
+                  >
+                    <p class="d-flex align-items-center fs-1 text-muted">
+                      No Favorite Projects
+                    </p>
+                  </div>
                 </div>
                 <div class="row" v-else-if="activeTab === 'myProjects'">
-                  <ProjectCompProjectCard
-                    v-for="(project, index) in projectsStore?.allProjects"
-                    :key="index"
-                    :project="project"
-                    class="mb-10"
-                  />
+                  <div v-if="projectsStore?.allProjects.length > 0">
+                    <ProjectCompProjectCard
+                      v-for="(project, index) in projectsStore?.allProjects"
+                      :key="index"
+                      :project="project"
+                      class="mb-10"
+                    />
+                  </div>
+                  <div
+                    v-else
+                    class="d-flex justify-content-center algin-items-center"
+                    style="height: 385px"
+                  >
+                    <p class="d-flex align-items-center fs-1 text-muted">
+                      No Have any Projects
+                    </p>
+                  </div>
                 </div>
               </div>
               <div v-else class="d-flex flex-center flex-column">

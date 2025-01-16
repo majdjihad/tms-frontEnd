@@ -33,9 +33,10 @@ onBeforeMount(async () => {
     data.countOfRequest = response.data.countOfRequest;
     inProgress.value = false;
   } catch (error) {
-    console.log("error");
-    navigateTo("/login", { replace: true });
     showToast("error", error.data.message);
+    setTimeout(() => {
+      navigateTo("/login", { replace: true });
+    },2000)
     inProgress.value = false;
   }
 });

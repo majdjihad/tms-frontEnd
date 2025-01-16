@@ -8,7 +8,9 @@
 .landing-hero-bg {
     background-color: #13263c;
 }
-
+img {
+    -webkit-user-drag: none;
+}
 .gradient-text {
     background: linear-gradient(to right, #12ce5d 0%, #ffd80c 100%);
     -webkit-background-clip: text;
@@ -271,9 +273,21 @@ tbody tr:hover {
   .menu-transition-leave-to {
     opacity: 0;
     top: 50px;
-  }  
+  }
+  /* issue description editor  */
+  .p-editor .p-editor-toolbar {
+    background-color: white !important;
+    color: black;
+  }
+  .ql-snow .ql-picker {
+    color: black;
+  }
+  .p-editor .p-editor-content .ql-editor {
+    background-color: white !important;
+    color: black !important;
+  }
+    
 /* Media Query */
-
 @media (max-width: 868px) {
     .custom-table-style {
         overflow-x: scroll;

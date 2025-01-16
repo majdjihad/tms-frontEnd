@@ -1,8 +1,11 @@
 import { defineStore } from "pinia";
 import { useProjects } from "~/composables/useProjects";
 import { useMember } from "~/composables/useMember";
+import { useUser } from "~/composables/useAuth";
+
 export const useProjectsStore = defineStore("useProjects", () => {
   // decler all projects variables
+  const user = useUser();
   const allProjects = ref(null);
   const allFavoriteProjects = ref(null);
   const allInviteProjects = ref(null);
@@ -25,7 +28,7 @@ export const useProjectsStore = defineStore("useProjects", () => {
       changeStatus.value = false;
     } catch (error) {
       console.log(error);
-      return navigateTo(``, { replace: true });
+      return navigateTo(`/`, { replace: true });
     }
   }
   // get roles of project
@@ -48,7 +51,9 @@ export const useProjectsStore = defineStore("useProjects", () => {
       console.log(error);
       return navigateTo(`/projects`, { replace: true });
     }
-    getRoleOfProject(projectId);
+    if (user.value.id === project.value.user_id) {
+      getRoleOfProject(projectId);
+    }
   }
 
   return {

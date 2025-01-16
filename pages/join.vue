@@ -76,7 +76,6 @@ const formHandle = async () => {
         });
       },
       onError: (error) => {
-        console.log("error");
         showToast("error", error.data.message);
         if (error?.data?.code === 400) {
           return navigateTo("/login", { replace: true });

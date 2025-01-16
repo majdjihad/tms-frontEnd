@@ -198,7 +198,6 @@ const handelCreateIssue = async () => {
 // handle move issue
 const handleMoveIssue = async (e) => {
   if (e.added) {
-    console.log(props.status);
     await moveIssueForStatus(
       projectsStore?.project?.project_identify,
       e?.added?.element.id,
@@ -208,7 +207,6 @@ const handleMoveIssue = async (e) => {
       }
     );
   } else if (!e.removed) {
-    console.log(props.status);
     await moveIssueForStatus(
       projectsStore?.project?.project_identify,
       e?.moved?.element.id,
@@ -298,10 +296,7 @@ const handleMoveIssue = async (e) => {
         </Draggable>
       </div>
       <div v-if="createIssueProgress" class="disabled">
-        <BoardCompIssueCard
-          :issue="newIssueData"
-          :createIssueProgress="true"
-        />
+        <BoardCompIssueCard :issue="newIssueData" :createIssueProgress="true" />
       </div>
       <div
         @click.stop
@@ -473,10 +468,7 @@ const handleMoveIssue = async (e) => {
         </p>
       </div>
       <div v-if="createIssueProgress" class="disabled">
-        <BoardCompIssueCard
-          :issue="newIssueData"
-          :createIssueProgress="true"
-        />
+        <BoardCompIssueCard :issue="newIssueData" :createIssueProgress="true" />
       </div>
       <div
         @click.stop
@@ -510,5 +502,8 @@ const handleMoveIssue = async (e) => {
 }
 .editStatus:hover {
   background: var(--bs-gray-300);
+}
+.status-head {
+  cursor: grab;
 }
 </style>

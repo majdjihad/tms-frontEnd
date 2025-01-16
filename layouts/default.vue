@@ -19,8 +19,11 @@ const diableProjectHeadList = [
 <template>
   <div>
     <MainHeader />
-    <ProjectCompProjectHead v-if="!diableProjectHeadList.includes(route.name)" />
+    <ProjectCompProjectHead
+      v-if="!diableProjectHeadList.includes(route.name)"
+    />
     <slot />
-    
+    <!--begin::Footer Section-->
+    <!-- end::Footer Section -->
   </div>
 </template>

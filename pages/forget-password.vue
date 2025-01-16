@@ -60,7 +60,6 @@ const {
     showToast("error", error.data.message);
   },
 });
-
 </script>
 
 <template>
@@ -68,18 +67,19 @@ const {
     <div class="vh-100 d-flex flex-column flex-root" id="kt_app_root">
       <div class="d-flex flex-column flex-lg-row flex-column-fluid">
         <!-- Left column: Form section -->
-        <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
+        <div
+          class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1"
+        >
           <!-- Form content wrapper -->
           <div class="d-flex flex-center flex-column flex-lg-row-fluid">
             <!-- Form container with logo and inputs -->
             <div class="w-500px p-10 text-center">
               <nuxt-link to="/">
                 <img
-                alt="TaskSwift Logo"
-                src="~/assets/media/logos/logo-dark.png"
-                class="h-70px mb-12"
-              />
-
+                  alt="TaskSwift Logo"
+                  src="~/assets/media/logos/logo-dark.png"
+                  class="h-70px mb-12"
+                />
               </nuxt-link>
               <!-- Password reset form -->
               <form class="form w-100" @submit.prevent="formHandle">
@@ -119,14 +119,14 @@ const {
                   </button>
                 </div>
                 <div class="text-gray-500 text-center fw-semibold fs-6">
-                  Already have an account?
+                  I have an account?
                   <nuxt-link to="/login" class="link-primary">Log In</nuxt-link>
                 </div>
               </form>
             </div>
           </div>
         </div>
-        
+
         <!-- Right column: Decorative section with background image -->
         <div
           class="bg d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 h-1"
@@ -136,7 +136,7 @@ const {
           >
             <img
               class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
-              src="~/assets/media/illustrations/misc/join.png"
+              src="~/assets/media/illustrations/misc/forget-password.png"
               alt="join photo"
             />
             <h1
@@ -145,10 +145,11 @@ const {
               Forget password
             </h1>
             <div class="d-none d-lg-block text-white fs-base text-center w-75">
-              Join our community of achievers at TaskSwift! Discover a smarter way
-              to manage tasks, enhance productivity, and collaborate seamlessly.
-              Whether you're a professional or student, together we'll conquer
-              goals and stay organized. Join now for a more efficient tomorrow.
+              Join our community of achievers at TaskSwift! Discover a smarter
+              way to manage tasks, enhance productivity, and collaborate
+              seamlessly. Whether you're a professional or student, together
+              we'll conquer goals and stay organized. Join now for a more
+              efficient tomorrow.
             </div>
           </div>
         </div>
@@ -159,5 +160,6 @@ const {
 
 <style scoped>
 .bg {
-  background-image: url(~/assets/media/misc/auth-bg.png)
-}</style>
+  background-image: url(~/assets/media/misc/auth-bg.png);
+}
+</style>
