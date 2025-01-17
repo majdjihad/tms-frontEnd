@@ -10,18 +10,6 @@ const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
 const { editIssue, createLabel, createIssue, addComment } = useBacklog();
 
-// watch(
-//   () => backlogStore?.issueInfoArray,
-//   () => {
-//     if (!backlogStore?.issueInfoArray) {
-//       historyComponent.value = false;
-//       commentComponent.value = true;
-//     }
-//     const inputLabels = useTemplateRef("labels");
-//     new Tagify(inputLabels);
-//   }
-// );
-
 // define action descriptionAction menu
 const descriptionActionMenuOpen = ref(false);
 const descriptionItems = ref([
@@ -34,13 +22,6 @@ const descriptionItems = ref([
   },
 ]);
 
-// define toggle action descriptionAction menu
-const descriptionActionToggle = () => {
-  descriptionActionMenuOpen.value = !descriptionActionMenuOpen.value;
-};
-const descriptionActionMenuClose = () => {
-  descriptionActionMenuOpen.value = false;
-};
 // Define description function
 const openDescription = ref(false);
 const descriptionIssueLoader = ref(false);
@@ -50,28 +31,10 @@ const assigneeMenuOpen = ref(false);
 const assigneeMenuLoading = ref(false);
 const editAssigneeMenuLoading = ref(false);
 
-const assigneeMenuToggle = () => {
-  assigneeMenuOpen.value = !assigneeMenuOpen.value;
-};
-
-//define close assignee menu
-const assigneeMenuClose = () => {
-  assigneeMenuOpen.value = false;
-};
-
 // status menu functionality
 const statusMenuOpen = ref(false);
 const statusMenuLoading = ref(false);
 const editStatusMenuLoading = ref(false);
-
-const statusMenuToggle = async () => {
-  statusMenuOpen.value = !statusMenuOpen.value;
-};
-
-//define close assignee menu
-const statusMenuClose = () => {
-  statusMenuOpen.value = false;
-};
 
 // Define function handle change statuses or assignee issues
 const changeIssue = async (actionId) => {
@@ -111,8 +74,8 @@ const changeIssue = async (actionId) => {
       editEstimateTimeLoading.value = true;
     }
   }
-  assigneeMenuClose();
-  statusMenuClose();
+  assigneeMenuOpen.value = false
+  statusMenuOpen.value = false;
   try {
     await editIssue(
       projectsStore?.project?.project_identify,
@@ -148,52 +111,6 @@ let hourTime = ref(backlogStore?.issueInfoArray?.estimated_at[1]);
 let minuteTime = ref(backlogStore?.issueInfoArray?.estimated_at[2]);
 let openEstimateTime = ref(false);
 let editEstimateTimeLoading = ref(false);
-
-// Define label Names function
-// let labelNames = ref([]);
-// let openAddLabels = ref(false);
-// let editLabelsLoading = ref(false);
-
-// function onChange(e) {
-//   // outputs a String
-//   const labelsNum = ref(JSON.parse(e.target.tagifyValue).length);
-//   if (
-//     !labelNames?.value?.includes(
-//       `${
-//         JSON.parse(e.target.tagifyValue)[labelsNum.value - 1].value
-//       }`.toLowerCase()
-//     )
-//   ) {
-//     labelNames.value?.push(
-//       `${
-//         JSON.parse(e.target.tagifyValue)[labelsNum.value - 1].value
-//       }`.toLowerCase()
-//     );
-//   }
-// }
-
-// const createNewLabel = async () => {
-//   editLabelsLoading.value = true;
-//   try {
-//     const response = await createLabel(
-//       projectsStore?.project?.project_identify,
-//       backlogStore?.issueInfoArray?.id,
-//       { label: `${labelNames.value}` }
-//     );
-//     await backlogStore?.getBacklogProject(
-//       projectsStore?.project?.project_identify
-//     );
-//     await backlogStore?.getIssueInfo(
-//       projectsStore?.project?.project_identify,
-//       backlogStore?.issueInfoArray?.id
-//     );
-//     showToast("success", response?.message);
-//   } catch (error) {
-//     showToast("error", error?.data?.message);
-//   }
-//   editLabelsLoading.value = false;
-//   openAddLabels.value = false;
-// };
 
 // define time type variables
 const relativeTimeStatus = ref(true);
@@ -258,18 +175,10 @@ const createSubIssue = async () => {
   createIssueInput.value = "";
   createSubIssueLoading.value = false;
 };
-const closeCreateSubIssueInput = () => (openCreateSubIssueInput.value = false);
 const openTypeIssueMenu = ref(false);
 
-const typeIssueMenuToggle = () => {
-  openTypeIssueMenu.value = !openTypeIssueMenu.value;
-};
-
-const closeTypeIssueMenu = () => {
-  openTypeIssueMenu.value = false;
-};
 const changeTypeSubIssue = (type) => {
-  closeTypeIssueMenu();
+  openTypeIssueMenu.value = false;
   defaultTypeIssue.value = type;
 };
 // define add comment function
@@ -277,9 +186,7 @@ const commentComponent = ref(true);
 const openAddComment = ref(false);
 const newComment = ref(null);
 const openAddCommentLoader = ref(false);
-const toggleOpenAddComment = () => {
-  openAddComment.value = !openAddComment.value;
-};
+
 const addCommentHandle = async () => {
   openAddCommentLoader.value = true;
   try {
@@ -315,6 +222,30 @@ const getIssueHistory = async () => {
     );
   }
 };
+// Define issue type function
+const openIssueTypeMenu = ref(false);
+const IssueTypeLoading = ref(false);
+const editIssueTypeLoading = ref(false);
+const typeIssueArray = ref(["task", "story", "bug"]);
+
+const changeTypeIssue = async (actionId) => {
+  openIssueTypeMenu.value = false;
+  editIssueTypeLoading.value = true;
+  try {
+    await editIssue(
+      projectsStore?.project?.project_identify,
+      backlogStore?.issueInfoArray?.id,
+      actionId
+    );
+    await backlogStore?.getBacklogProject(
+      projectsStore?.project?.project_identify
+    );
+  } catch (error) {
+    showToast(error?.data?.message);
+  }
+  editIssueTypeLoading.value = false;
+};
+
 // define background color by user id
 const getColor = (index) => {
   const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
@@ -361,17 +292,30 @@ watch(
             <div class="position-relative">
               <div class="py-1 px-3 fw-bold fs-3 text-nowrap">
                 <div class="fw-semibold p-1">
-                  <span v-if="backlogStore?.issueInfoArray?.sprint?.name">{{
-                    backlogStore?.issueInfoArray?.sprint?.name
-                  }}</span>
-                  <span v-else>Backlog</span>
+                  <span
+                    v-if="backlogStore?.issueInfoArray?.sprint?.name"
+                    class="fw-normal"
+                    >{{ backlogStore?.issueInfoArray?.sprint?.name }}</span
+                  >
+                  <span v-else class="fw-normal">Backlog</span>
                 </div>
               </div>
             </div>
             <span class="fs-1 fw-semibold">/</span>
             <div class="position-relative">
-              <div class="py-1 px-3 fs-3 text-nowrap">
-                <div class="fw-semibold p-1">
+              <div v-if="editIssueTypeLoading">
+                <Icon
+                  name="svg-spinners:180-ring-with-bg"
+                  class="p-2 mx-4"
+                  size="30"
+                />
+              </div>
+              <div v-else class="py-1 px-3 fs-3 fw-normal">
+                <div
+                  class="btn btn-sm btn-outline-secondary p-1 fs-4"
+                  v-click-outside="() => (openIssueTypeMenu = false)"
+                  @click="openIssueTypeMenu = !openIssueTypeMenu"
+                >
                   <img
                     v-if="backlogStore?.issueInfoArray?.type === 'task'"
                     alt="task"
@@ -387,8 +331,78 @@ watch(
                     alt="bug"
                     src="~/assets/media/issue/type/bug.svg"
                   />
-                  {{ backlogStore?.issueInfoArray?.type }}
+                  <span class="ms-1 fw-normal">{{
+                    backlogStore?.issueInfoArray?.type
+                  }}</span>
+                  <Icon
+                    v-if="openIssueTypeMenu"
+                    name="ic:outline-keyboard-arrow-up"
+                    size="25"
+                    class="m-0"
+                  />
+                  <Icon
+                    v-else
+                    name="ic:outline-keyboard-arrow-down"
+                    size="25"
+                    class="m-0"
+                  />
                 </div>
+                <Transition name="statusesMenu">
+                  <div
+                    v-if="openIssueTypeMenu"
+                    class="statusesMenuWrapper position-absolute bg-white border border-1 rounded-1 overflow-y-auto z-1"
+                    style="
+                      min-width: 110px !important;
+                      width: max-content !important;
+                      right: 0;
+                    "
+                  >
+                    <div v-if="IssueTypeLoading" class="text-center">
+                      <Icon
+                        name="svg-spinners:180-ring-with-bg"
+                        class="p-2"
+                        size="30"
+                      />
+                    </div>
+                    <ul
+                      v-else
+                      class="list-group list-group-flush"
+                    >
+                      <li
+                      v-for="(type, index) in typeIssueArray.filter((t) => (backlogStore?.issueInfoArray?.type !== t))"
+                        class="list-group-item list-group-item-action ps-1 cursor-pointer"
+                        :key="index"
+                      >
+                        <div
+                          class="fs-7 d-flex justify-content-start"
+                          style="max-width: 150px"
+                          @click="changeTypeIssue({ type: type })"
+                        >
+                          <img
+                            v-if="type === 'task'"
+                            class="py-1 px-1 rounded-1 me-1"
+                            alt="task"
+                            src="~/assets/media/issue/type/task.svg"
+                          />
+                          <img
+                            v-else-if="type === 'story'"
+                            class="py-1 px-1 rounded-1 me-1"
+                            alt="story"
+                            src="~/assets/media/issue/type/story.svg"
+                          />
+                          <img
+                            v-if="type === 'bug'"
+                            class="py-1 px-1 rounded-1 me-1"
+                            alt="bug"
+                            src="~/assets/media/issue/type/bug.svg"
+                          />
+                          <span class="fs-5">{{ type }}</span>
+                        </div>
+
+                      </li>
+                    </ul>
+                  </div>
+                </Transition>
               </div>
             </div>
           </div>
@@ -427,8 +441,8 @@ watch(
                   class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
                 >
                   <div
-                    v-click-outside="descriptionActionMenuClose"
-                    @click="descriptionActionToggle"
+                    v-click-outside="() => (descriptionActionMenuOpen = false)"
+                    @click="descriptionActionMenuOpen = !descriptionActionMenuOpen"
                     class="btn btn-light p-1 rounded d-flex justify-content-center align-items-center overflow-hidden"
                   >
                     <i
@@ -476,7 +490,7 @@ watch(
                   </p>
                   <p
                     @click="openDescription = false"
-                    class="btn btn-sm btn-light-danger mx-2"
+                    class="btn btn-sm btn-light mx-2"
                   >
                     cansel
                   </p>
@@ -515,8 +529,8 @@ watch(
                   <div
                     v-else
                     class="fw-bold fs-8 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
-                    v-click-outside="assigneeMenuClose"
-                    @click="assigneeMenuToggle"
+                    v-click-outside="() => (assigneeMenuOpen = false)"
+                    @click="assigneeMenuOpen = !assigneeMenuOpen"
                   >
                     <div
                       class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2"
@@ -690,8 +704,8 @@ watch(
                   <div
                     v-else
                     class="fw-bold fs-9 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
-                    v-click-outside="statusMenuClose"
-                    @click="statusMenuToggle"
+                    v-click-outside="() =>(statusMenuOpen = false)"
+                    @click="statusMenuOpen = !statusMenuOpen"
                   >
                     <div
                       class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2"
@@ -756,10 +770,10 @@ watch(
                   <div
                     v-if="!openEstimateTime"
                     class="p-4 d-flex justify-content-start align-items-center border border-1 rounded-1"
+                    @click="openEstimateTime = !openEstimateTime"
                   >
                     <div
                       class="d-flex align-items-center gap-2"
-                      @click="openEstimateTime = !openEstimateTime"
                     >
                       <span class="badge fs-7 badge-light-dark"
                         >{{
@@ -843,7 +857,7 @@ watch(
                       </button>
                       <p
                         @click="openEstimateTime = false"
-                        class="btn btn-sm btn-light-danger mx-1"
+                        class="btn btn-sm btn-light mx-1"
                       >
                         cansel
                       </p>
@@ -851,52 +865,6 @@ watch(
                   </form>
                 </div>
               </div>
-              <!-- <div
-                class="d-flex justify-content-between align-items-center p-3"
-              >
-                <p class="fs-6 fw-semibold">Labels</p>
-                <div class="position-relative w-350px createIssueWrapper">
-                  <div
-                    class="d-flex justify-content-start align-items-center"
-                    @click="openAddLabels = true"
-                  >
-                    <input
-                      class="form-control form-control-solid"
-                      :value="backlogStore?.issueInfoArray?.labelNames"
-                      id="kt_tagify_1"
-                      ref="label"
-                      placeholder="Enter labels"
-                      type="text"
-                      @change="onChange"
-                      autocomplete="off"
-                    />
-                  </div>
-                  <div
-                    v-if="openAddLabels"
-                    class="d-flex justify-content-end mt-3"
-                  >
-                    <button
-                      :disabled="editLabelsLoading"
-                      @click="createNewLabel"
-                      class="btn btn-sm btn-light-success mx-2"
-                    >
-                      <span v-if="!editLabelsLoading">save</span>
-                      <Icon
-                        v-else
-                        name="svg-spinners:180-ring-with-bg"
-                        class="p-2"
-                        size="30"
-                      />
-                    </button>
-                    <p
-                      @click="openAddLabels = false"
-                      class="btn btn-sm btn-light-danger"
-                    >
-                      cansel
-                    </p>
-                  </div>
-                </div>
-              </div> -->
               <div
                 class="d-flex justify-content-between align-items-center p-3"
               >
@@ -999,7 +967,7 @@ watch(
               >
                 <div
                   v-if="openCreateSubIssueInput"
-                  v-click-outside="closeCreateSubIssueInput"
+                  v-click-outside="() => (openCreateSubIssueInput = false)"
                   class="d-flex align-items-center px-5 py-2"
                 >
                   <div class="position-relative">
@@ -1007,8 +975,8 @@ watch(
                       class="py-1 px-3 rounded-1 fs-8 text-uppercase text-nowrap"
                     >
                       <div
-                        v-click-outside="closeTypeIssueMenu"
-                        @click="typeIssueMenuToggle"
+                        v-click-outside="() => (openTypeIssueMenu = false)"
+                        @click="openTypeIssueMenu = !openTypeIssueMenu"
                       >
                         <img
                           v-if="defaultTypeIssue === 'task'"
@@ -1181,10 +1149,10 @@ watch(
                 <div class="col-11 ps-0">
                   <p
                     v-if="!openAddComment"
-                    @click="toggleOpenAddComment"
+                    @click="openAddComment = !openAddComment"
                     class="p-3 fs-5 fw-normal text-gray-400 hover-bg-light cursor-pointer border border-2 rounded-1"
                   >
-                    add a comment...
+                    Add a comment...
                   </p>
                   <div class="card border-0" v-if="openAddComment">
                     <form @submit.prevent="addCommentHandle">
@@ -1208,7 +1176,7 @@ watch(
                         </button>
                         <p
                           @click="openAddComment = false"
-                          class="btn btn btn-sm btn-light-danger mx-1"
+                          class="btn btn btn-sm btn-light mx-1"
                         >
                           Cansel
                         </p>
