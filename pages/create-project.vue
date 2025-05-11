@@ -103,8 +103,8 @@ const {
   validationErrors: errors,
 } = useSubmit(() => createProject(projectData.value), {
   onSuccess: (response) => {
-    projectsStore.changeStatus = true;
     // Handle the response
+    projectsStore?.getAllProjects()
     showToast("success", response.message);
     return navigateTo("/projects", { replace: true });
   },

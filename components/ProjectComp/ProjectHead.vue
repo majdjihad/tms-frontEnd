@@ -175,7 +175,7 @@ const handleArchiveProject = () => {
                     class="menu-link"
                     :class="{ active: route.name === 'projects-id-board' }"
                   >
-                    <span class="menu-title">Boards</span>
+                    <span class="menu-title">Board</span>
                   </NuxtLink>
                 </div>
                 <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">

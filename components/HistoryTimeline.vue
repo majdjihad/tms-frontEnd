@@ -122,7 +122,7 @@ function getClass(action) {
 }
 .date {
   position: absolute;
-  left: -150px;
+  left: -180px;
   top: -4px;
   width: auto;
   display: flex;

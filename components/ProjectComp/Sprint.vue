@@ -655,7 +655,7 @@ const handleMoveIssue = async (e) => {
         </div>
       </div>
     </div>
-    <modalsEditSprint :sprint="sprint" />
+    <modalsEditSprint :sprint="props?.sprint" />
   </div>
 </template>
 

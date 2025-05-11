@@ -18,7 +18,7 @@ const getColor = (index) => {
     <!--begin::Details-->
     <div class="d-flex align-items-center">
       <!--begin::Avatar-->
-      <div class="symbol symbol-35px symbol-circle">
+      <div class="symbol symbol-circle symbol-30px overflow-hidden">
         <img
           v-if="member?.user?.photo"
           alt="Pic"
@@ -28,7 +28,9 @@ const getColor = (index) => {
           v-else
           class="symbol-label text-inverse-warning fw-bold"
           :style="{ backgroundColor: getColor(member?.user?.id) }"
-          >{{ member?.user?.name ? member?.user?.name[0] : "-" }}</span
+          >{{
+            member?.user?.name ? member?.user?.name[0].toUpperCase() : "-"
+          }}</span
         >
       </div>
       <!--end::Avatar-->

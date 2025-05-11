@@ -166,7 +166,7 @@ if (profileStore?.profileInfo?.user?.identify_number !== route?.params?.id) {
                             </div>
                           </div>
                           <div
-                            v-if="!profileStore?.profileInfo?.user?.created_at"
+                            v-if="profileStore?.profileInfo?.user?.created_at"
                             class="mt-3"
                           >
                             <span

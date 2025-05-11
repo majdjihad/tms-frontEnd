@@ -41,8 +41,8 @@ if (projectsStore?.changeStatus) {
                     data-bs-toggle="modal"
                     data-bs-target="#kt_modal_invite_friends"
                   >
-                    <Icon name="mdi:account-multiple-plus-outline" size="20" />
-                    <span>Invite</span>
+                  <Icon name="mdi:account-multiple-plus-outline" size="20" />
+                  <span>Invite</span>
                   </button>
                 </div>
               </div>

@@ -8,7 +8,50 @@ import { showToast } from "~/composables/useToast";
 
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
-const { editIssue, createLabel, createIssue, addComment } = useBacklog();
+const { editIssue, createIssue, addComment } = useBacklog();
+
+// Define issue type function
+const openIssueTypeMenu = ref(false);
+const IssueTypeLoading = ref(false);
+const editIssueTypeLoading = ref(false);
+const typeIssueArray = ref(["task", "story", "bug"]);
+
+const changeTypeIssue = async (actionId) => {
+  historyComponent.value = false;
+  commentComponent.value = true;
+  openIssueTypeMenu.value = false;
+  editIssueTypeLoading.value = true;
+  try {
+    await editIssue(
+      projectsStore?.project?.project_identify,
+      backlogStore?.issueInfoArray?.id,
+      actionId
+    );
+      backlogStore.issueInfoArray.type = actionId.type;
+    await backlogStore?.getBacklogProject(
+      projectsStore?.project?.project_identify
+    );
+  } catch (error) {
+    showToast(error?.data?.message);
+  }
+  editIssueTypeLoading.value = false;
+
+};
+
+// define background color by user id
+const getColor = (index) => {
+  const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
+  const colorIndex = index % colorList.length;
+  return `#${colorList[colorIndex]}`;
+};
+
+// Define toggle arrow function
+const arrowIcon = ref("ep:arrow-up-bold");
+const toggleArrowDetalis = () => {
+  arrowIcon.value === "ep:arrow-up-bold"
+    ? (arrowIcon.value = "ep:arrow-down-bold")
+    : (arrowIcon.value = "ep:arrow-up-bold");
+};
 
 // define action descriptionAction menu
 const descriptionActionMenuOpen = ref(false);
@@ -74,7 +117,7 @@ const changeIssue = async (actionId) => {
       editEstimateTimeLoading.value = true;
     }
   }
-  assigneeMenuOpen.value = false
+  assigneeMenuOpen.value = false;
   statusMenuOpen.value = false;
   try {
     await editIssue(
@@ -178,6 +221,7 @@ const createSubIssue = async () => {
 const openTypeIssueMenu = ref(false);
 
 const changeTypeSubIssue = (type) => {
+  console.log("asd");
   openTypeIssueMenu.value = false;
   defaultTypeIssue.value = type;
 };
@@ -221,44 +265,6 @@ const getIssueHistory = async () => {
       1
     );
   }
-};
-// Define issue type function
-const openIssueTypeMenu = ref(false);
-const IssueTypeLoading = ref(false);
-const editIssueTypeLoading = ref(false);
-const typeIssueArray = ref(["task", "story", "bug"]);
-
-const changeTypeIssue = async (actionId) => {
-  openIssueTypeMenu.value = false;
-  editIssueTypeLoading.value = true;
-  try {
-    await editIssue(
-      projectsStore?.project?.project_identify,
-      backlogStore?.issueInfoArray?.id,
-      actionId
-    );
-    await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
-    );
-  } catch (error) {
-    showToast(error?.data?.message);
-  }
-  editIssueTypeLoading.value = false;
-};
-
-// define background color by user id
-const getColor = (index) => {
-  const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
-  const colorIndex = index % colorList.length;
-  return `#${colorList[colorIndex]}`;
-};
-
-// Define toggle arrow function
-const arrowIcon = ref("ep:arrow-up-bold");
-const toggleArrowDetalis = () => {
-  arrowIcon.value === "ep:arrow-up-bold"
-    ? (arrowIcon.value = "ep:arrow-down-bold")
-    : (arrowIcon.value = "ep:arrow-up-bold");
 };
 
 watch(
@@ -364,12 +370,11 @@ watch(
                         size="30"
                       />
                     </div>
-                    <ul
-                      v-else
-                      class="list-group list-group-flush"
-                    >
+                    <ul v-else class="list-group list-group-flush">
                       <li
-                      v-for="(type, index) in typeIssueArray.filter((t) => (backlogStore?.issueInfoArray?.type !== t))"
+                        v-for="(type, index) in typeIssueArray.filter(
+                          (t) => backlogStore?.issueInfoArray?.type !== t
+                        )"
                         class="list-group-item list-group-item-action ps-1 cursor-pointer"
                         :key="index"
                       >
@@ -398,7 +403,6 @@ watch(
                           />
                           <span class="fs-5">{{ type }}</span>
                         </div>
-
                       </li>
                     </ul>
                   </div>
@@ -442,7 +446,9 @@ watch(
                 >
                   <div
                     v-click-outside="() => (descriptionActionMenuOpen = false)"
-                    @click="descriptionActionMenuOpen = !descriptionActionMenuOpen"
+                    @click="
+                      descriptionActionMenuOpen = !descriptionActionMenuOpen
+                    "
                     class="btn btn-light p-1 rounded d-flex justify-content-center align-items-center overflow-hidden"
                   >
                     <i
@@ -704,7 +710,7 @@ watch(
                   <div
                     v-else
                     class="fw-bold fs-9 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
-                    v-click-outside="() =>(statusMenuOpen = false)"
+                    v-click-outside="() => (statusMenuOpen = false)"
                     @click="statusMenuOpen = !statusMenuOpen"
                   >
                     <div
@@ -772,9 +778,7 @@ watch(
                     class="p-4 d-flex justify-content-start align-items-center border border-1 rounded-1"
                     @click="openEstimateTime = !openEstimateTime"
                   >
-                    <div
-                      class="d-flex align-items-center gap-2"
-                    >
+                    <div class="d-flex align-items-center gap-2">
                       <span class="badge fs-7 badge-light-dark"
                         >{{
                           backlogStore?.issueInfoArray?.estimated_at[0]
@@ -886,7 +890,7 @@ watch(
                       />
                       <span
                         v-else
-                        class="symbol-label text-light fs-1 w-30px h-30px rounded-circle"
+                        class="symbol-label text-inverse-warning fs-2"
                         :style="{
                           backgroundColor: getColor(
                             backlogStore?.issueInfoArray?.user?.id
@@ -899,7 +903,7 @@ watch(
                         }}</span
                       >
                     </div>
-                    <span class="ms-3 fs-4 text-capitalize">{{
+                    <span class="ms-2 fs-6 text-capitalize fw-normal">{{
                       backlogStore?.issueInfoArray?.user?.name
                     }}</span>
                   </div>

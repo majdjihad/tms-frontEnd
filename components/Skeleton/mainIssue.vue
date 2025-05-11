@@ -18,10 +18,10 @@
           </div>
           <div class="description">
             <p class="skeleton rounded-1 w-70px h-20px my-6"></p>
-            <p class="skeleton rounded-1 m-4 w-90 h-40px"></p>
+            <p class="skeleton rounded-1 my-4 py-4 w-90 h-40px"></p>
           </div>
           <div class="mt-6 position-relative">
-            <div class="d-flex justify-content-between align-items-center p-4">
+            <div class="d-flex justify-content-between align-items-center py-4">
               <p class="skeleton w-70px rounded-1 h-20px m-0"></p>
             </div>
             <div class="p-0 pb-6">
@@ -108,7 +108,6 @@
 </template>
 
 <script setup>
-
 </script>
 
 <style lang="scss" scoped>

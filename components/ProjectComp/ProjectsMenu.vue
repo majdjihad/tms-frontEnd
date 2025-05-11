@@ -12,17 +12,17 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
     <div
       v-if="isProjectMenu"
       class="bg-light rounded-2 shadow position-absolute p-0 w-300px projects-menu"
-      style="z-index: 1000 !important"
+      style="z-index: 99 !important"
     >
       <div class="menu-state-bg overflow-hidden">
         <div class="row">
-          <div class="p-3">
+          <div>
             <div>
               <div
                 v-if="projectsStore?.changeStatus"
                 class="menu-item p-0 mb-3"
               >
-                <div class="menu-link">
+                <div class="menu-link pb-0">
                   <div
                     class="d-flex flex-center rounded w-40px h-40px me-3 overflow-hidden rounded-1"
                   >
@@ -47,7 +47,7 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
                   projectsStore?.allProjects?.length ||
                   projectsStore?.allInviteProjects?.length
                 "
-                class="mb-3"
+                class="mt-3"
                 style="max-height: 190px"
               >
                 <div
@@ -56,7 +56,8 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
                   class="menu-item p-0 mb-3"
                 >
                   <NuxtLink
-                    :to="`/projects/${project?.project_identify}/backlog`"
+                    v-if="index < 3"
+                    :to="`/projects/${project?.project_identify}/board`"
                     class="menu-link"
                   >
                     <span
@@ -99,10 +100,13 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
                   :key="index"
                   class="menu-item p-0 mb-3"
                 >
-                  <NuxtLink :to="`/projects/${project?.project_identify}/backlog`" class="menu-link">
+                  <NuxtLink
+                    :to="`/projects/${project?.project_identify}/backlog`"
+                    class="menu-link"
+                  >
                     <span
                       class="d-flex flex-center rounded w-40px h-40px me-3 overflow-hidden rounded-1"
-                    >                    
+                    >
                       <img
                         src="~/assets/media/avatars/project.png"
                         class="w-100 d-block"
@@ -149,11 +153,12 @@ projectsStore?.changeStatus ? projectsStore?.getAllProjects() : false;
                 </div>
               </div>
             </div>
-            <div class="separator separator-dashed my-3"></div>
+            <div class="separator separator-dashed my-0"></div>
             <NuxtLink
               v-if="projectsStore.allProjects !== null"
               to="/projects"
-              class="links d-flex flex-stack flex-wrap flex-lg-nowrap px-5 py-3 text-gray-800 rounded-1"
+              class="links d-flex flex-stack flex-wrap flex-lg-wrap px-5 py-3 text-gray-800 rounded-1"
+              style="z-index: 100 !important"
             >
               View All Projects
             </NuxtLink>
