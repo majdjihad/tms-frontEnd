@@ -9,7 +9,7 @@ const createIssueInput = ref("");
 const backlogStore = useBacklogStore();
 const { createIssue } = useBacklog();
 const projectsStore = useProjectsStore();
-
+const route = useRoute();
 const closeBtn = ref(false);
 
 const errorMsg = reactive({
@@ -33,12 +33,12 @@ const createIssueToBacklog = () => {
 };
 
 const { submit, inProgress } = useSubmit(
-  () => createIssue(projectsStore?.project?.project_identify, data),
+  () => createIssue(route.params.id, data),
   {
     onSuccess: async (response) => {
       // Handle the response
       await backlogStore?.getBacklogProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
       showToast("success", response.message);
       if (closeBtn.value) {

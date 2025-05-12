@@ -43,6 +43,7 @@ export const useProjectsStore = defineStore("useProjects", () => {
   }
   // get project details
   async function getProject(projectId) {
+    project.value = null;
     const { detailsProject } = useProjects();
     try {
       const response = await detailsProject(projectId);

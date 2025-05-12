@@ -20,9 +20,7 @@ const route = useRoute();
 const projectId = ref(route?.params?.id);
 // before render page
 onMounted(() => {
-  if (backlogStore?.backlogProject === null) {
     backlogStore?.getBacklogProject(projectId.value);
-  }
 });
 
 const { createStatus, moveStatus } = useBacklog();
@@ -68,7 +66,7 @@ const { submit, inProgress } = useSubmit(
   async () => {
     createStatusInput.value = null;
     return await createStatus(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       newStatusdata
     );
   },
@@ -77,7 +75,7 @@ const { submit, inProgress } = useSubmit(
       // Handle the response
       createStatusProgress.value = true;
       await backlogStore?.getBacklogProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
       createStatusProgress.value = false;
     },
@@ -91,7 +89,7 @@ const { submit, inProgress } = useSubmit(
 const handleMoveStatus = async (e) => {
   if (e.added) {
     await moveStatus(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       e?.added?.element.id,
       {
         sprint_id: null,
@@ -100,7 +98,7 @@ const handleMoveStatus = async (e) => {
     );
   } else if (!e.removed) {
     await moveStatus(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       e?.moved?.element.id,
       {
         order: e?.moved?.newIndex + 1,

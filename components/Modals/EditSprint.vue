@@ -6,6 +6,7 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import { useBacklog } from "~/composables/useBacklog";
 import { showToast } from "~/composables/useToast";
 
+const route = useRoute();
 const props = defineProps(["sprint"]);
 const projectsStore = useProjectsStore();
 const { editSprint } = useBacklog();
@@ -22,7 +23,7 @@ const defaultDuration = reactive({
 });
 const data = reactive({
   id: props?.sprint?.id,
-  project_id: projectsStore?.project?.project_identify,
+  project_id: route.params.id,
   name: props?.sprint?.name,
   duration: defaultDuration.value,
   start_date: moment(props?.sprint?.created_at).format("YYYY-MM-DD HH:mm:ss"),
@@ -56,7 +57,7 @@ function handleEditSprint() {
 const { submit, inProgress } = useSubmit(
   () =>
     editSprint(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.sprint?.id,
       data
     ),

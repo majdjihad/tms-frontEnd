@@ -6,6 +6,7 @@ import { showToast } from "~/composables/useToast";
 
 const projectsStore = useProjectsStore();
 const { editProject } = useProjects();
+const route = useRoute();
 
 let projectData = null;
 const errorMsg = reactive({
@@ -51,14 +52,14 @@ const {
   inProgress,
   validationErrors: errors,
 } = useSubmit(
-  () => editProject(projectsStore?.project?.project_identify, projectData),
+  () => editProject(route.params.id, projectData),
   {
     onSuccess: async (response) => {
       // Handle the response
       if (closeBtn.value) {
         closeBtn.value.click();
       }
-      await projectsStore?.getProject(projectsStore?.project?.project_identify);
+      await projectsStore?.getProject(route?.params?.id);
       projectsStore.changeStatus = true;
       showToast("success", response.message);
     },

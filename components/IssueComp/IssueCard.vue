@@ -11,7 +11,7 @@ const { moveIssue, deleteIssue, editIssue, editPriority } = useBacklog();
 const projectsStore = useProjectsStore();
 const backlogStore = useBacklogStore();
 const model = defineModel();
-
+const route = useRoute();
 // get issue description
 const getInfoIssue = async () => {
   if (
@@ -21,11 +21,11 @@ const getInfoIssue = async () => {
     backlogStore.issueInfoArray = null;
     backlogStore.issueCommentArray = null;
     await backlogStore?.getIssueInfo(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id
     );
     await backlogStore?.getIssueComments(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id
     );
   }
@@ -60,14 +60,14 @@ const handleDeleteIssue = () => {
 const { submit } = useSubmit(
   async () => {
     return await deleteIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id
     );
   },
   {
     onSuccess: async () => {
       await backlogStore?.getBacklogProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
     },
     onError: (error) => {
@@ -87,7 +87,7 @@ const statusesToggle = async () => {
     if (!backlogStore?.statusesArray && !statusesLoading.value) {
       statusesLoading.value = true;
       const response = await backlogStore?.getStatusProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
       backlogStore.statusesArray = await response?.statuses;
       statusesLoading.value = false;
@@ -127,12 +127,12 @@ const changeIssue = async (actionId) => {
     : false;
   try {
     await editIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id,
       actionId
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast(error?.data?.message);
@@ -173,7 +173,7 @@ const items = ref([
             label: "Top",
             command: async () => {
               await moveIssue(
-                projectsStore?.project?.project_identify,
+                route.params.id,
                 props?.issue?.id,
                 {
                   sprint_id: null,
@@ -182,7 +182,7 @@ const items = ref([
                 }
               );
               await backlogStore?.getBacklogProject(
-                projectsStore?.project?.project_identify
+                route.params.id
               );
             },
           },
@@ -190,7 +190,7 @@ const items = ref([
             label: "Bottom",
             command: async () => {
               await moveIssue(
-                projectsStore?.project?.project_identify,
+                route.params.id,
                 props?.issue?.id,
                 {
                   sprint_id: null,
@@ -199,7 +199,7 @@ const items = ref([
                 }
               );
               await backlogStore?.getBacklogProject(
-                projectsStore?.project?.project_identify
+                route.params.id
               );
             },
           },
@@ -209,7 +209,7 @@ const items = ref([
         label: sprint?.name,
         command: async () => {
           await moveIssue(
-            projectsStore?.project?.project_identify,
+            route.params.id,
             props?.issue?.id,
             {
               sprint_id: sprint?.id,
@@ -218,7 +218,7 @@ const items = ref([
             }
           );
           await backlogStore?.getBacklogProject(
-            projectsStore?.project?.project_identify
+            route.params.id
           );
         },
       })),
@@ -260,12 +260,12 @@ const changePriority = async (priorityObj) => {
   EditPriorityLoading.value = true;
   try {
     await editPriority(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id,
       priorityObj
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast(error?.data?.message);

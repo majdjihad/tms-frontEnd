@@ -8,6 +8,7 @@ import { showToast } from "~/composables/useToast";
 const user = useUser();
 const projectsStore = useProjectsStore();
 const { addMember } = useMember();
+const route = useRoute();
 const closeBtn = ref(null);
 const formData = reactive({
   user_id: "",
@@ -28,7 +29,7 @@ function formHandle() {
     : "";
   if (formData.email && formData.message) {
     formData.user_id = user.value.id;
-    formData.project_identify = projectsStore?.project?.project_identify;
+    formData.project_identify = route.params.id;
     submit();
   }
 }
@@ -39,7 +40,7 @@ const {
   validationErrors: errors,
 } = useSubmit(
   () => {
-    return addMember(projectsStore?.project?.project_identify, formData);
+    return addMember(route.params.id, formData);
   },
   {
     onSuccess: (response) => {

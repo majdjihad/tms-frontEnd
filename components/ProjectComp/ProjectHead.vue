@@ -11,23 +11,25 @@ const getColor = (index) => {
 const user = useUser();
 const route = useRoute();
 const projectsStore = useProjectsStore();
-const projectId = ref(route?.params?.id);
 const countMemberShow = ref(7);
-
-if (projectsStore?.project === null) {
-  projectsStore?.getProject(projectId.value);
-}
+  projectsStore.getProject(route.params.id);
+  watch(
+  () => route.params.id,
+  (newId) => {
+    projectsStore.getProject(newId); // استدعاء المشروع الجديد
+  }
+);
 const isMenuOpen = ref(false);
 
 const { archiveProject } = useProjects();
-const { submit, inProgress } = useSubmit(
+const { submit } = useSubmit(
   async () => {
-    return await archiveProject(projectsStore?.project?.project_identify);
+    return await archiveProject(route.params.id);
   },
   {
     onSuccess: async () => {
       await backlogStore?.getBacklogProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
     },
     onError: async (error) => {
@@ -171,7 +173,7 @@ const handleArchiveProject = () => {
               >
                 <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
                   <NuxtLink
-                    :to="`/projects/${projectsStore?.project?.project_identify}/board`"
+                    :to="`/projects/${route.params.id}/board`"
                     class="menu-link"
                     :class="{ active: route.name === 'projects-id-board' }"
                   >
@@ -180,7 +182,7 @@ const handleArchiveProject = () => {
                 </div>
                 <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
                   <NuxtLink
-                    :to="`/projects/${projectsStore?.project?.project_identify}/backlog`"
+                    :to="`/projects/${route.params.id}/backlog`"
                     class="menu-link"
                     :class="{ active: route.name === 'projects-id-backlog' }"
                   >
@@ -189,7 +191,7 @@ const handleArchiveProject = () => {
                 </div>
                 <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
                   <NuxtLink
-                    :to="`/projects/${projectsStore?.project?.project_identify}/team`"
+                    :to="`/projects/${route.params.id}/team`"
                     class="menu-link"
                     :class="{ active: route.name === 'projects-id-team' }"
                   >
@@ -198,7 +200,7 @@ const handleArchiveProject = () => {
                 </div>
                 <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
                   <NuxtLink
-                    :to="`/projects/${projectsStore?.project?.project_identify}/history`"
+                    :to="`/projects/${route.params.id}/history`"
                     class="menu-link"
                     :class="{ active: route.name === 'projects-id-history' }"
                   >

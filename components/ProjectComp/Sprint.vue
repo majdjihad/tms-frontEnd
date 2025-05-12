@@ -15,6 +15,7 @@ const projectsStore = useProjectsStore();
 const arrowIcon = ref("ep:arrow-up-bold");
 const createIssueInput = ref("");
 const createProgress = ref(false);
+const route = useRoute();
 const {
   deleteSprint,
   createIssue,
@@ -69,14 +70,14 @@ const {
 } = useSubmit(
   async () => {
     createIssueInput.value = null;
-    return await createIssue(projectsStore?.project?.project_identify, data);
+    return await createIssue(route.params.id, data);
   },
   {
     onSuccess: async (response) => {
       // Handle the response
       createProgress.value = true;
       await backlogStore?.getBacklogProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
       createProgress.value = false;
     },
@@ -176,7 +177,7 @@ const handleDeleteSprint = () => {
   const { submit } = useSubmit(
     async () => {
       return await deleteSprint(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         props?.sprint?.id,
         { issue_sprint_id: null }
       );
@@ -211,7 +212,7 @@ const handleMultipleDeleteIssue = () => {
   const { submit } = useSubmit(
     async () => {
       return await deleteMultipleIssues(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         { issues_id: selectedIssue.value }
       );
     },
@@ -266,7 +267,7 @@ const handleMultipleEditStatus = (keyParam, valueParam) => {
       const data = reactive({ issues_id: selectedIssue.value });
       data[keyParam] = valueParam;
       return await editMultipleIssue(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         data
       );
     },
@@ -308,17 +309,17 @@ const handleMoveIssue = async (e) => {
   if (e.added) {
     if (props.selectedIssue?.length) {
       if (props?.selectedIssue?.includes(e?.added?.element?.id)) {
-        await moveMultipleIssue(projectsStore?.project?.project_identify, {
+        await moveMultipleIssue(route.params.id, {
           issues_id: props.selectedIssue,
           sprint_id: props.sprint.id,
           order: e?.added?.newIndex + 1,
         });
         await backlogStore?.getBacklogProject(
-          projectsStore?.project?.project_identify
+          route.params.id
         );
       } else {
         await moveIssue(
-          projectsStore?.project?.project_identify,
+          route.params.id,
           e?.added?.element.id,
           {
             sprint_id: props.sprint.id,
@@ -328,7 +329,7 @@ const handleMoveIssue = async (e) => {
       }
     } else {
       await moveIssue(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         e?.added?.element.id,
         {
           sprint_id: props.sprint.id,
@@ -338,7 +339,7 @@ const handleMoveIssue = async (e) => {
     }
   } else if (!e.removed) {
     await moveIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       e?.moved?.element.id,
       {
         sprint_id: null,

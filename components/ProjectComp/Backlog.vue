@@ -9,6 +9,7 @@ import Draggable from "vuedraggable";
 const props = defineProps(["selectedIssue"]);
 const projectsStore = useProjectsStore();
 const backlogStore = useBacklogStore();
+const route = useRoute();
 const creating = ref(false);
 const arrowIcon = ref("ep:arrow-up-bold");
 const {
@@ -47,14 +48,14 @@ const createIssueToBacklog = async () => {
 const { submit, inProgress } = useSubmit(
   async () => {
     createIssueInput.value = null;
-    return await createIssue(projectsStore?.project?.project_identify, data);
+    return await createIssue(route.params.id, data);
   },
   {
     onSuccess: async (response) => {
       // Handle the response
       createProgress.value = true;
       await backlogStore?.getBacklogProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
       createProgress.value = false;
     },
@@ -78,7 +79,7 @@ const createSprintLoader = ref(false);
 const handleCreateSprint = async () => {
   createSprintLoader.value = true;
   try {
-    await createSprint(projectsStore?.project?.project_identify);
+    await createSprint(route.params.id);
     showToast("success", "success create sprint");
   } catch (error) {
     showToast("error", error?.data?.message);
@@ -142,7 +143,7 @@ const handleMultipleDeleteIssue = () => {
   const { submit } = useSubmit(
     async () => {
       return await deleteMultipleIssues(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         { issues_id: selectedIssue.value }
       );
     },
@@ -205,7 +206,7 @@ const handleMultipleEditIssue = (keyParam, valueParam) => {
       data[keyParam] = valueParam;
       data[keyParam] = valueParam;
       return await editMultipleIssue(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         data
       );
     },
@@ -232,17 +233,17 @@ const handleMoveIssue = async (e) => {
   if (e.added) {
     if (props.selectedIssue?.length) {
       if (props?.selectedIssue?.includes(e?.added?.element?.id)) {
-        await moveMultipleIssue(projectsStore?.project?.project_identify, {
+        await moveMultipleIssue(route.params.id, {
           issues_id: props.selectedIssue,
           sprint_id: null,
           order: e?.added?.newIndex + 1,
         });
         await backlogStore?.getBacklogProject(
-          projectsStore?.project?.project_identify
+          route.params.id
         );
       } else {
         await moveIssue(
-          projectsStore?.project?.project_identify,
+          route.params.id,
           e?.added?.element.id,
           {
             sprint_id: null,
@@ -252,7 +253,7 @@ const handleMoveIssue = async (e) => {
       }
     } else {
       await moveIssue(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         e?.added?.element.id,
         {
           sprint_id: null,
@@ -262,7 +263,7 @@ const handleMoveIssue = async (e) => {
     }
   } else if (!e.removed) {
     await moveIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       e?.moved?.element.id,
       {
         sprint_id: null,

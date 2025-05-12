@@ -9,7 +9,7 @@ const { createIssue, moveIssueForStatus, editStatus, deleteStatus } =
 const props = defineProps(["status", "createStatusProgress"]);
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
-
+const route = useRoute();
 // get issue by status
 const issuesByStatus = ref(
   backlogStore.allIssues.filter((issue) => issue.status.id === props.status.id)
@@ -77,12 +77,12 @@ const handleEditStatus = async () => {
   try {
     editStatusProgress.value = true;
     await editStatus(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.status?.id,
       dataNewStatus
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast("error", error.data.message);
@@ -115,7 +115,7 @@ const handleDeleteStatus = async () => {
 const { submit } = useSubmit(
   async () => {
     return await deleteStatus(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.status?.id,
       { issues_status_id: props?.status?.id }
     );
@@ -123,7 +123,7 @@ const { submit } = useSubmit(
   {
     onSuccess: async () => {
       await backlogStore?.getBacklogProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
     },
     onError: (error) => {
@@ -183,9 +183,9 @@ const handelCreateIssue = async () => {
   creatingIssue.value = false;
   try {
     createIssueProgress.value = true;
-    await createIssue(projectsStore?.project?.project_identify, newIssueData);
+    await createIssue(route.params.id, newIssueData);
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast("error", error.data.message);
@@ -199,7 +199,7 @@ const handelCreateIssue = async () => {
 const handleMoveIssue = async (e) => {
   if (e.added) {
     await moveIssueForStatus(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       e?.added?.element.id,
       {
         order_by_status: e?.added?.newIndex + 1,
@@ -208,7 +208,7 @@ const handleMoveIssue = async (e) => {
     );
   } else if (!e.removed) {
     await moveIssueForStatus(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       e?.moved?.element.id,
       {
         order_by_status: e?.moved?.newIndex + 1,

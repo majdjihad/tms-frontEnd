@@ -6,7 +6,7 @@ import { useBacklogStore } from "~/stores/backlogStore";
 const props = defineProps(["issue", "createIssueProgress"]);
 const projectsStore = useProjectsStore();
 const backlogStore = useBacklogStore();
-
+const route = useRoute();
 // get issue description
 const getInfoIssue = async () => {
   if (
@@ -16,11 +16,11 @@ const getInfoIssue = async () => {
     backlogStore.issueInfoArray = null;
     backlogStore.issueCommentArray = null;
     await backlogStore?.getIssueInfo(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id
     );
     await backlogStore?.getIssueComments(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id
     );
   }
@@ -50,14 +50,14 @@ const handleDeleteIssue = async () => {
 const { submit } = useSubmit(
   async () => {
     return await deleteIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id
     );
   },
   {
     onSuccess: async () => {
       await backlogStore?.getBacklogProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
     },
     onError: (error) => {
@@ -116,12 +116,12 @@ const changeAssigneeIssue = async (AssigneeValue) => {
   EditAssigneeLoading.value = true;
   try {
     await editIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.issue?.id,
       { assign_to: AssigneeValue }
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast("error", error.data.message);

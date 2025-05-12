@@ -14,9 +14,7 @@ const backlogStore = useBacklogStore();
 
 // before render page 
 onMounted(() => {
-  if (backlogStore?.backlogProject === null) {
     backlogStore?.getBacklogProject(projectId.value);
-  }
 });
 // declear selected issues array for select issue
 const selectedIssue = ref([]);

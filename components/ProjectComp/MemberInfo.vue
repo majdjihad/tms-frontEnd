@@ -6,6 +6,7 @@ import { showToast } from "~/composables/useToast";
 import { useUser } from "~/composables/useAuth";
 
 const user = useUser();
+const route = useRoute();
 const props = defineProps(["member", "index"]);
 const projectsStore = useProjectsStore();
 const { removeMember } = useMember();
@@ -34,14 +35,14 @@ const handleDeleteMember = () => {
 const { submit } = useSubmit(
   () => {
     return removeMember(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props.member?.id
     );
   },
   {
     onSuccess: (response) => {
       // Handle the response
-      projectsStore?.getProject(projectsStore?.project?.project_identify);
+      projectsStore?.getProject(route?.params?.id);
       showToast("success", response.message);
     },
     onError: (error) => {

@@ -22,7 +22,6 @@ const projectId = ref(route?.params?.id);
 
 // Fetch project history data when component is mounted
 onMounted(async () => {
-  if (!projectStore.history) {
     try {
       // Attempt to fetch project history for the current project
       const response = await projectHistory(projectId.value, 1);
@@ -33,7 +32,6 @@ onMounted(async () => {
       showToast("error", error.data.message);
       return navigateTo(`/projects`, { replace: true });
     }
-  }
 });
 </script>
 

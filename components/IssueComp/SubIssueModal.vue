@@ -9,6 +9,7 @@ import { showToast } from "~/composables/useToast";
 
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
+const route = useRoute()
 const { editIssue, issueType, createLabel, createIssue, addComment } =
   useBacklog();
 // Define sprintName function
@@ -44,12 +45,12 @@ const moveIssueToAntherSprint = async (actionId) => {
   editSprintNameLoading.value = true;
   try {
     await editIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       actionId
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast(error?.data?.message);
@@ -69,7 +70,7 @@ const issueTypeMenuToggle = async () => {
       IssueTypeLoading.value = true;
       try {
         const response = await issueType(
-          projectsStore?.project?.project_identify,
+          route.params.id,
           backlogStore?.issueInfoArray?.id
         );
         typeIssueArray.value = await response?.type;
@@ -88,12 +89,12 @@ const changeTypeIssue = async (actionId) => {
   editIssueTypeLoading.value = true;
   try {
     await editIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       actionId
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast(error?.data?.message);
@@ -205,15 +206,15 @@ const changeIssue = async (actionId) => {
   statusMenuClose();
   try {
     await editIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       actionId
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
     await backlogStore?.getIssueInfo(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id
     );
   } catch (error) {
@@ -266,15 +267,15 @@ const createNewLabel = async () => {
   editLabelsLoading.value = true;
   try {
     const response = await createLabel(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       { label: `${labelNames.value}` }
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
     await backlogStore?.getIssueInfo(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id
     );
     showToast("success", response?.message);
@@ -337,9 +338,9 @@ const createSubIssue = async () => {
   subIssueData.type = defaultTypeIssue.value;
   createSubIssueLoading.value = true;
   try {
-    await createIssue(projectsStore?.project?.project_identify, subIssueData);
+    await createIssue(route.params.id, subIssueData);
     await backlogStore?.getIssueInfo(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id
     );
   } catch (error) {
@@ -374,7 +375,7 @@ const addCommentHandle = async () => {
   openAddCommentLoader.value = true;
   try {
     await addComment(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       {
         content: newComment.value,
@@ -382,7 +383,7 @@ const addCommentHandle = async () => {
       }
     );
     await backlogStore?.getIssueComments(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id
     );
   } catch (error) {
@@ -399,7 +400,7 @@ const getIssueHistory = async () => {
   historyComponent.value = true;
   if (!backlogStore?.issueHistoryArray[0]) {
     await backlogStore?.getIssueHistory(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       2
     );

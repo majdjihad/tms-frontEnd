@@ -9,7 +9,7 @@ import { showToast } from "~/composables/useToast";
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
 const { editIssue, createIssue, addComment } = useBacklog();
-
+const route = useRoute();
 // Define issue type function
 const openIssueTypeMenu = ref(false);
 const IssueTypeLoading = ref(false);
@@ -23,13 +23,13 @@ const changeTypeIssue = async (actionId) => {
   editIssueTypeLoading.value = true;
   try {
     await editIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       actionId
     );
       backlogStore.issueInfoArray.type = actionId.type;
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast(error?.data?.message);
@@ -121,15 +121,15 @@ const changeIssue = async (actionId) => {
   statusMenuOpen.value = false;
   try {
     await editIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       actionId
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
     await backlogStore?.getIssueInfo(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id
     );
   } catch (error) {
@@ -207,9 +207,9 @@ const createSubIssue = async () => {
   subIssueData.type = defaultTypeIssue.value;
   createSubIssueLoading.value = true;
   try {
-    await createIssue(projectsStore?.project?.project_identify, subIssueData);
+    await createIssue(route.params.id, subIssueData);
     await backlogStore?.getIssueInfo(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id
     );
   } catch (error) {
@@ -235,7 +235,7 @@ const addCommentHandle = async () => {
   openAddCommentLoader.value = true;
   try {
     await addComment(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       {
         content: newComment.value,
@@ -243,7 +243,7 @@ const addCommentHandle = async () => {
       }
     );
     await backlogStore?.getIssueComments(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id
     );
   } catch (error) {
@@ -260,7 +260,7 @@ const getIssueHistory = async () => {
   historyComponent.value = true;
   if (!backlogStore?.issueHistoryArray[0]) {
     await backlogStore?.getIssueHistory(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       backlogStore?.issueInfoArray?.id,
       1
     );

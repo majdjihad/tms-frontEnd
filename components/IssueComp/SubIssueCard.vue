@@ -10,7 +10,7 @@ const props = defineProps(["subIssue", "progress"]);
 const { deleteIssue, editIssue, editPriority } = useBacklog();
 const projectsStore = useProjectsStore();
 const backlogStore = useBacklogStore();
-
+const route = useRoute();
 // define background color by user id
 const getColor = (index) => {
   const colorList = ["4A90E2", "9013FE", "F5A623", "D0021B", "F8E71C"];
@@ -40,14 +40,14 @@ const handleDeleteSubIssue = () => {
 const { submit } = useSubmit(
   async () => {
     return await deleteIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.subIssue?.id
     );
   },
   {
     onSuccess: async (response) => {
       await backlogStore?.getIssueInfo(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         props?.subIssue?.parent_id
       );
     },
@@ -63,11 +63,11 @@ const getInfoSubIssue = async () => {
   backlogStore.subIssueInfoArray = null;
   backlogStore.subIssueCommentArray = null;
   await backlogStore?.getIssueInfo(
-    projectsStore?.project?.project_identify,
+    route.params.id,
     props?.subIssue?.parent_id
   );
   await backlogStore?.getIssueComments(
-    projectsStore?.project?.project_identify,
+    route.params.id,
     props?.subIssue?.id
   );
 };
@@ -83,7 +83,7 @@ const statusesToggle = async () => {
     if (!backlogStore?.statusesArray && !statusesLoading.value) {
       statusesLoading.value = true;
       const response = await backlogStore?.getStatusProject(
-        projectsStore?.project?.project_identify
+        route.params.id
       );
       backlogStore.statusesArray = await response?.statuses;
       statusesLoading.value = false;
@@ -123,12 +123,12 @@ const changesubIssue = async (actionId) => {
     : false;
   try {
     await editIssue(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.subIssue?.id,
       actionId
     );
     await backlogStore?.getIssueInfo(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.subIssue?.parent_id
     );
   } catch (error) {
@@ -181,12 +181,12 @@ const changePriority = async (priorityObj) => {
   EditPriorityLoading.value = true;
   try {
     await editPriority(
-      projectsStore?.project?.project_identify,
+      route.params.id,
       props?.subIssue?.id,
       priorityObj
     );
     await backlogStore?.getBacklogProject(
-      projectsStore?.project?.project_identify
+      route.params.id
     );
   } catch (error) {
     showToast(error?.data?.message);

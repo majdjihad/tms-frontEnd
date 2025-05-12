@@ -10,7 +10,7 @@ const props = defineProps(["comment"]);
 const { editComment, deleteComment } = useBacklog();
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
-
+const route = useRoute();
 // define delete comment function
 const handleDeleteComment = () => {
   Swal.fire({
@@ -27,12 +27,12 @@ const handleDeleteComment = () => {
     },
     preConfirm: async () => {
       await deleteComment(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         props?.comment?.issue_id,
         props?.comment?.id
       );
       await backlogStore?.getIssueComments(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         backlogStore?.issueInfoArray?.id
       );
     },
@@ -82,13 +82,13 @@ const handleEditComment = async () => {
   if (commentValue.value !== props?.comment?.content) {
     try {
       await editComment(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         props?.comment?.issue_id,
         props?.comment?.id,
         { content: commentValue.value, mentionList: [] }
       );
       await backlogStore?.getIssueComments(
-        projectsStore?.project?.project_identify,
+        route.params.id,
         backlogStore?.issueInfoArray?.id
       );
     } catch (error) {
