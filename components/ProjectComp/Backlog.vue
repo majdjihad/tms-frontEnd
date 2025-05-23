@@ -6,7 +6,7 @@ import { useProjectsStore } from "~/stores/projectsStore";
 import { showToast } from "~/composables/useToast";
 import Draggable from "vuedraggable";
 
-const props = defineProps(["selectedIssue"]);
+const props = defineProps(["selectedIssue", "canManage"]);
 const projectsStore = useProjectsStore();
 const backlogStore = useBacklogStore();
 const route = useRoute();
@@ -308,7 +308,7 @@ const handleMoveIssue = async (e) => {
           </div>
         </div>
         <div class="card-toolbar">
-          <div class="d-flex justify-content-end gap-4">
+          <div class="d-flex justify-content-end gap-4" v-if="canManage">
             <button
               type="button"
               :disabled="createSprintLoader"
@@ -398,22 +398,32 @@ const handleMoveIssue = async (e) => {
             </div>
           </div>
           <div v-if="backlogStore?.backlogProject.length > 0">
-            <Draggable
-              v-model="backlogStore.backlogProject"
-              @start="dragStart"
-              @end="dragEnd"
-              group="issues"
-              @change="handleMoveIssue"
-              ghost-class="ghost"
-              itemKey="id"
-            >
-              <template #item="{ element: issue }">
-                <IssueCompIssueCard
-                  v-model="selectedIssue"
-                  :issue="issue"
-                />
-              </template>
-            </Draggable>
+            <div v-if="canManage">
+              <Draggable
+                v-model="backlogStore.backlogProject"
+                @start="dragStart"
+                @end="dragEnd"
+                group="issues"
+                @change="handleMoveIssue"
+                ghost-class="ghost"
+                itemKey="id"
+              >
+                <template #item="{ element: issue }">
+                  <IssueCompIssueCard
+                    v-model="selectedIssue"
+                    :issue="issue"
+                    :can-edite="canManage"
+                  />
+                </template>
+              </Draggable>
+            </div>
+            <div v-else>
+                    <IssueCompIssueCard v-for="i in backlogStore.backlogProject" :key="i?.id"
+                    v-model="selectedIssue"
+                    :issue="i"
+                    :can-edite="canManage"
+                  />
+            </div>
           </div>
           <div v-if="inProgress || createProgress" class="disabled">
             <IssueCompIssueCard :issue="data" :progress="true" />
@@ -435,6 +445,7 @@ const handleMoveIssue = async (e) => {
           </div>
 
           <div
+            v-if="canManage"
             @click.stop
             id="createBacklogIssueWrapper"
             ref="inputFocus"

@@ -6,6 +6,7 @@ import { useBacklogStore } from "~/stores/backlogStore";
 const props = defineProps(["issue", "createIssueProgress"]);
 const projectsStore = useProjectsStore();
 const backlogStore = useBacklogStore();
+const user = useUser();
 const route = useRoute();
 // get issue description
 const getInfoIssue = async () => {
@@ -15,16 +16,22 @@ const getInfoIssue = async () => {
   ) {
     backlogStore.issueInfoArray = null;
     backlogStore.issueCommentArray = null;
-    await backlogStore?.getIssueInfo(
-      route.params.id,
-      props?.issue?.id
-    );
-    await backlogStore?.getIssueComments(
-      route.params.id,
-      props?.issue?.id
-    );
+    await backlogStore?.getIssueInfo(route.params.id, props?.issue?.id);
+    await backlogStore?.getIssueComments(route.params.id, props?.issue?.id);
   }
 };
+// Add computed property to check edit permissions
+const canEditIssue = computed(() => {
+  const isOwner = user.value?.id === projectsStore?.project?.user_id;
+  const isAdmin = projectsStore?.project?.team_members?.some(
+    (member) =>
+      member.user_id === user.value?.id &&
+      member.invite_status === "accept" &&
+      ["admin", "owner"].includes(member.role.key)
+  );
+
+  return isOwner || isAdmin;
+});
 
 // declear delete confirm
 const { deleteIssue, editIssue } = useBacklog();
@@ -49,16 +56,11 @@ const handleDeleteIssue = async () => {
 
 const { submit } = useSubmit(
   async () => {
-    return await deleteIssue(
-      route.params.id,
-      props?.issue?.id
-    );
+    return await deleteIssue(route.params.id, props?.issue?.id);
   },
   {
     onSuccess: async () => {
-      await backlogStore?.getBacklogProject(
-        route.params.id
-      );
+      await backlogStore?.getBacklogProject(route.params.id);
     },
     onError: (error) => {
       showToast("error", error.data.message);
@@ -72,24 +74,28 @@ const toggleIssueMenu = (event) => {
 };
 const issueActionMenu = ref();
 const statusActionItems = ref([
-{
+  {
     label: "Preview",
     icon: "fa-regular fa-eye",
     command: () => {
       document.querySelector(".issue-title").click();
     },
   },
-  {
-    label: "Copy",
-    icon: "fa-regular fa-copy",
-  },
-  {
-    label: "Delete",
-    icon: "pi pi-fw pi-trash",
-    command: () => {
-      handleDeleteIssue();
-    },
-  },
+  ...(canEditIssue.value
+    ? [
+        {
+          label: "Copy",
+          icon: "fa-regular fa-copy",
+        },
+        {
+          label: "Delete",
+          icon: "pi pi-fw pi-trash",
+          command: () => {
+            handleDeleteIssue();
+          },
+        },
+      ]
+    : []),
 ]);
 
 // declear getColor function for member no have image
@@ -115,14 +121,10 @@ const changeAssigneeIssue = async (AssigneeValue) => {
   closeAssignee();
   EditAssigneeLoading.value = true;
   try {
-    await editIssue(
-      route.params.id,
-      props?.issue?.id,
-      { assign_to: AssigneeValue }
-    );
-    await backlogStore?.getBacklogProject(
-      route.params.id
-    );
+    await editIssue(route.params.id, props?.issue?.id, {
+      assign_to: AssigneeValue,
+    });
+    await backlogStore?.getBacklogProject(route.params.id);
   } catch (error) {
     showToast("error", error.data.message);
   }
@@ -133,7 +135,8 @@ const changeAssigneeIssue = async (AssigneeValue) => {
   <div>
     <div
       v-if="!props.createIssueProgress"
-      class="issue-card h-150px d-flex flex-column justify-content-evenly bg-light p-4 mt-3 shadow-sm rounded-1 "
+      :class="{ 'cursor-grab': canEditIssue }"
+      class="issue-card h-150px d-flex flex-column justify-content-evenly bg-light p-4 mt-3 shadow-sm rounded-1"
     >
       <div class="d-flex justify-content-between align-items-center">
         <p
@@ -184,117 +187,164 @@ const changeAssigneeIssue = async (AssigneeValue) => {
           }}</span>
         </div>
         <div class="position-relative col-auto">
-          <div
-            class="d-flex justify-content-center align-items-center rounded-1 fw-bold fs-8 text-uppercase text-nowrap cursor-pointer"
-          >
-            <div v-if="EditAssigneeLoading">
-              <Icon
-                name="svg-spinners:180-ring-with-bg"
-                class="p-2"
-                size="30"
-              />
-            </div>
+          <div v-if="canEditIssue">
             <div
-              v-else
-              v-click-outside="closeAssignee"
-              @click="assigneeToggle"
-              class="symbol symbol-circle symbol-30px overflow-hidden"
+              class="d-flex justify-content-center align-items-center rounded-1 fw-bold fs-8 text-uppercase text-nowrap cursor-pointer"
             >
-              <div v-if="issue?.assign_to">
-                <img
-                  v-if="issue?.team_member?.user?.photo"
-                  :src="issue?.team_member?.user?.url_photo"
-                  :alt="issue?.team_member?.user?.name"
-                  class="w-35px h-35px"
+              <div v-if="EditAssigneeLoading">
+                <Icon
+                  name="svg-spinners:180-ring-with-bg"
+                  class="p-2"
+                  size="30"
                 />
-                <span
-                  v-else
-                  class="symbol-label text-inverse-warning fs-2 hover-bg-light"
-                  :style="{
-                    backgroundColor: getColor(issue?.team_member?.user?.id),
-                  }"
-                  >{{
-                    issue?.team_member?.user?.name
-                      ? issue?.team_member?.user?.name[0].toUpperCase()
-                      : "-"
-                  }}</span
-                >
-              </div>
-              <div v-else>
-                <img
-                  src="~/assets/media/avatars/blank.png"
-                  alt="Unassigned"
-                  class="w-35px h-35px"
-                />
-              </div>
-            </div>
-          </div>
-          <Transition name="statusesMenu">
-            <div
-              v-if="assigneeOpen"
-              class="statusesMenuWrapper position-absolute bg-white shadow p-0 d-flex flex-column gap-0 rounded-1 overflow-y-auto z-1"
-              style="
-                min-width: 130px !important;
-                width: max-content !important;
-                max-height: 138px !important;
-              "
-            >
-              <div v-if="assigneeLoading" class="text-center">
-                Loading...
-                <Icon name="svg-spinners:180-ring-with-bg" size="16" />
               </div>
               <div
-                @click="changeAssigneeIssue(null)"
-                class="unAssignee w-100 d-flex justify-content-start align-items-center hover-bg-light cursor-pointer p-2 border-bottom"
-                v-if="issue?.assign_to"
+                v-else
+                v-click-outside="closeAssignee"
+                @click="assigneeToggle"
+                class="symbol symbol-circle symbol-30px overflow-hidden"
               >
-                <div class="symbol symbol-circle symbol-30px overflow-hidden">
+                <div
+                  v-if="issue?.assign_to"
+                  v-tooltip.top="{ value: issue?.team_member?.user?.name }"
+                >
+                  <img
+                    v-if="issue?.team_member?.user?.photo"
+                    :src="issue?.team_member?.user?.url_photo"
+                    :alt="issue?.team_member?.user?.name"
+                    class="w-35px h-35px"
+                  />
+                  <span
+                    v-else
+                    class="symbol-label text-inverse-warning fs-2 hover-bg-light"
+                    :style="{
+                      backgroundColor: getColor(issue?.team_member?.user?.id),
+                    }"
+                    >{{
+                      issue?.team_member?.user?.name
+                        ? issue?.team_member?.user?.name[0].toUpperCase()
+                        : "-"
+                    }}</span
+                  >
+                </div>
+                <div v-else v-tooltip.top="{ value: 'unassignee' }">
                   <img
                     src="~/assets/media/avatars/blank.png"
                     alt="Unassigned"
-                    class="w-30px h-30px"
+                    class="w-35px h-35px"
                   />
-                </div>
-                <span class="ms-3 fs-5">unassignee</span>
-              </div>
-              <div
-                v-for="(
-                  member, index
-                ) in projectsStore?.project?.team_members?.filter(
-                  (memeber) => memeber?.invite_status === 'accept'
-                )"
-                :key="index"
-                @click="changeAssigneeIssue(member?.id)"
-              >
-                <div
-                  class="w-100 d-flex justify-content-start align-items-center hover-bg-light cursor-pointer p-2 border-bottom"
-                  v-if="issue?.assign_to != member?.id"
-                >
-                  <div class="symbol symbol-circle symbol-30px overflow-hidden">
-                    <img
-                      v-if="member?.user?.photo"
-                      :src="member?.user?.url_photo"
-                      :alt="member?.user?.name"
-                      class="w-30px h-30px"
-                    />
-                    <span
-                      v-else
-                      class="symbol-label text-inverse-warning fs-2"
-                      :style="{ backgroundColor: getColor(member?.user?.id) }"
-                      >{{
-                        member?.user?.name
-                          ? member?.user?.name[0].toUpperCase()
-                          : "-"
-                      }}</span
-                    >
-                  </div>
-                  <h4 class="m-0 ms-2 fs-5 fw-normal">
-                    {{ member?.user?.name }}
-                  </h4>
                 </div>
               </div>
             </div>
-          </Transition>
+            <Transition name="statusesMenu">
+              <div
+                v-if="assigneeOpen"
+                class="statusesMenuWrapper position-absolute bg-white shadow p-0 d-flex flex-column gap-0 rounded-1 overflow-y-auto z-1"
+                style="
+                  min-width: 130px !important;
+                  width: max-content !important;
+                  max-height: 138px !important;
+                "
+              >
+                <div v-if="assigneeLoading" class="text-center">
+                  Loading...
+                  <Icon name="svg-spinners:180-ring-with-bg" size="16" />
+                </div>
+                <div
+                  @click="changeAssigneeIssue(null)"
+                  class="unAssignee w-100 d-flex justify-content-start align-items-center hover-bg-light cursor-pointer p-2 border-bottom"
+                  v-if="issue?.assign_to"
+                >
+                  <div class="symbol symbol-circle symbol-30px overflow-hidden">
+                    <img
+                      src="~/assets/media/avatars/blank.png"
+                      alt="Unassigned"
+                      class="w-30px h-30px"
+                    />
+                  </div>
+                  <span class="ms-3 fs-5">unassignee</span>
+                </div>
+                <div
+                  v-for="(
+                    member, index
+                  ) in projectsStore?.project?.team_members?.filter(
+                    (m) =>
+                      m?.invite_status === 'accept' && m?.role?.key !== 'viewer'
+                  )"
+                  :key="index"
+                  @click="changeAssigneeIssue(member?.id)"
+                >
+                  <div
+                    class="w-100 d-flex justify-content-start align-items-center hover-bg-light cursor-pointer p-2 border-bottom"
+                    v-if="issue?.assign_to != member?.id"
+                  >
+                    <div
+                      class="symbol symbol-circle symbol-30px overflow-hidden"
+                    >
+                      <img
+                        v-if="member?.user?.photo"
+                        :src="member?.user?.url_photo"
+                        :alt="member?.user?.name"
+                        class="w-30px h-30px"
+                      />
+                      <span
+                        v-else
+                        class="symbol-label text-inverse-warning fs-2"
+                        :style="{ backgroundColor: getColor(member?.user?.id) }"
+                        >{{
+                          member?.user?.name
+                            ? member?.user?.name[0].toUpperCase()
+                            : "-"
+                        }}</span
+                      >
+                    </div>
+                    <h4 class="m-0 ms-2 fs-5 fw-normal">
+                      {{ member?.user?.name }}
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
+          <div v-else>
+            <div
+              class="d-flex justify-content-center align-items-center rounded-1 fw-bold fs-8 text-uppercase text-nowrap cursor-pointer"
+            >
+              <div class="symbol symbol-circle symbol-30px overflow-hidden">
+                <NuxtLink
+                  :to="`/profile/${issue?.team_member?.user?.identify_number}`"
+                  v-if="issue?.assign_to"
+                  v-tooltip.top="{ value: issue?.team_member?.user?.name }"
+                >
+                  <img
+                    v-if="issue?.team_member?.user?.photo"
+                    :src="issue?.team_member?.user?.url_photo"
+                    :alt="issue?.team_member?.user?.name"
+                    class="w-35px h-35px"
+                  />
+                  <span
+                    v-else
+                    class="symbol-label text-inverse-warning fs-2 hover-bg-light"
+                    :style="{
+                      backgroundColor: getColor(issue?.team_member?.user?.id),
+                    }"
+                    >{{
+                      issue?.team_member?.user?.name
+                        ? issue?.team_member?.user?.name[0].toUpperCase()
+                        : "-"
+                    }}</span
+                  >
+                </NuxtLink>
+                <div v-else v-tooltip.top="{ value: 'unassignee' }">
+                  <img
+                    src="~/assets/media/avatars/blank.png"
+                    alt="Unassigned"
+                    class="w-35px h-35px"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -338,15 +388,21 @@ const changeAssigneeIssue = async (AssigneeValue) => {
         </div>
       </div>
     </div>
-    <IssueCompIssueModal />
+    <IssueCompIssueModal
+      :can-edite="
+        canEditIssue ||
+        backlogStore?.issueInfoArray?.team_member?.user?.identify_number ===
+          user?.identify_number
+      "
+    />
   </div>
 </template>
 <style scoped>
-.issue-card {
-  cursor: grab;
-}
 .issue-title:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+.cursor-grab {
+  cursor: grab;
 }
 </style>

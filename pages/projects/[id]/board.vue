@@ -1,9 +1,9 @@
 <script setup>
 // Import required
 import { useBacklogStore } from "~/stores/backlogStore";
-import { useProjectsStore } from "~/stores/projectsStore";
 import { useUser } from "~/composables/useAuth";
 import Draggable from "vuedraggable";
+import { useProjectsStore } from "~/stores/projectsStore";
 
 useHead({
   title: "boards",
@@ -14,14 +14,32 @@ definePageMeta({
 });
 
 const backlogStore = useBacklogStore();
-const projectsStore = useProjectsStore();
+const projectStore = useProjectsStore();
 const user = useUser();
 const route = useRoute();
 const projectId = ref(route?.params?.id);
 // before render page
+const isLoading = ref(true);
+
+const fetchBacklog = async (id) => {
+  isLoading.value = true;
+  await backlogStore?.getBacklogProject(id);
+  isLoading.value = false;
+};
+
 onMounted(() => {
-    backlogStore?.getBacklogProject(projectId.value);
+  if (projectId.value !== projectStore?.project?.project_identify) {
+    fetchBacklog(projectId.value);
+  }
 });
+
+// watch(
+//   () => route.params.id,
+//   (newId) => {
+//     projectId.value = newId;
+//     fetchBacklog(newId);
+//   }
+// );
 
 const { createStatus, moveStatus } = useBacklog();
 
@@ -65,18 +83,13 @@ const handelCreateStatus = async () => {
 const { submit, inProgress } = useSubmit(
   async () => {
     createStatusInput.value = null;
-    return await createStatus(
-      route.params.id,
-      newStatusdata
-    );
+    return await createStatus(route.params.id, newStatusdata);
   },
   {
     onSuccess: async (response) => {
       // Handle the response
       createStatusProgress.value = true;
-      await backlogStore?.getBacklogProject(
-        route.params.id
-      );
+      await backlogStore?.getBacklogProject(route.params.id);
       createStatusProgress.value = false;
     },
     onError: (error) => {
@@ -84,28 +97,37 @@ const { submit, inProgress } = useSubmit(
     },
   }
 );
-
+// Add computed property to check permissions
+const hasManagePermission = computed(() => {
+  const isOwner = user.value?.id === projectStore?.project?.user_id;
+  const isAdmin = projectStore?.project?.team_members?.some(
+    (member) =>
+      member.user_id === user.value?.id &&
+      member.invite_status === "accept" &&
+      ["admin", "owner"].includes(member.role.key)
+  );
+  return isOwner || isAdmin;
+});
 // handle move issue
 const handleMoveStatus = async (e) => {
   if (e.added) {
-    await moveStatus(
-      route.params.id,
-      e?.added?.element.id,
-      {
-        sprint_id: null,
-        order: e?.added?.newIndex + 1,
-      }
-    );
+    await moveStatus(route.params.id, e?.added?.element.id, {
+      sprint_id: null,
+      order: e?.added?.newIndex + 1,
+    });
   } else if (!e.removed) {
-    await moveStatus(
-      route.params.id,
-      e?.moved?.element.id,
-      {
-        order: e?.moved?.newIndex + 1,
-      }
-    );
+    await moveStatus(route.params.id, e?.moved?.element.id, {
+      order: e?.moved?.newIndex + 1,
+    });
   }
 };
+watch(
+  () => route.params.id,
+  (newId) => {
+    projectId.value = newId;
+    fetchBacklog(newId);
+  }
+);
 </script>
 <template>
   <div class="app-container container-xxl py-9 d-flex overflow-auto">
@@ -113,25 +135,39 @@ const handleMoveStatus = async (e) => {
       class="d-flex"
       v-if="backlogStore.statusesArray && backlogStore.allIssues"
     >
-      <Draggable
-        class="d-flex"
-        v-model="backlogStore.statusesArray"
-        group="statuses"
-        @change="handleMoveStatus"
-        ghost-class="ghost"
-        itemKey="id"
-      >
-        <template #item="{ element: status }">
-          <BoardCompStatusCard :status="status" />
-        </template>
-      </Draggable>
+      <div v-if="hasManagePermission">
+        <Draggable
+          class="d-flex"
+          v-model="backlogStore.statusesArray"
+          group="statuses"
+          @change="handleMoveStatus"
+          ghost-class="ghost"
+          itemKey="id"
+        >
+          <template #item="{ element: status }">
+            <BoardCompStatusCard
+              :status="status"
+              :can-manage="hasManagePermission"
+            />
+          </template>
+        </Draggable>
+      </div>
+      <div class="d-flex" v-else>
+        <div v-for="s in backlogStore.statusesArray" :key="s.id">
+          <BoardCompStatusCard
+            :status="s"
+            :can-manage="hasManagePermission"
+          />
+        </div>
+      </div>
       <div v-if="createStatusProgress || inProgress" class="disabled">
         <BoardCompStatusCard
           :status="newStatusdata"
           :createStatusProgress="true"
+          :can-manage="hasManagePermission"
         />
       </div>
-      <div class="craeteStatus">
+      <div class="craeteStatus" v-if="hasManagePermission">
         <div
           class="position-relative"
           v-if="showCreateStatus"
@@ -175,7 +211,7 @@ const handleMoveStatus = async (e) => {
       </div>
     </div>
     <div v-else class="d-flex">
-      <SkeletonStatusCard v-for="index in 4" :key="index" />
+      <SkeletonStatusCard  v-for="index in 4" :key="index" />
     </div>
   </div>
 </template>

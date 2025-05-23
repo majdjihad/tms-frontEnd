@@ -1,11 +1,22 @@
 <script setup>
+import blankUserImage from '~/assets/media/avatars/blank.png';
+import blankProjectImage from '~/assets/media/avatars/blank-project.png';
+
 // props
 const props = defineProps(["from", "formDataError", "currentImage"]);
 const model = defineModel();
+
 // === data === //
-const previewImage = ref(props.currentImage);
 const imageError = ref(false);
 const imageErrorMessage = ref("image can't be more than 5mb");
+
+// Move defaultImage computed before previewImage
+const defaultImage = computed(() => 
+  props.from === "user" ? blankUserImage : blankProjectImage
+);
+
+// Now previewImage can safely use defaultImage
+const previewImage = ref(props.currentImage || defaultImage.value);
 
 // === methods === //
 const handleImageChange = (event) => {
@@ -17,18 +28,11 @@ const handleImageChange = (event) => {
     let reader = new FileReader();
     reader.addEventListener("load", (e) => {
       previewImage.value = e.target.result;
+      model.value = e.target.result;
     });
-    model.value = previewImage.value;
     reader.readAsDataURL(files[0]);
   }
 };
-
-// ===== computed ===== //
-const defaultImage = computed(() =>
-  props.from == "user"
-    ? "~/assets/media/avatars/blank.png"
-    : "~/assets/media/avatars/blank-project.png"
-);
 </script>
 
 <template>
@@ -37,15 +41,11 @@ const defaultImage = computed(() =>
       class="image-input image-input-outline image-input-empty"
       :class="{ 'border border-danger border-2 ': imageError || formDataError }"
       data-kt-image-input="true"
-      style="
-        background-position: center !important;
-        background-repeat: no-repeat !important;
-        object-fit: cover !important;
-      "
       :style="{
-        backgroundImage: previewImage
-          ? `url('${previewImage}')`
-          : `url('${defaultImage}')`,
+        backgroundImage: `url(${previewImage || defaultImage.value})`,
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        objectFit: 'cover'
       }"
     >
       <div
@@ -56,11 +56,10 @@ const defaultImage = computed(() =>
           object-fit: cover !important;
         "
         :style="{
-          backgroundImage: `url('${
-            previewImage ? previewImage : currentImage
-          }')`,
+          backgroundImage: `url(${previewImage || currentImage || defaultImage})`
         }"
-      ></div>
+      >
+      </div>
       <label
         class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
         data-kt-image-input-action="change"

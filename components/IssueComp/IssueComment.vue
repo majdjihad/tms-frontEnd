@@ -6,11 +6,12 @@ import Editor from "primevue/editor";
 import TieredMenu from "primevue/tieredmenu";
 import { showToast } from "~/composables/useToast";
 
-const props = defineProps(["comment"]);
+const props = defineProps(["comment", "canEdite"]);
 const { editComment, deleteComment } = useBacklog();
 const backlogStore = useBacklogStore();
-const projectsStore = useProjectsStore();
 const route = useRoute();
+const user = useUser();
+
 // define delete comment function
 const handleDeleteComment = () => {
   Swal.fire({
@@ -41,6 +42,7 @@ const handleDeleteComment = () => {
 // define action comment menu
 const commentMenuOpen = ref(false);
 const items = ref([
+    ...(user.value?.id === props?.comment?.user?.id ? [
   {
     label: "Edit",
     icon: "fa-regular fa-pen-to-square",
@@ -48,6 +50,7 @@ const items = ref([
       toggleOpenComment();
     },
   },
+  ] : []),
   {
     label: "Delete",
     icon: "fa-regular fa-trash-can",
@@ -133,7 +136,7 @@ const getColor = (index) => {
             }}</span>
           </div>
         </div>
-        <div class="position-relative">
+        <div class="position-relative" v-if="canEdite || user?.id === comment?.user?.id">
           <div
             class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
           >
@@ -147,16 +150,16 @@ const getColor = (index) => {
               ></i>
             </div>
           </div>
-          <div
-            v-if="commentMenuOpen"
-            class="statusesMenuWrapper z-1 position-absolute end-0 w-auto"
-          >
-            <TieredMenu v-if="commentMenuOpen" :model="items" />
-          </div>
+            <div
+              v-if="commentMenuOpen"
+              class="statusesMenuWrapper z-1 position-absolute end-0 w-auto"
+            >
+              <TieredMenu v-if="commentMenuOpen" :model="items" />
+            </div>
         </div>
       </div>
       <div
-        class="content p-3 mt-3 ms-6 me-4 fs-5 bg-light rounded"
+        class="content my-3 ms-6 me-4 fs-5 bg-gray-200 rounded-1 p-2 rounded"
         v-html="comment?.content"
       ></div>
     </div>

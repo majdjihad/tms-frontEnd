@@ -16,7 +16,7 @@ const countMemberShow = ref(7);
   watch(
   () => route.params.id,
   (newId) => {
-    projectsStore.getProject(newId); // استدعاء المشروع الجديد
+    projectsStore.getProject(newId);
   }
 );
 const isMenuOpen = ref(false);
@@ -37,6 +37,17 @@ const { submit } = useSubmit(
     },
   }
 );
+// Add computed property to check permissions
+const hasManagePermission = computed(() => {
+  const isOwner = user.value?.id === projectsStore?.project?.user_id;
+  const isAdmin = projectsStore?.project?.team_members?.some(
+    (member) =>
+      member.user_id === user.value?.id &&
+      member.invite_status === "accept" &&
+      ["admin", "owner"].includes(member.role.key)
+  );
+  return isOwner || isAdmin;
+});
 
 const handleArchiveProject = () => {
   Swal.fire({
@@ -292,7 +303,8 @@ const handleArchiveProject = () => {
                     </div>
                   </div>
                 </div>
-                <div class="d-flex align-items-center flex-shrink-0">
+                <div class="d-flex align-items-center flex-shrink-0"
+                v-if="hasManagePermission">
                   <div
                     class="d-flex justify-content-end"
                     data-kt-user-table-toolbar="base"

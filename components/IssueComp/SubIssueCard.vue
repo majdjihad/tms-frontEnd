@@ -6,7 +6,7 @@ import { useProjectsStore } from "~/stores/projectsStore";
 import { showToast } from "~/composables/useToast";
 import TieredMenu from "primevue/tieredmenu";
 
-const props = defineProps(["subIssue", "progress"]);
+const props = defineProps(["subIssue", "progress", "canEdite"]);
 const { deleteIssue, editIssue, editPriority } = useBacklog();
 const projectsStore = useProjectsStore();
 const backlogStore = useBacklogStore();
@@ -39,10 +39,7 @@ const handleDeleteSubIssue = () => {
 
 const { submit } = useSubmit(
   async () => {
-    return await deleteIssue(
-      route.params.id,
-      props?.subIssue?.id
-    );
+    return await deleteIssue(route.params.id, props?.subIssue?.id);
   },
   {
     onSuccess: async (response) => {
@@ -62,14 +59,8 @@ const getInfoSubIssue = async () => {
   document.getElementById("kt_modal_issue_info").click();
   backlogStore.subIssueInfoArray = null;
   backlogStore.subIssueCommentArray = null;
-  await backlogStore?.getIssueInfo(
-    route.params.id,
-    props?.subIssue?.parent_id
-  );
-  await backlogStore?.getIssueComments(
-    route.params.id,
-    props?.subIssue?.id
-  );
+  await backlogStore?.getIssueInfo(route.params.id, props?.subIssue?.parent_id);
+  await backlogStore?.getIssueComments(route.params.id, props?.subIssue?.id);
 };
 
 // statuses menu functionality
@@ -82,9 +73,7 @@ const statusesToggle = async () => {
     statusesOpen.value = true;
     if (!backlogStore?.statusesArray && !statusesLoading.value) {
       statusesLoading.value = true;
-      const response = await backlogStore?.getStatusProject(
-        route.params.id
-      );
+      const response = await backlogStore?.getStatusProject(route.params.id);
       backlogStore.statusesArray = await response?.statuses;
       statusesLoading.value = false;
     }
@@ -122,11 +111,7 @@ const changesubIssue = async (actionId) => {
     ? (EditAssigneeLoading.value = true)
     : false;
   try {
-    await editIssue(
-      route.params.id,
-      props?.subIssue?.id,
-      actionId
-    );
+    await editIssue(route.params.id, props?.subIssue?.id, actionId);
     await backlogStore?.getIssueInfo(
       route.params.id,
       props?.subIssue?.parent_id
@@ -180,14 +165,8 @@ const changePriority = async (priorityObj) => {
   closePrioritiesMenu();
   EditPriorityLoading.value = true;
   try {
-    await editPriority(
-      route.params.id,
-      props?.subIssue?.id,
-      priorityObj
-    );
-    await backlogStore?.getBacklogProject(
-      route.params.id
-    );
+    await editPriority(route.params.id, props?.subIssue?.id, priorityObj);
+    await backlogStore?.getBacklogProject(route.params.id);
   } catch (error) {
     showToast(error?.data?.message);
   }
@@ -203,7 +182,7 @@ const closePrioritiesMenu = () => {
 <template>
   <div>
     <div
-      class="subIssue-container d-flex align-items-center justify-content-between cursor-pointer py-2 px-8 border-bottom position-relative"
+      class="subIssue-container d-flex align-items-center justify-content-between py-2 px-8 border-bottom position-relative"
     >
       <div>
         <img
@@ -236,8 +215,82 @@ const closePrioritiesMenu = () => {
         class="subIssue-info d-flex align-items-center justify-content-between"
       >
         <div class="position-relative">
-          <div
-            class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
+          <div v-if="canEdite" class="cursor-pointer">
+            <div
+              class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
+              :class="
+                subIssue?.status?.name === 'TO DO'
+                  ? 'bg-light-active'
+                  : subIssue?.status?.name === 'DONE'
+                  ? 'bg-light-primary text-primary'
+                  : 'bg-light-success text-success'
+              "
+            >
+              <div v-if="EditStatusLoading">
+                <Icon name="svg-spinners:180-ring-with-bg" size="20" />
+              </div>
+              <div
+                v-else
+                v-click-outside="closeStatuses"
+                @click="statusesToggle"
+              >
+                {{ subIssue?.status?.name }}
+                <Icon
+                  v-if="statusesOpen"
+                  name="ic:outline-keyboard-arrow-up"
+                  size="17"
+                  class="m-0"
+                />
+                <Icon
+                  v-else
+                  name="ic:outline-keyboard-arrow-down"
+                  size="17"
+                  class="m-0"
+                />
+              </div>
+            </div>
+            <Transition name="statusesMenu">
+              <div
+                v-if="statusesOpen"
+                class="statusesMenuWrapper position-absolute bg-white shadow p-3 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
+                style="
+                  min-width: 130px !important;
+                  width: max-content !important;
+                  max-height: 138px !important;
+                  right: 0;
+                "
+              >
+                <div v-if="statusesLoading" class="text-center">
+                  Loading...
+                  <Icon name="svg-spinners:180-ring-with-bg" size="16" />
+                </div>
+                <div
+                  v-else
+                  v-for="(status, index) in backlogStore.statusesArray"
+                  :key="index"
+                  class="hover-bg-light"
+                >
+                  <div
+                    v-if="status?.name !== subIssue?.status?.name"
+                    class="py-1 px-3 rounded-1 text-uppercase fs-7 truncate"
+                    style="max-width: 150px"
+                    @click="changesubIssue({ status_id: status?.id })"
+                    :class="
+                      status?.name === 'TO DO'
+                        ? 'bg-light-active'
+                        : status?.name === 'DONE'
+                        ? 'bg-light-primary text-primary'
+                        : 'bg-light-success text-success'
+                    "
+                  >
+                    {{ status?.name }}
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
+          <div v-else
+            class="py-1 px-3 me-4 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
             :class="
               subIssue?.status?.name === 'TO DO'
                 ? 'bg-light-active'
@@ -246,178 +299,153 @@ const closePrioritiesMenu = () => {
                 : 'bg-light-success text-success'
             "
           >
-            <div v-if="EditStatusLoading">
-              <Icon name="svg-spinners:180-ring-with-bg" size="20" />
-            </div>
-            <div v-else v-click-outside="closeStatuses" @click="statusesToggle">
-              {{ subIssue?.status?.name }}
-              <Icon
-                v-if="statusesOpen"
-                name="ic:outline-keyboard-arrow-up"
-                size="17"
-                class="m-0"
-              />
-              <Icon
-                v-else
-                name="ic:outline-keyboard-arrow-down"
-                size="17"
-                class="m-0"
-              />
-            </div>
+            {{ subIssue?.status?.name }}
           </div>
-          <Transition name="statusesMenu">
-            <div
-              v-if="statusesOpen"
-              class="statusesMenuWrapper position-absolute bg-white shadow p-3 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
-              style="
-                min-width: 130px !important;
-                width: max-content !important;
-                max-height: 138px !important;
-                right: 0;
-              "
-            >
-              <div v-if="statusesLoading" class="text-center">
-                Loading...
-                <Icon name="svg-spinners:180-ring-with-bg" size="16" />
-              </div>
-              <div
-                v-else
-                v-for="(status, index) in backlogStore.statusesArray"
-                :key="index"
-                class="hover-bg-light"
-              >
-                <div
-                  v-if="status?.name !== subIssue?.status?.name"
-                  class="py-1 px-3 rounded-1 text-uppercase fs-7 truncate"
-                  style="max-width: 150px"
-                  @click="changesubIssue({ status_id: status?.id })"
-                  :class="
-                    status?.name === 'TO DO'
-                      ? 'bg-light-active'
-                      : status?.name === 'DONE'
-                      ? 'bg-light-primary text-primary'
-                      : 'bg-light-success text-success'
-                  "
-                >
-                  {{ status?.name }}
-                </div>
-              </div>
-            </div>
-          </Transition>
         </div>
         <div class="position-relative">
-          <div
-            class="d-flex justify-content-center align-items-center py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
-          >
-            <div v-if="EditAssigneeLoading">
-              <Icon
-                name="svg-spinners:180-ring-with-bg"
-                class="p-2"
-                size="30"
-              />
-            </div>
+          <div v-if="canEdite">
             <div
-              v-else
-              v-click-outside="closeAssignee"
-              @click="assigneeToggle"
-              class="symbol symbol-circle symbol-30px overflow-hidden"
+              class="d-flex justify-content-center align-items-center py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
             >
-              <div v-if="subIssue?.assign_to">
-                <img
-                  v-if="subIssue?.team_member?.user?.photo"
-                  :src="subIssue?.team_member?.user?.url_photo"
-                  :alt="subIssue?.team_member?.user?.name"
-                  class="w-35px h-35px"
+              <div v-if="EditAssigneeLoading">
+                <Icon
+                  name="svg-spinners:180-ring-with-bg"
+                  class="p-2"
+                  size="30"
                 />
-                <span
-                  v-else
-                  class="symbol-label text-inverse-warning fw-bold fs-3"
-                  :style="{
-                    backgroundColor: getColor(subIssue?.team_member?.user?.id),
-                  }"
-                  >{{
-                    subIssue?.team_member?.user?.name
-                      ? subIssue?.team_member?.user?.name[0].toUpperCase()
-                      : "-"
-                  }}</span
-                >
-              </div>
-              <div v-else>
-                <img
-                  src="~/assets/media/avatars/blank.png"
-                  alt="Unassigned"
-                  class="w-35px h-35px"
-                />
-              </div>
-            </div>
-          </div>
-          <Transition name="statusesMenu">
-            <div
-              v-if="assigneeOpen"
-              class="statusesMenuWrapper position-absolute bg-white shadow p-0 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
-              style="
-                min-width: 130px !important;
-                width: max-content !important;
-                max-height: 138px !important;
-                gap: 0 !important;
-              "
-            >
-              <div v-if="assigneeLoading" class="text-center">
-                Loading...
-                <Icon name="svg-spinners:180-ring-with-bg" size="16" />
               </div>
               <div
-                @click="changesubIssue({ assign_to: null })"
-                class="unAssignee w-100 d-flex justify-content-start align-items-center hover-bg-light p-2 border-bottom"
-                v-if="subIssue?.assign_to"
+                v-else
+                v-click-outside="closeAssignee"
+                @click="assigneeToggle"
+                class="symbol symbol-circle symbol-30px overflow-hidden"
               >
-                <div class="symbol symbol-circle symbol-30px overflow-hidden">
+                <div class="cursor-pointer" v-if="subIssue?.assign_to" v-tooltip.top="{ value: subIssue?.team_member?.user?.name}">
+                  <img
+                    v-if="subIssue?.team_member?.user?.photo"
+                    :src="subIssue?.team_member?.user?.url_photo"
+                    :alt="subIssue?.team_member?.user?.name"
+                    class="w-35px h-35px"
+                  />
+                  <span
+                    v-else
+                    class="symbol-label text-inverse-warning fw-bold fs-3"
+                    :style="{
+                      backgroundColor: getColor(subIssue?.team_member?.user?.id),
+                    }"
+                    >{{
+                      subIssue?.team_member?.user?.name
+                        ? subIssue?.team_member?.user?.name[0].toUpperCase()
+                        : "-"
+                    }}</span
+                  >
+                </div>
+                <div class="cursor-pointer" v-else v-tooltip.top="{ value: 'Unassigned'}">
                   <img
                     src="~/assets/media/avatars/blank.png"
                     alt="Unassigned"
-                    class="w-30px h-30px"
+                    class="w-35px h-35px"
                   />
-                </div>
-                <span class="ms-3">unassignee</span>
-              </div>
-              <div
-                v-for="(
-                  member, index
-                ) in projectsStore?.project?.team_members?.filter(
-                  (memeber) => memeber?.invite_status === 'accept'
-                )"
-                :key="index"
-                @click="changesubIssue({ assign_to: member?.id })"
-              >
-                <div
-                  class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2 border-bottom"
-                  v-if="subIssue?.assign_to != member?.id"
-                >
-                  <div class="symbol symbol-circle symbol-30px overflow-hidden">
-                    <img
-                      v-if="member?.user?.photo"
-                      :src="member?.user?.url_photo"
-                      :alt="member?.user?.name"
-                      class="w-30px h-30px"
-                    />
-                    <span
-                      v-else
-                      class="symbol-label text-inverse-warning fs-3 fw-bold"
-                      :style="{ backgroundColor: getColor(member?.user?.id) }"
-                      >{{
-                        member?.user?.name
-                          ? member?.user?.name[0].toUpperCase()
-                          : "-"
-                      }}</span
-                    >
-                  </div>
-                  <span class="ms-3">{{ member?.user?.name }}</span>
                 </div>
               </div>
             </div>
-          </Transition>
+            <Transition name="statusesMenu">
+              <div
+                v-if="assigneeOpen"
+                class="statusesMenuWrapper position-absolute bg-white shadow p-0 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
+                style="
+                  min-width: 130px !important;
+                  width: max-content !important;
+                  max-height: 138px !important;
+                  gap: 0 !important;
+                "
+              >
+                <div v-if="assigneeLoading" class="text-center">
+                  Loading...
+                  <Icon name="svg-spinners:180-ring-with-bg" size="16" />
+                </div>
+                <div
+                  @click="changesubIssue({ assign_to: null })"
+                  class="unAssignee w-100 d-flex justify-content-start align-items-center hover-bg-light p-2 border-bottom cursor-pointer"
+                  v-if="subIssue?.assign_to"
+                >
+                  <div class="symbol symbol-circle symbol-30px overflow-hidden">
+                    <img
+                      src="~/assets/media/avatars/blank.png"
+                      alt="Unassigned"
+                      class="w-30px h-30px"
+                    />
+                  </div>
+                  <span class="ms-3">unassignee</span>
+                </div>
+                <div
+                  v-for="(
+                    member, index
+                  ) in projectsStore?.project?.team_members?.filter(
+                    (memeber) => memeber?.invite_status === 'accept'
+                  )"
+                  :key="index"
+                  @click="changesubIssue({ assign_to: member?.id })"
+                >
+                  <div
+                    class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2 border-bottom cursor-pointer"
+                    v-if="subIssue?.assign_to != member?.id"
+                  >
+                    <div class="symbol symbol-circle symbol-30px overflow-hidden">
+                      <img
+                        v-if="member?.user?.photo"
+                        :src="member?.user?.url_photo"
+                        :alt="member?.user?.name"
+                        class="w-30px h-30px"
+                      />
+                      <span
+                        v-else
+                        class="symbol-label text-inverse-warning fs-3 fw-bold"
+                        :style="{ backgroundColor: getColor(member?.user?.id) }"
+                        >{{
+                          member?.user?.name
+                            ? member?.user?.name[0].toUpperCase()
+                            : "-"
+                        }}</span
+                      >
+                    </div>
+                    <span class="ms-3">{{ member?.user?.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
+          <div v-else class="symbol symbol-circle symbol-30px overflow-hidden cursor-pointer">
+                            <NuxtLink v-if="subIssue?.assign_to" :to="`/profile/${subIssue?.team_member?.user?.identify_number}`"  v-tooltip.top="{ value: subIssue?.team_member?.user?.name}">
+                  <img
+                    v-if="subIssue?.team_member?.user?.photo"
+                    :src="subIssue?.team_member?.user?.url_photo"
+                    :alt="subIssue?.team_member?.user?.name"
+                    class="w-35px h-35px"
+                  />
+                  <span
+                    v-else
+                    class="symbol-label text-inverse-warning fw-bold fs-3"
+                    :style="{
+                      backgroundColor: getColor(subIssue?.team_member?.user?.id),
+                    }"
+                    >{{
+                      subIssue?.team_member?.user?.name
+                        ? subIssue?.team_member?.user?.name[0].toUpperCase()
+                        : "-"
+                    }}</span
+                  >
+                </NuxtLink>
+                <div v-else class="cursor-pointer" v-tooltip.top="{ value: 'Unassigned'}">
+                  <img
+                    src="~/assets/media/avatars/blank.png"
+                    alt="Unassigned"
+                    class="w-35px h-35px"
+                  />
+                </div>
+          </div>
         </div>
-        <div class="position-relative">
+        <div class="position-relative" v-if="canEdite">
           <div
             class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
           >

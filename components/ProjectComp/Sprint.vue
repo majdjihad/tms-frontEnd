@@ -8,7 +8,7 @@ import { showToast } from "~/composables/useToast";
 import TieredMenu from "primevue/tieredmenu";
 import Draggable from "vuedraggable";
 
-const props = defineProps(["sprint", "selectedIssue"]);
+const props = defineProps(["sprint", "selectedIssue", "canManage"]);
 const creating = ref(false);
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
@@ -392,7 +392,7 @@ const handleMoveIssue = async (e) => {
               {{ sprint?.goal }}
             </p>
           </div>
-          <div class="card-toolbar">
+          <div class="card-toolbar" v-if="canManage">
             <div
               class="d-flex justify-content-end gap-4"
               data-kt-customer-table-toolbar="base"
@@ -486,22 +486,32 @@ const handleMoveIssue = async (e) => {
                 <span style="line-height: 15px">Delete</span>
               </div>
             </div>
-            <Draggable
-              v-model="sprint.issues"
-              @start="dragStart"
-              @end="dragEnd"
-              group="issues"
-              @change="handleMoveIssue"
-              ghost-class="ghost"
-              itemKey="id"
-            >
-              <template #item="{ element: issue }">
-                <IssueCompIssueCard
-                  v-model="selectedIssue"
-                  :issue="issue"
-                />
-              </template>
-            </Draggable>
+            <div v-if="canManage">
+              <Draggable
+                v-model="sprint.issues"
+                @start="dragStart"
+                @end="dragEnd"
+                group="issues"
+                @change="handleMoveIssue"
+                ghost-class="ghost"
+                itemKey="id"
+              >
+                <template #item="{ element: issue }">
+                  <IssueCompIssueCard
+                    v-model="selectedIssue"
+                    :issue="issue"
+                    :can-edite="canManage"
+                  />
+                </template>
+              </Draggable>
+            </div>
+                        <div v-else>
+                    <IssueCompIssueCard v-for="i in sprint.issues" :key="i?.id"
+                    v-model="selectedIssue"
+                    :issue="i"
+                    :can-edite="canManage"
+                  />
+            </div>
             <div v-if="inProgress || createProgress">
               <IssueCompIssueCard :issue="data" :progress="true" />
             </div>
@@ -516,6 +526,7 @@ const handleMoveIssue = async (e) => {
               </div>
             </div>
             <div
+            v-if="canManage"
               @click.stop
               id="createIssueWrapper"
               ref="inputFocus"

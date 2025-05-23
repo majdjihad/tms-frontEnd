@@ -57,6 +57,7 @@ const getColor = (index) => {
   const colorIndex = index % colorList.length;
   return `#${colorList[colorIndex]}`;
 };
+
 </script>
 
 <template>
@@ -73,7 +74,6 @@ const getColor = (index) => {
           v-if="member?.user?.photo"
           :src="member?.user?.url_photo"
           :alt="member?.user?.name"
-          class="w-100"
         />
         <span
           v-else
@@ -85,7 +85,12 @@ const getColor = (index) => {
         >
       </div>
       <div class="truncate" style="max-width: 100px">
-        {{ member?.user?.name || "---" }}
+        <span v-if="user?.identify_number === member?.user?.identify_number">
+          You
+        </span>
+        <span v-else>
+          {{ member?.user?.name || "---" }}
+        </span>
       </div>
     </NuxtLink>
     <td class="truncate" style="max-width: 100px">
@@ -105,7 +110,7 @@ const getColor = (index) => {
       </div>
     </td>
     <td
-      v-if="member?.user?.id !== projectsStore?.project?.user_id"
+      v-if="user?.id === projectsStore?.project?.user_id && member?.user?.id !== projectsStore?.project?.user_id"
       @click="handleDeleteMember"
       class="text-end px-2"
     >
@@ -177,27 +182,7 @@ const getColor = (index) => {
         {{ member?.invite_status }}
       </div>
     </td>
-    <td
-      v-if="member?.role?.key !== 'admin' && member?.role?.key !== 'owner'"
-      @click="handleDeleteMember"
-      class="text-end px-2"
-    >
-      <div
-        class="btn btn-light-danger btn-flex btn-center btn-sm cursor-pointer"
-      >
-        <div class="d-flex align-items-center gap-1">
-          <i class="ki-duotone ki-trash fs-5">
-            <span class="path1"></span>
-            <span class="path2"></span>
-            <span class="path3"></span>
-            <span class="path4"></span>
-            <span class="path5"></span>
-          </i>
-          <span>Remove</span>
-        </div>
-      </div>
-    </td>
-    <td v-else class="text-end px-2">
+    <td class="text-end px-2">
       <div class="btn">{{ member?.role?.key }}</div>
     </td>
   </tr>

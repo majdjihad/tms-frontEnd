@@ -113,12 +113,6 @@ const {
   },
 });
 
-/**
- * Displays toast notifications for success/error messages
- * @param {string} statusCode - Type of toast ('success' or 'error')
- * @param {string} msg - Message to display
- */
-
 </script>
 
 <template>
@@ -142,7 +136,7 @@ const {
                 <div class="text-center mb-11">
                   <h1 class="text-dark fw-bolder mb-3">Create Project</h1>
                   <div class="text-gray-500 fw-semibold fs-6">
-                    Create your first project
+                    Create your project
                   </div>
                 </div>
 

@@ -6,7 +6,7 @@ import Draggable from "vuedraggable";
 
 const { createIssue, moveIssueForStatus, editStatus, deleteStatus } =
   useBacklog();
-const props = defineProps(["status", "createStatusProgress"]);
+const props = defineProps(["status", "createStatusProgress", "canManage"]);
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
 const route = useRoute();
@@ -261,10 +261,11 @@ const handleMoveIssue = async (e) => {
       </div>
       <div
         v-else
+        :class="{'cursor-grab': canManage}"
         class="status-head d-flex justify-content-between align-items-center"
       >
         <span class="fs-4 p-3 text-gray-700">{{ props.status.name }}</span>
-        <i
+        <i v-if="canManage"
           @click="toggleStatusMenu"
           class="edit-status ki-solid ki-dots-horizontal w-auto h-auto p-1 fs-2x btn btn-sm btn-icon btn-bg-light"
           aria-haspopup="true"
@@ -282,7 +283,7 @@ const handleMoveIssue = async (e) => {
           No issues in this Status.
         </p>
       </div>
-      <div v-else>
+      <div v-if="canManage">
         <Draggable
           v-model="issuesByStatus"
           group="issues"
@@ -295,10 +296,16 @@ const handleMoveIssue = async (e) => {
           </template>
         </Draggable>
       </div>
+      <div v-else>
+        <div v-for="i in issuesByStatus" :key="i.id">
+          <BoardCompIssueCard :issue="i"/>
+        </div>
+      </div>
       <div v-if="createIssueProgress" class="disabled">
         <BoardCompIssueCard :issue="newIssueData" :createIssueProgress="true" />
       </div>
       <div
+      v-if="canManage"
         @click.stop
         @click="creatingIssue = true"
         class="createIssue rounded-bottom"
@@ -457,7 +464,7 @@ const handleMoveIssue = async (e) => {
       </div>
       <div
         v-else
-        class="status-head d-flex justify-content-between align-items-center"
+        class="cursor-grab d-flex justify-content-between align-items-center"
       >
         <span class="fs-4 p-3 text-gray-700">{{ props.status.name }}</span>
         <Icon name="svg-spinners:180-ring-with-bg" class="p-1" size="22" />
@@ -503,7 +510,7 @@ const handleMoveIssue = async (e) => {
 .editStatus:hover {
   background: var(--bs-gray-300);
 }
-.status-head {
+.cursor-grab {
   cursor: grab;
 }
 </style>

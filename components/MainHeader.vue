@@ -45,11 +45,11 @@ const route = useRoute();
                   </span>
                   <ProjectCompProjectsMenu :isProjectMenu="isProjectMenu" />
                 </div>
-                <NuxtLink
+                <NuxtLink v-if="user?.project_identify"
                   :class="{
                     'active-link': user?.project_identify === route.params.id,
                   }"
-                  :to="`/projects/${user?.project_identify}/backlog`"
+                  :to="`/projects/${user?.project_identify}/board`"
                   class="header-menu-item ms-4 position-relative h-100"
                 >
                   <span class="menu-title me-1 fw-bold">my project</span>

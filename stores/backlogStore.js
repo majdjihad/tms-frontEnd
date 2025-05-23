@@ -17,25 +17,25 @@ export const useBacklogStore = defineStore("useBacklog", () => {
     useBacklog();
   // get backlogProject details
   const getBacklogProject = async (projectId) => {
+    allIssues.value = [];
     try {
       const backlogResponse = await backlog(projectId);
-  
+
       // Validate and convert backlog to an array of issues
       backlogProject.value = backlogResponse?.backlog
         ? Object.values(backlogResponse.backlog) // Convert object to array
         : [];
-  
+
       // Validate and assign sprints
       sprintsProject.value = Array.isArray(backlogResponse?.sprints)
         ? backlogResponse.sprints
         : [];
-  
+
       // Populate all issues
-      allIssues.value = [];
       backlogProject.value.forEach((issue) => {
         allIssues.value.push(issue);
       });
-  
+
       sprintsProject.value.forEach((sprint) => {
         if (Array.isArray(sprint.issues)) {
           sprint.issues.forEach((issue) => {
@@ -43,7 +43,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
           });
         }
       });
-  
+
       // Fetch project statuses
       getStatusProject(projectId);
     } catch (error) {
@@ -51,9 +51,10 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       navigateTo("/projects", { replace: true });
     }
   };
-  
+
   // get statuses details
   const getStatusProject = async (projectId) => {
+    statusesArray.value = null;
     try {
       const statusResponse = await statuses(projectId);
       statusesArray.value = statusResponse?.statuses;

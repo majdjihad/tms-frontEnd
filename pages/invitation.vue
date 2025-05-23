@@ -110,7 +110,6 @@ const {
           </nuxtLink>
           <div class="card card-flush mb-10 w-md-650px">
             <div class="card-header pt-9">
-              <h1 class="fw-light mb-3 text-dark">invation massage:</h1>
               <div class="d-flex align-items-center">
                 <div class="symbol symbol-50px me-5">
                   <img
@@ -182,7 +181,7 @@ const {
                     name="svg-spinners:ring-resize"
                     size="16"
                   />
-                  <span v-else class="fs-4">reject</span>
+                  <span v-else class="fs-4">Reject</span>
                 </button>
                 <button
                   :disabled="inProgress"
@@ -196,7 +195,7 @@ const {
                     name="svg-spinners:ring-resize"
                     size="25"
                   />
-                  <span v-else class="fs-4">accept</span>
+                  <span v-else class="fs-4">Accept</span>
                 </button>
               </div>
             </div>

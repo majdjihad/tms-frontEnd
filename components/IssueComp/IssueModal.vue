@@ -8,6 +8,8 @@ import { showToast } from "~/composables/useToast";
 
 const backlogStore = useBacklogStore();
 const projectsStore = useProjectsStore();
+const user = useUser();
+const props = defineProps(["canEdite"]);
 const { editIssue, createIssue, addComment } = useBacklog();
 const route = useRoute();
 // Define issue type function
@@ -27,15 +29,12 @@ const changeTypeIssue = async (actionId) => {
       backlogStore?.issueInfoArray?.id,
       actionId
     );
-      backlogStore.issueInfoArray.type = actionId.type;
-    await backlogStore?.getBacklogProject(
-      route.params.id
-    );
+    backlogStore.issueInfoArray.type = actionId.type;
+    await backlogStore?.getBacklogProject(route.params.id);
   } catch (error) {
     showToast(error?.data?.message);
   }
   editIssueTypeLoading.value = false;
-
 };
 
 // define background color by user id
@@ -125,9 +124,7 @@ const changeIssue = async (actionId) => {
       backlogStore?.issueInfoArray?.id,
       actionId
     );
-    await backlogStore?.getBacklogProject(
-      route.params.id
-    );
+    await backlogStore?.getBacklogProject(route.params.id);
     await backlogStore?.getIssueInfo(
       route.params.id,
       backlogStore?.issueInfoArray?.id
@@ -234,14 +231,10 @@ const openAddCommentLoader = ref(false);
 const addCommentHandle = async () => {
   openAddCommentLoader.value = true;
   try {
-    await addComment(
-      route.params.id,
-      backlogStore?.issueInfoArray?.id,
-      {
-        content: newComment.value,
-        mentionList: [],
-      }
-    );
+    await addComment(route.params.id, backlogStore?.issueInfoArray?.id, {
+      content: newComment.value,
+      mentionList: [],
+    });
     await backlogStore?.getIssueComments(
       route.params.id,
       backlogStore?.issueInfoArray?.id
@@ -276,6 +269,15 @@ watch(
     }
   }
 );
+
+// Add computed property to check if user can comment
+const canComment = computed(() => {
+  const teamMember = projectsStore?.project?.team_members?.find(
+    (member) =>
+      member.user_id === user.value?.id && member.invite_status === "accept"
+  );
+  return teamMember?.role?.key !== "viewer";
+});
 </script>
 
 <template>
@@ -308,7 +310,7 @@ watch(
               </div>
             </div>
             <span class="fs-1 fw-semibold">/</span>
-            <div class="position-relative">
+            <div class="position-relative" v-if="canEdite">
               <div v-if="editIssueTypeLoading">
                 <Icon
                   name="svg-spinners:180-ring-with-bg"
@@ -318,7 +320,7 @@ watch(
               </div>
               <div v-else class="py-1 px-3 fs-3 fw-normal">
                 <div
-                  class="btn btn-sm btn-outline-secondary p-1 fs-4"
+                  class="btn btn-sm btn-outline-secondary p-1 ms-2 fs-4"
                   v-click-outside="() => (openIssueTypeMenu = false)"
                   @click="openIssueTypeMenu = !openIssueTypeMenu"
                 >
@@ -409,6 +411,28 @@ watch(
                 </Transition>
               </div>
             </div>
+            <div v-else>
+              <div class="p-1 ms-3 fs-4">
+                <img
+                  v-if="backlogStore?.issueInfoArray?.type === 'task'"
+                  alt="task"
+                  src="~/assets/media/issue/type/task.svg"
+                />
+                <img
+                  v-else-if="backlogStore?.issueInfoArray?.type === 'story'"
+                  alt="story"
+                  src="~/assets/media/issue/type/story.svg"
+                />
+                <img
+                  v-else-if="backlogStore?.issueInfoArray?.type === 'bug'"
+                  alt="bug"
+                  src="~/assets/media/issue/type/bug.svg"
+                />
+                <span class="ms-1 fw-normal">{{
+                  backlogStore?.issueInfoArray?.type
+                }}</span>
+              </div>
+            </div>
           </div>
           <div
             class="btn btn-sm btn-icon btn-active-color-primary"
@@ -424,7 +448,7 @@ watch(
             <p class="my-6 fs-1 text-capitalize">
               {{ backlogStore?.issueInfoArray?.title }}
             </p>
-            <div>
+            <div v-if="canEdite">
               <p
                 @click="openCreateIssueInput"
                 @click.stop
@@ -443,6 +467,7 @@ watch(
               <div class="position-relative">
                 <div
                   class="py-1 px-3 rounded-1 fw-bold fs-8 text-uppercase text-nowrap"
+                  v-if="canEdite"
                 >
                   <div
                     v-click-outside="() => (descriptionActionMenuOpen = false)"
@@ -466,9 +491,9 @@ watch(
             </div>
             <p
               v-if="!openDescription"
-              class="description-content p-3 fs-5 fw-normal bg-light border border-2 rounded-1"
+              class="description-content p-3 fs-5 fw-normal bg-light border border-2 rounded-1 text-gray-600"
               v-html="
-                backlogStore?.issueInfoArray?.description || 'add a description'
+                backlogStore?.issueInfoArray?.description || 'description...'
               "
             ></p>
             <div v-if="openDescription">
@@ -527,67 +552,120 @@ watch(
               >
                 <p class="fs-5 fw-semibold text-dark">Assignee To</p>
                 <div
-                  class="position-relative w-350px border border-1 cursor-pointer rounded-1"
+                  class="position-relative w-350px border border-1 rounded-1"
                 >
-                  <div class="text-center p-3" v-if="editAssigneeMenuLoading">
-                    <Icon name="svg-spinners:180-ring-with-bg" size="20" />
-                  </div>
-                  <div
-                    v-else
-                    class="fw-bold fs-8 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
-                    v-click-outside="() => (assigneeMenuOpen = false)"
-                    @click="assigneeMenuOpen = !assigneeMenuOpen"
-                  >
+                  <div v-if="canEdite" class="cursor-pointer">
+                    <div class="text-center p-3" v-if="editAssigneeMenuLoading">
+                      <Icon name="svg-spinners:180-ring-with-bg" size="20" />
+                    </div>
                     <div
-                      class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2"
+                      v-else
+                      class="fw-bold fs-8 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
+                      v-click-outside="() => (assigneeMenuOpen = false)"
+                      @click="assigneeMenuOpen = !assigneeMenuOpen"
                     >
                       <div
-                        class="d-flex justify-content-between align-items-center"
-                        v-if="backlogStore?.issueInfoArray?.assign_to"
+                        class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2"
                       >
                         <div
-                          class="symbol symbol-circle symbol-30px overflow-hidden"
+                          class="d-flex justify-content-between align-items-center"
+                          v-if="backlogStore?.issueInfoArray?.assign_to"
                         >
-                          <img
-                            v-if="
-                              backlogStore?.issueInfoArray?.team_member?.user
-                                ?.photo
-                            "
-                            :src="
-                              backlogStore?.issueInfoArray?.team_member?.user
-                                ?.url_photo
-                            "
-                            :alt="
-                              backlogStore?.issueInfoArray?.team_member?.user
-                                ?.name
-                            "
-                            class="w-30px h-30px"
-                          />
-                          <span
-                            v-else
-                            class="symbol-label text-inverse-warning fs-2"
-                            :style="{
-                              backgroundColor: getColor(
-                                backlogStore?.issueInfoArray?.team_member?.user
-                                  ?.id
-                              ),
-                            }"
-                            >{{
-                              backlogStore?.issueInfoArray?.team_member?.user
-                                ?.name
-                                ? backlogStore?.issueInfoArray?.team_member?.user?.name[0].toUpperCase()
-                                : "-"
-                            }}</span
+                          <div
+                            class="symbol symbol-circle symbol-30px overflow-hidden"
                           >
+                            <img
+                              v-if="
+                                backlogStore?.issueInfoArray?.team_member?.user
+                                  ?.photo
+                              "
+                              :src="
+                                backlogStore?.issueInfoArray?.team_member?.user
+                                  ?.url_photo
+                              "
+                              :alt="
+                                backlogStore?.issueInfoArray?.team_member?.user
+                                  ?.name
+                              "
+                              class="w-30px h-30px"
+                            />
+                            <span
+                              v-else
+                              class="symbol-label text-inverse-warning fs-2"
+                              :style="{
+                                backgroundColor: getColor(
+                                  backlogStore?.issueInfoArray?.team_member
+                                    ?.user?.id
+                                ),
+                              }"
+                              >{{
+                                backlogStore?.issueInfoArray?.team_member?.user
+                                  ?.name
+                                  ? backlogStore?.issueInfoArray?.team_member?.user?.name[0].toUpperCase()
+                                  : "-"
+                              }}</span
+                            >
+                          </div>
+                          <span class="ms-2 fs-6 text-capitalize fw-normal">{{
+                            backlogStore?.issueInfoArray?.team_member?.user
+                              ?.name
+                          }}</span>
                         </div>
-                        <span class="ms-2 fs-6 text-capitalize fw-normal">{{
-                          backlogStore?.issueInfoArray?.team_member?.user?.name
-                        }}</span>
+                        <div v-else>
+                          <div
+                            class="unAssignee w-100 d-flex justify-content-start align-items-center"
+                            v-if="!backlogStore?.issueInfoArray?.assign_to"
+                          >
+                            <div
+                              class="symbol symbol-circle symbol-30px overflow-hidden"
+                            >
+                              <img
+                                src="~/assets/media/avatars/blank.png"
+                                alt="Unassigned"
+                                class="w-30px h-30px"
+                              />
+                            </div>
+                            <span class="ms-2 fs-6 text-capitalize fw-normal"
+                              >unassignee</span
+                            >
+                          </div>
+                        </div>
                       </div>
-                      <div v-else>
+                      <Icon
+                        v-if="assigneeMenuOpen"
+                        name="ic:outline-keyboard-arrow-up"
+                        size="25"
+                        class="text-gray-400 m-0"
+                      />
+                      <Icon
+                        v-else
+                        name="ic:outline-keyboard-arrow-down"
+                        size="25"
+                        class="text-gray-400 m-0"
+                      />
+                    </div>
+                    <Transition name="statusesMenu">
+                      <div
+                        v-if="assigneeMenuOpen"
+                        class="w-100 statusesMenuWrapper position-absolute bg-white shadow p-0 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
+                        style="
+                          min-width: 100% !important;
+                          width: max-content !important;
+                          max-height: 138px !important;
+                          gap: 0 !important;
+                        "
+                      >
+                        <div v-if="assigneeMenuLoading" class="text-center">
+                          Loading...
+                          <Icon
+                            name="svg-spinners:180-ring-with-bg"
+                            size="16"
+                          />
+                        </div>
                         <div
-                          class="unAssignee w-100 d-flex justify-content-start align-items-center"
-                          v-if="!backlogStore?.issueInfoArray?.assign_to"
+                          @click="changeIssue({ assign_to: null })"
+                          class="unAssignee w-100 d-flex justify-content-start align-items-center hover-bg-light p-3 border-bottom"
+                          v-if="backlogStore?.issueInfoArray?.assign_to"
                         >
                           <div
                             class="symbol symbol-circle symbol-30px overflow-hidden"
@@ -598,44 +676,106 @@ watch(
                               class="w-30px h-30px"
                             />
                           </div>
-                          <span class="ms-2 fs-6 text-capitalize fw-normal"
+                          <span class="m-0 ms-3 fw-normal text-capitalize"
                             >unassignee</span
                           >
                         </div>
+                        <div
+                          v-for="(
+                            member, index
+                          ) in projectsStore?.project?.team_members?.filter(
+                            (m) =>
+                              m?.invite_status === 'accept' &&
+                              m?.role?.key !== 'viewer'
+                          )"
+                          :key="index"
+                          @click="changeIssue({ assign_to: member?.id })"
+                        >
+                          <div
+                            class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-3 border-bottom"
+                            v-if="
+                              backlogStore?.issueInfoArray?.assign_to !==
+                              member?.id
+                            "
+                          >
+                            <div
+                              class="symbol symbol-circle symbol-30px overflow-hidden"
+                            >
+                              <img
+                                v-if="member?.user?.photo"
+                                :src="member?.user?.url_photo"
+                                :alt="member?.user?.name"
+                                class="w-30px h-30px"
+                              />
+                              <span
+                                v-else
+                                class="symbol-label text-inverse-warning fs-2"
+                                :style="{
+                                  backgroundColor: getColor(member?.user?.id),
+                                }"
+                                >{{
+                                  member?.user?.name
+                                    ? member?.user?.name[0].toUpperCase()
+                                    : "-"
+                                }}</span
+                              >
+                            </div>
+                            <span class="ms-2 fs-5">{{
+                              member?.user?.name
+                            }}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <Icon
-                      v-if="assigneeMenuOpen"
-                      name="ic:outline-keyboard-arrow-up"
-                      size="25"
-                      class="text-gray-400 m-0"
-                    />
-                    <Icon
-                      v-else
-                      name="ic:outline-keyboard-arrow-down"
-                      size="25"
-                      class="text-gray-400 m-0"
-                    />
+                    </Transition>
                   </div>
-                  <Transition name="statusesMenu">
+                  <div class="p-2" v-else>
                     <div
-                      v-if="assigneeMenuOpen"
-                      class="w-100 statusesMenuWrapper position-absolute bg-white shadow p-0 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
-                      style="
-                        min-width: 100% !important;
-                        width: max-content !important;
-                        max-height: 138px !important;
-                        gap: 0 !important;
-                      "
+                      class="d-flex align-items-center"
+                      v-if="backlogStore?.issueInfoArray?.assign_to"
                     >
-                      <div v-if="assigneeMenuLoading" class="text-center">
-                        Loading...
-                        <Icon name="svg-spinners:180-ring-with-bg" size="16" />
-                      </div>
                       <div
-                        @click="changeIssue({ assign_to: null })"
-                        class="unAssignee w-100 d-flex justify-content-start align-items-center hover-bg-light p-3 border-bottom"
-                        v-if="backlogStore?.issueInfoArray?.assign_to"
+                        class="symbol symbol-circle symbol-30px overflow-hidden"
+                      >
+                        <img
+                          v-if="
+                            backlogStore?.issueInfoArray?.team_member?.user
+                              ?.photo
+                          "
+                          :src="
+                            backlogStore?.issueInfoArray?.team_member?.user
+                              ?.url_photo
+                          "
+                          :alt="
+                            backlogStore?.issueInfoArray?.team_member?.user
+                              ?.name
+                          "
+                          class="w-30px h-30px"
+                        />
+                        <span
+                          v-else
+                          class="symbol-label text-inverse-warning fs-2"
+                          :style="{
+                            backgroundColor: getColor(
+                              backlogStore?.issueInfoArray?.team_member?.user
+                                ?.id
+                            ),
+                          }"
+                          >{{
+                            backlogStore?.issueInfoArray?.team_member?.user
+                              ?.name
+                              ? backlogStore?.issueInfoArray?.team_member?.user?.name[0].toUpperCase()
+                              : "-"
+                          }}</span
+                        >
+                      </div>
+                      <span class="ms-2 fs-6 text-capitalize fw-normal">{{
+                        backlogStore?.issueInfoArray?.team_member?.user?.name
+                      }}</span>
+                    </div>
+                    <div v-else>
+                      <div
+                        class="unAssignee w-100 d-flex justify-content-start align-items-center"
+                        v-if="!backlogStore?.issueInfoArray?.assign_to"
                       >
                         <div
                           class="symbol symbol-circle symbol-30px overflow-hidden"
@@ -646,55 +786,12 @@ watch(
                             class="w-30px h-30px"
                           />
                         </div>
-                        <span class="m-0 ms-3 fw-normal text-capitalize"
+                        <span class="ms-2 fs-6 text-capitalize fw-normal"
                           >unassignee</span
                         >
                       </div>
-                      <div
-                        v-for="(
-                          member, index
-                        ) in projectsStore?.project?.team_members?.filter(
-                          (m) => m?.invite_status === 'accept'
-                        )"
-                        :key="index"
-                        @click="changeIssue({ assign_to: member?.id })"
-                      >
-                        <div
-                          class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-3 border-bottom"
-                          v-if="
-                            backlogStore?.issueInfoArray?.assign_to !==
-                            member?.id
-                          "
-                        >
-                          <div
-                            class="symbol symbol-circle symbol-30px overflow-hidden"
-                          >
-                            <img
-                              v-if="member?.user?.photo"
-                              :src="member?.user?.url_photo"
-                              :alt="member?.user?.name"
-                              class="w-30px h-30px"
-                            />
-                            <span
-                              v-else
-                              class="symbol-label text-inverse-warning fs-2"
-                              :style="{
-                                backgroundColor: getColor(member?.user?.id),
-                              }"
-                              >{{
-                                member?.user?.name
-                                  ? member?.user?.name[0].toUpperCase()
-                                  : "-"
-                              }}</span
-                            >
-                          </div>
-                          <span class="ms-2 fs-5">{{
-                            member?.user?.name
-                          }}</span>
-                        </div>
-                      </div>
                     </div>
-                  </Transition>
+                  </div>
                 </div>
               </div>
               <div
@@ -702,179 +799,219 @@ watch(
               >
                 <p class="fs-6 fw-semibold">Status</p>
                 <div
-                  class="position-relative w-350px border border-1 cursor-pointer rounded-1"
+                  class="position-relative w-350px border border-1 rounded-1"
                 >
-                  <div class="text-center p-3" v-if="editStatusMenuLoading">
-                    <Icon name="svg-spinners:180-ring-with-bg" size="20" />
+                  <div v-if="canEdite" class="cursor-pointer">
+                    <div class="text-center p-3" v-if="editStatusMenuLoading">
+                      <Icon name="svg-spinners:180-ring-with-bg" size="20" />
+                    </div>
+                    <div
+                      v-else
+                      class="fw-bold fs-9 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
+                      v-click-outside="() => (statusMenuOpen = false)"
+                      @click="statusMenuOpen = !statusMenuOpen"
+                    >
+                      <div
+                        class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2"
+                      >
+                        <span class="fw-normal fs-7">{{
+                          backlogStore?.issueInfoArray?.status?.name
+                        }}</span>
+                      </div>
+                      <Icon
+                        v-if="statusMenuOpen"
+                        name="ic:outline-keyboard-arrow-up"
+                        size="25"
+                        class="text-gray-400 m-0"
+                      />
+                      <Icon
+                        v-else
+                        name="ic:outline-keyboard-arrow-down"
+                        size="25"
+                        class="text-gray-400 m-0"
+                      />
+                    </div>
+                    <Transition name="statusesMenu">
+                      <div
+                        v-if="statusMenuOpen"
+                        class="w-100 statusesMenuWrapper position-absolute bg-white shadow p-0 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
+                        style="
+                          min-width: 100% !important;
+                          width: max-content !important;
+                          max-height: 138px !important;
+                          gap: 0 !important;
+                        "
+                      >
+                        <div v-if="statusMenuLoading" class="text-center">
+                          Loading...
+                          <Icon
+                            name="svg-spinners:180-ring-with-bg"
+                            size="16"
+                          />
+                        </div>
+                        <div
+                          v-else
+                          v-for="(status, index) in backlogStore.statusesArray"
+                          :key="index"
+                        >
+                          <div
+                            class="w-100 fw-normal fs-7 p-3 hover-bg-light border-bottom"
+                            v-if="
+                              status?.name !==
+                              backlogStore?.issueInfoArray?.status?.name
+                            "
+                            @click="changeIssue({ status_id: status?.id })"
+                          >
+                            {{ status?.name }}
+                          </div>
+                        </div>
+                      </div>
+                    </Transition>
                   </div>
                   <div
                     v-else
-                    class="fw-bold fs-9 text-uppercase text-nowrap d-flex align-items-center hover-bg-light p-1"
-                    v-click-outside="() => (statusMenuOpen = false)"
-                    @click="statusMenuOpen = !statusMenuOpen"
+                    class="w-100 fw-normal fs-7 p-3 hover-bg-light border-bottom"
                   >
-                    <div
-                      class="w-100 d-flex justify-content-start align-items-center hover-bg-light p-2"
-                    >
-                      <span class="fw-normal fs-7">{{
-                        backlogStore?.issueInfoArray?.status?.name
-                      }}</span>
-                    </div>
-                    <Icon
-                      v-if="statusMenuOpen"
-                      name="ic:outline-keyboard-arrow-up"
-                      size="25"
-                      class="text-gray-400 m-0"
-                    />
-                    <Icon
-                      v-else
-                      name="ic:outline-keyboard-arrow-down"
-                      size="25"
-                      class="text-gray-400 m-0"
-                    />
+                    {{ backlogStore?.issueInfoArray?.status?.name }}
                   </div>
-                  <Transition name="statusesMenu">
-                    <div
-                      v-if="statusMenuOpen"
-                      class="w-100 statusesMenuWrapper position-absolute bg-white shadow p-0 d-flex flex-column gap-2 rounded-1 overflow-y-auto z-1"
-                      style="
-                        min-width: 100% !important;
-                        width: max-content !important;
-                        max-height: 138px !important;
-                        gap: 0 !important;
-                      "
-                    >
-                      <div v-if="statusMenuLoading" class="text-center">
-                        Loading...
-                        <Icon name="svg-spinners:180-ring-with-bg" size="16" />
-                      </div>
-                      <div
-                        v-else
-                        v-for="(status, index) in backlogStore.statusesArray"
-                        :key="index"
-                      >
-                        <div
-                          class="w-100 fw-normal fs-7 p-3 hover-bg-light border-bottom"
-                          v-if="
-                            status?.name !==
-                            backlogStore?.issueInfoArray?.status?.name
-                          "
-                          @click="changeIssue({ status_id: status?.id })"
-                        >
-                          {{ status?.name }}
-                        </div>
-                      </div>
-                    </div>
-                  </Transition>
                 </div>
               </div>
               <div
                 class="d-flex justify-content-between align-items-center p-3"
               >
                 <p class="fs-6 fw-semibold">Estimate Time</p>
-                <div class="position-relative w-350px cursor-pointer">
-                  <div
-                    v-if="!openEstimateTime"
-                    class="p-4 d-flex justify-content-start align-items-center border border-1 rounded-1"
-                    @click="openEstimateTime = !openEstimateTime"
-                  >
-                    <div class="d-flex align-items-center gap-2">
-                      <span class="badge fs-7 badge-light-dark"
-                        >{{
-                          backlogStore?.issueInfoArray?.estimated_at[0]
-                        }}
-                        d</span
-                      >
-                      <span class="badge fs-7 badge-light-primary"
-                        >{{ backlogStore?.issueInfoArray?.estimated_at[1] }} h
-                      </span>
-                      <span class="badge fs-7 badge-light-warning"
-                        >{{ backlogStore?.issueInfoArray?.estimated_at[2] }} m
-                      </span>
+                <div class="position-relative w-350px">
+                  <div v-if="canEdite" class="cursor-pointer">
+                    <div
+                      v-if="!openEstimateTime"
+                      class="p-4 d-flex justify-content-start align-items-center border border-1 rounded-1"
+                      @click="openEstimateTime = !openEstimateTime"
+                    >
+                      <div class="d-flex align-items-center gap-2">
+                        <span class="badge fs-7 badge-light-dark"
+                          >{{
+                            backlogStore?.issueInfoArray?.estimated_at[0]
+                          }}
+                          d</span
+                        >
+                        <span class="badge fs-7 badge-light-primary"
+                          >{{ backlogStore?.issueInfoArray?.estimated_at[1] }} h
+                        </span>
+                        <span class="badge fs-7 badge-light-warning"
+                          >{{ backlogStore?.issueInfoArray?.estimated_at[2] }} m
+                        </span>
+                      </div>
+                    </div>
+                    <form
+                      v-else
+                      @submit.prevent="
+                        changeIssue({
+                          estimated_at: [
+                            backlogStore?.issueInfoArray?.estimated_at[0],
+                            backlogStore?.issueInfoArray?.estimated_at[1],
+                            backlogStore?.issueInfoArray?.estimated_at[2],
+                          ],
+                        })
+                      "
+                    >
+                      <div class="d-flex">
+                        <div class="input-group">
+                          <span class="input-group-text" id="basic-addon1"
+                            >D</span
+                          >
+                          <input
+                            type="text"
+                            class="form-control placeholder-sm p-0 ps-1"
+                            v-model="
+                              backlogStore.issueInfoArray.estimated_at[0]
+                            "
+                            placeholder="day"
+                            aria-label="day"
+                            aria-describedby="basic-addon1"
+                          />
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text" id="basic-addon1"
+                            >H</span
+                          >
+                          <input
+                            type="text"
+                            class="form-control placeholder-sm p-0 ps-1"
+                            v-model="
+                              backlogStore.issueInfoArray.estimated_at[1]
+                            "
+                            placeholder="hour"
+                            aria-label="hour"
+                            aria-describedby="basic-addon1"
+                          />
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text" id="basic-addon1"
+                            >M</span
+                          >
+                          <input
+                            type="text"
+                            class="form-control placeholder-sm p-0 ps-1"
+                            v-model="
+                              backlogStore.issueInfoArray.estimated_at[2]
+                            "
+                            placeholder="minutes"
+                            aria-label="minutes"
+                            aria-describedby="basic-addon1"
+                          />
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-end mt-3">
+                        <button
+                          :disabled="editEstimateTimeLoading"
+                          class="btn btn-sm btn-light-success mx-1"
+                        >
+                          <span v-if="!editEstimateTimeLoading">save</span>
+                          <Icon
+                            v-else
+                            name="svg-spinners:180-ring-with-bg"
+                            class="p-1"
+                            size="22"
+                          />
+                        </button>
+                        <p
+                          @click="openEstimateTime = false"
+                          class="btn btn-sm btn-light mx-1"
+                        >
+                          cansel
+                        </p>
+                      </div>
+                    </form>
+                  </div>
+                  <div v-else>
+                    <div
+                      class="p-4 d-flex justify-content-start align-items-center border border-1 rounded-1"
+                    >
+                      <div class="d-flex align-items-center gap-2">
+                        <span class="badge fs-7 badge-light-dark"
+                          >{{
+                            backlogStore?.issueInfoArray?.estimated_at[0]
+                          }}
+                          d</span
+                        >
+                        <span class="badge fs-7 badge-light-primary"
+                          >{{ backlogStore?.issueInfoArray?.estimated_at[1] }} h
+                        </span>
+                        <span class="badge fs-7 badge-light-warning"
+                          >{{ backlogStore?.issueInfoArray?.estimated_at[2] }} m
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <form
-                    v-else
-                    @submit.prevent="
-                      changeIssue({
-                        estimated_at: [
-                          backlogStore?.issueInfoArray?.estimated_at[0],
-                          backlogStore?.issueInfoArray?.estimated_at[1],
-                          backlogStore?.issueInfoArray?.estimated_at[2],
-                        ],
-                      })
-                    "
-                  >
-                    <div class="d-flex">
-                      <div class="input-group">
-                        <span class="input-group-text" id="basic-addon1"
-                          >D</span
-                        >
-                        <input
-                          type="text"
-                          class="form-control placeholder-sm p-0 ps-1"
-                          v-model="backlogStore.issueInfoArray.estimated_at[0]"
-                          placeholder="day"
-                          aria-label="day"
-                          aria-describedby="basic-addon1"
-                        />
-                      </div>
-                      <div class="input-group">
-                        <span class="input-group-text" id="basic-addon1"
-                          >H</span
-                        >
-                        <input
-                          type="text"
-                          class="form-control placeholder-sm p-0 ps-1"
-                          v-model="backlogStore.issueInfoArray.estimated_at[1]"
-                          placeholder="hour"
-                          aria-label="hour"
-                          aria-describedby="basic-addon1"
-                        />
-                      </div>
-                      <div class="input-group">
-                        <span class="input-group-text" id="basic-addon1"
-                          >M</span
-                        >
-                        <input
-                          type="text"
-                          class="form-control placeholder-sm p-0 ps-1"
-                          v-model="backlogStore.issueInfoArray.estimated_at[2]"
-                          placeholder="minutes"
-                          aria-label="minutes"
-                          aria-describedby="basic-addon1"
-                        />
-                      </div>
-                    </div>
-                    <div class="d-flex justify-content-end mt-3">
-                      <button
-                        :disabled="editEstimateTimeLoading"
-                        class="btn btn-sm btn-light-success mx-1"
-                      >
-                        <span v-if="!editEstimateTimeLoading">save</span>
-                        <Icon
-                          v-else
-                          name="svg-spinners:180-ring-with-bg"
-                          class="p-1"
-                          size="22"
-                        />
-                      </button>
-                      <p
-                        @click="openEstimateTime = false"
-                        class="btn btn-sm btn-light mx-1"
-                      >
-                        cansel
-                      </p>
-                    </div>
-                  </form>
                 </div>
               </div>
               <div
                 class="d-flex justify-content-between align-items-center p-3"
               >
                 <p class="fs-6 fw-semibold">Reporter</p>
-                <div
-                  class="position-relative w-350px border border-1 rounded-1"
+                <NuxtLink
+                  :to="`/profile/${backlogStore?.issueInfoArray?.user?.identify_number}`"
+                  class="position-relative w-350px border border-1 rounded-1 text-dark"
                 >
                   <div
                     class="d-flex justify-content-start align-items-center p-3"
@@ -907,7 +1044,7 @@ watch(
                       backlogStore?.issueInfoArray?.user?.name
                     }}</span>
                   </div>
-                </div>
+                </NuxtLink>
               </div>
               <div class="position-relative mt-4">
                 <div class="border-top border-1 fw-semibold p-3">
@@ -949,13 +1086,16 @@ watch(
           </div>
           <div class="my-4">
             <h1 class="fs-4 my-6 text-capitalize">sub issues</h1>
-            <div class="border border-1 rounded-1">
+            <div class="border border-1 rounded-1" v-if="canEdite">
               <div
                 v-for="(subIssue, index) in backlogStore?.issueInfoArray
                   ?.sub_issues"
                 :key="index"
               >
-                <IssueCompSubIssueCard :subIssue="subIssue" />
+                <IssueCompSubIssueCard
+                  :subIssue="subIssue"
+                  :can-edite="canEdite"
+                />
               </div>
               <div v-if="createSubIssueLoading">
                 <IssueCompSubIssueCard
@@ -1097,6 +1237,20 @@ watch(
                 >
               </div>
             </div>
+            <div v-else>
+              <div v-if="backlogStore?.issueInfoArray?.sub_issues.length > 0">
+                <div
+                  v-for="(subIssue, index) in backlogStore?.issueInfoArray
+                    ?.sub_issues"
+                  :key="index"
+                >
+                  <IssueCompSubIssueCard :subIssue="subIssue" />
+                </div>
+              </div>
+              <p class="fs-4 text-center py-4 text-gray-600" v-else>
+                No have any subIssues in this Issue
+              </p>
+            </div>
           </div>
           <div class="my-4">
             <h1 class="fs-4 my-6">Activity</h1>
@@ -1124,30 +1278,26 @@ watch(
               </li>
             </ul>
             <div v-if="commentComponent === true">
+              <!-- Only show comment input for non-viewer members -->
               <div
+                v-if="canComment"
                 :class="{ 'align-items-center': !openAddComment }"
                 class="row mb-4"
               >
                 <div class="col-1 overflow-hidden cursor-pointer">
                   <img
-                    v-if="backlogStore?.issueInfoArray?.user?.photo"
-                    :src="backlogStore?.issueInfoArray?.user?.url_photo"
-                    :alt="backlogStore?.issueInfoArray?.user?.name"
+                    v-if="user?.photo"
+                    :src="user?.url_photo"
+                    :alt="user?.name"
                     class="w-35px h-35px rounded-circle"
                   />
                   <span
                     v-else
                     class="symbol-label text-inverse-warning fs-1 d-flex justify-content-center align-items-center w-30px h-30px rounded-circle"
                     :style="{
-                      backgroundColor: getColor(
-                        backlogStore?.issueInfoArray?.user?.id
-                      ),
+                      backgroundColor: getColor(user?.id),
                     }"
-                    >{{
-                      backlogStore?.issueInfoArray?.user?.name
-                        ? backlogStore?.issueInfoArray?.user?.name[0].toUpperCase()
-                        : "-"
-                    }}</span
+                    >{{ user?.name[0].toUpperCase() }}</span
                   >
                 </div>
                 <div class="col-11 ps-0">
@@ -1189,12 +1339,16 @@ watch(
                   </div>
                 </div>
               </div>
+              <!-- Show existing comments -->
               <div v-if="backlogStore?.issueCommentArray?.length">
                 <div
                   v-for="(comment, index) in backlogStore?.issueCommentArray"
                   :key="index"
                 >
-                  <IssueCompIssueComment :comment="comment" />
+                  <IssueCompIssueComment
+                    :comment="comment"
+                    :can-edite="canEdite"
+                  />
                 </div>
               </div>
             </div>
