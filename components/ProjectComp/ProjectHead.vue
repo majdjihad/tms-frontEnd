@@ -209,7 +209,7 @@ const handleArchiveProject = () => {
                     <span class="menu-title">Team</span>
                   </NuxtLink>
                 </div>
-                <div class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
+                <div v-if="hasManagePermission" class="menu-item pb-xl-8 pb-4 mt-5 mt-lg-0">
                   <NuxtLink
                     :to="`/projects/${route.params.id}/history`"
                     class="menu-link"

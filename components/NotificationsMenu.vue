@@ -11,7 +11,7 @@ const props = defineProps(["isNotificationsMenu"]);
           class="alert d-flex flex-column align-items-center flex-sm-row w-100"
         >
           <div class="d-flex flex-column w-100">
-            <h6 class="fw-semibold">
+            <h6 class="fw-semibold text-gray-500">
               You don't have any notifications project.
             </h6>
           </div>

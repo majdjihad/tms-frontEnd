@@ -100,13 +100,16 @@ const changeIssue = async (actionId) => {
     }
   }
   if (Object.keys(actionId)[0] === "estimated_at") {
-    if (isNaN(dayTime.value) || dayTime.value >= 31) {
+    if (isNaN(backlogStore?.issueInfoArray?.estimated_at[0]) || backlogStore?.issueInfoArray?.estimated_at[0] >= 31) {
+      editEstimateTimeLoading.value = false;
       showToast("error", "please ensure in the value of the day is below 30");
       return;
-    } else if (isNaN(hourTime.value) || hourTime.value >= 25) {
+    } else if (isNaN(backlogStore?.issueInfoArray?.estimated_at[1]) || backlogStore?.issueInfoArray?.estimated_at[1] >= 25) {
+      editEstimateTimeLoading.value = false;
       showToast("error", "please ensure in the value of the hour is below 24");
       return;
-    } else if (isNaN(minuteTime.value) || minuteTime.value >= 61) {
+    } else if (isNaN(backlogStore?.issueInfoArray?.estimated_at[2]) || backlogStore?.issueInfoArray?.estimated_at[2] >= 61) {
+      editEstimateTimeLoading.value = false;
       showToast(
         "error",
         "please ensure in the value of the minutes is below 60"
@@ -146,9 +149,6 @@ const changeIssue = async (actionId) => {
 };
 
 // Define Estimate Time function
-let dayTime = ref(backlogStore?.issueInfoArray?.estimated_at[0]);
-let hourTime = ref(backlogStore?.issueInfoArray?.estimated_at[1]);
-let minuteTime = ref(backlogStore?.issueInfoArray?.estimated_at[2]);
 let openEstimateTime = ref(false);
 let editEstimateTimeLoading = ref(false);
 

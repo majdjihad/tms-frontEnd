@@ -87,7 +87,7 @@ async function favorite(projectId) {
           <div
             class="border border-gray-300 border-dashed rounded min-w-90px py-3 px-4 mb-3"
           >
-            <div class="fs-5 text-gray-800 fw-bold text-center">25</div>
+            <div class="fs-5 text-gray-800 fw-bold text-center">{{project?.activeIssues}}</div>
             <div class="fw-semibold text-gray-400">Opened Issues</div>
           </div>
         </div>

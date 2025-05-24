@@ -12,12 +12,11 @@ export const useBacklogStore = defineStore("useBacklog", () => {
   let issueHistoryArray = ref(null);
   let subIssueCommentArray = ref(null);
   let subIssueHistoryArray = ref(null);
-  let allIssues = ref([]);
+  let allIssues = ref(null);
   const { backlog, statuses, issueDescription, issueComments, issueHistory } =
     useBacklog();
   // get backlogProject details
   const getBacklogProject = async (projectId) => {
-    allIssues.value = [];
     try {
       const backlogResponse = await backlog(projectId);
 
@@ -25,7 +24,7 @@ export const useBacklogStore = defineStore("useBacklog", () => {
       backlogProject.value = backlogResponse?.backlog
         ? Object.values(backlogResponse.backlog) // Convert object to array
         : [];
-
+      allIssues.value = []
       // Validate and assign sprints
       sprintsProject.value = Array.isArray(backlogResponse?.sprints)
         ? backlogResponse.sprints
@@ -54,7 +53,6 @@ export const useBacklogStore = defineStore("useBacklog", () => {
 
   // get statuses details
   const getStatusProject = async (projectId) => {
-    statusesArray.value = null;
     try {
       const statusResponse = await statuses(projectId);
       statusesArray.value = statusResponse?.statuses;

@@ -381,7 +381,7 @@ const handleMoveIssue = async (e) => {
               >
             </div>
             <div class="fs-7 text-gray-600 fw-normal">
-              <span>{{ moment(sprint?.created_at).format("ll") }}</span> -
+              <span>{{ moment(sprint?.start_date).format("ll") }}</span> -
               <span>Forever</span>
             </div>
             <p

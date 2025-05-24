@@ -1,14 +1,13 @@
 <script setup>
 import { useSubmit } from "~/composables/useSubmit";
-import { useProjectsStore } from "~/stores/projectsStore";
 import VueDatePicker from "@vuepic/vue-datepicker";
+import moment from "moment";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { useBacklog } from "~/composables/useBacklog";
 import { showToast } from "~/composables/useToast";
 
 const route = useRoute();
 const props = defineProps(["sprint"]);
-const projectsStore = useProjectsStore();
 const { editSprint } = useBacklog();
 
 const errorMsg = reactive({
@@ -35,7 +34,11 @@ const data = reactive({
   },
   goal: null,
 });
-
+watch(() => data.start_date, (newDate) => {
+  if (newDate && typeof newDate === 'object') {
+    data.start_date = moment(newDate).format("YYYY-MM-DD HH:mm:ss");
+  }
+});
 const durations = ref([
   { name: "1 Week", value: "1 Week" },
   { name: "2 Week", value: "2 Week" },

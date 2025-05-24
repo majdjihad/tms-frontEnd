@@ -19,28 +19,10 @@ const user = useUser();
 const route = useRoute();
 const projectId = ref(route?.params?.id);
 // before render page
-const isLoading = ref(true);
-
-const fetchBacklog = async (id) => {
-  isLoading.value = true;
-  await backlogStore?.getBacklogProject(id);
-  isLoading.value = false;
-};
 
 onMounted(() => {
-  if (projectId.value !== projectStore?.project?.project_identify) {
-    fetchBacklog(projectId.value);
-  }
+    backlogStore?.getBacklogProject(projectId.value);
 });
-
-// watch(
-//   () => route.params.id,
-//   (newId) => {
-//     projectId.value = newId;
-//     fetchBacklog(newId);
-//   }
-// );
-
 const { createStatus, moveStatus } = useBacklog();
 
 let showCreateStatus = ref(false);
@@ -121,13 +103,6 @@ const handleMoveStatus = async (e) => {
     });
   }
 };
-watch(
-  () => route.params.id,
-  (newId) => {
-    projectId.value = newId;
-    fetchBacklog(newId);
-  }
-);
 </script>
 <template>
   <div class="app-container container-xxl py-9 d-flex overflow-auto">

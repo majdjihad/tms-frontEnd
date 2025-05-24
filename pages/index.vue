@@ -83,7 +83,7 @@ let currentImage = ref("board");
                     </div>
                   </div>
                 </div>
-                <div class="flex-equal text-end ms-1">
+                <div class="flex-equal text-end ms-1 d-flex">
                   <NuxtLink
                     to="/login"
                     class="btn border border-primary border-2 text-white me-5"

@@ -85,6 +85,7 @@ export const useAuth = () => {
     await $larafetch("/api/logout", { method: "post" });
     user.value = null;
     await navigateTo("/login", { replace: true });
+    window.location.reload();  
   }
 
   // async function resendEmailVerification() {

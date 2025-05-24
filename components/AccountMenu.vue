@@ -8,7 +8,9 @@ const { logout } = useAuth();
 const inProgress = ref(false);
 async function handleLogout() {
   inProgress.value = true;
+  
   await logout();
+
 }
 </script>
 
