@@ -76,9 +76,7 @@ const {
     onSuccess: async (response) => {
       // Handle the response
       createProgress.value = true;
-      await backlogStore?.getBacklogProject(
-        route.params.id
-      );
+      await backlogStore?.getBacklogProject(route.params.id);
       createProgress.value = false;
     },
     onError: (error) => {
@@ -176,11 +174,9 @@ const handleDeleteSprint = () => {
   });
   const { submit } = useSubmit(
     async () => {
-      return await deleteSprint(
-        route.params.id,
-        props?.sprint?.id,
-        { issue_sprint_id: null }
-      );
+      return await deleteSprint(route.params.id, props?.sprint?.id, {
+        issue_sprint_id: null,
+      });
     },
     {
       onError: (error) => {
@@ -211,10 +207,9 @@ const handleMultipleDeleteIssue = () => {
   });
   const { submit } = useSubmit(
     async () => {
-      return await deleteMultipleIssues(
-        route.params.id,
-        { issues_id: selectedIssue.value }
-      );
+      return await deleteMultipleIssues(route.params.id, {
+        issues_id: selectedIssue.value,
+      });
     },
     {
       onError: (error) => {
@@ -266,10 +261,7 @@ const handleMultipleEditStatus = (keyParam, valueParam) => {
     async () => {
       const data = reactive({ issues_id: selectedIssue.value });
       data[keyParam] = valueParam;
-      return await editMultipleIssue(
-        route.params.id,
-        data
-      );
+      return await editMultipleIssue(route.params.id, data);
     },
     {
       onError: (error) => {
@@ -314,38 +306,24 @@ const handleMoveIssue = async (e) => {
           sprint_id: props.sprint.id,
           order: e?.added?.newIndex + 1,
         });
-        await backlogStore?.getBacklogProject(
-          route.params.id
-        );
+        await backlogStore?.getBacklogProject(route.params.id);
       } else {
-        await moveIssue(
-          route.params.id,
-          e?.added?.element.id,
-          {
-            sprint_id: props.sprint.id,
-            order: e?.added?.newIndex + 1,
-          }
-        );
-      }
-    } else {
-      await moveIssue(
-        route.params.id,
-        e?.added?.element.id,
-        {
+        await moveIssue(route.params.id, e?.added?.element.id, {
           sprint_id: props.sprint.id,
           order: e?.added?.newIndex + 1,
-        }
-      );
+        });
+      }
+    } else {
+      await moveIssue(route.params.id, e?.added?.element.id, {
+        sprint_id: props.sprint.id,
+        order: e?.added?.newIndex + 1,
+      });
     }
   } else if (!e.removed) {
-    await moveIssue(
-      route.params.id,
-      e?.moved?.element.id,
-      {
-        sprint_id: null,
-        order: e?.moved?.newIndex + 1,
-      }
-    );
+    await moveIssue(route.params.id, e?.moved?.element.id, {
+      sprint_id: null,
+      order: e?.moved?.newIndex + 1,
+    });
   }
 };
 </script>
@@ -381,8 +359,15 @@ const handleMoveIssue = async (e) => {
               >
             </div>
             <div class="fs-7 text-gray-600 fw-normal">
-              <span>{{ moment(sprint?.start_date).format("ll") }}</span> -
-              <span>Forever</span>
+              <span>{{
+                sprint?.start_date
+                  ? moment(sprint.start_date).format("ll")
+                  : moment(sprint?.created_at).format("ll")
+              }}</span>
+              -
+              <span>{{
+                sprint?.end_date ? moment(sprint.end_date).format("ll") : 'forever'
+              }}</span>
             </div>
             <p
               v-if="sprint?.goal"
@@ -505,12 +490,14 @@ const handleMoveIssue = async (e) => {
                 </template>
               </Draggable>
             </div>
-                        <div v-else>
-                    <IssueCompIssueCard v-for="i in sprint.issues" :key="i?.id"
-                    v-model="selectedIssue"
-                    :issue="i"
-                    :can-edite="canManage"
-                  />
+            <div v-else>
+              <IssueCompIssueCard
+                v-for="i in sprint.issues"
+                :key="i?.id"
+                v-model="selectedIssue"
+                :issue="i"
+                :can-edite="canManage"
+              />
             </div>
             <div v-if="inProgress || createProgress">
               <IssueCompIssueCard :issue="data" :progress="true" />
@@ -526,7 +513,7 @@ const handleMoveIssue = async (e) => {
               </div>
             </div>
             <div
-            v-if="canManage"
+              v-if="canManage"
               @click.stop
               id="createIssueWrapper"
               ref="inputFocus"

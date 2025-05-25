@@ -4,6 +4,9 @@ definePageMeta({
   layout: "none",
 });
 let currentImage = ref("board");
+const isAccountMenu = ref(false);
+
+let user = useUser();
 </script>
 
 <template>
@@ -83,7 +86,7 @@ let currentImage = ref("board");
                     </div>
                   </div>
                 </div>
-                <div class="flex-equal text-end ms-1 d-flex">
+                <div class="flex-equal text-end ms-1" v-if="!user">
                   <NuxtLink
                     to="/login"
                     class="btn border border-primary border-2 text-white me-5"
@@ -93,12 +96,41 @@ let currentImage = ref("board");
                     Sign Up</NuxtLink
                   >
                 </div>
+                <div v-else class="flex-equal text-end ms-1">
+                  <div
+                    class="symbol symbol-35px symbol-md-40px position-relative rounded-pill shadow"
+                    @click="isAccountMenu = !isAccountMenu"
+                    v-click-outside="
+                      () => {
+                        isAccountMenu = false;
+                      }
+                    "
+                  >
+                    <img
+                      v-if="user?.url_photo"
+                      class="symbol symbol-25px symbol-md-30px symbol-circle cursor-pointer"
+                      :src="user?.url_photo"
+                      :alt="user?.name"
+                    />
+                    <img
+                      v-else
+                      class="symbol symbol-35px symbol-md-45px cursor-pointer"
+                      src="../assets/media/avatars/blank.png"
+                      :alt="user?.name"
+                    />
+                    <AccountMenu :isAccountMenu="isAccountMenu" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <section class="d-flex justify-content-center p-7 text-center">
             <div class="hero-content text-center">
-              <img src="~/assets/media/logos/logo-light.png" class="w-75" alt="Logo" />
+              <img
+                src="~/assets/media/logos/logo-light.png"
+                class="w-75"
+                alt="Logo"
+              />
               <h1 class="btn-show">
                 Streamline Your Tasks, Amplify Your Productivity
               </h1>
@@ -450,11 +482,9 @@ let currentImage = ref("board");
               id="how-it-works"
               data-kt-scroll-offset="{default: 100, lg: 150}"
             >
-            Customer <span class="btn-show">Reviews</span>
+              Customer <span class="btn-show">Reviews</span>
             </h3>
-            <p class="fs-5 text-muted">
-              Customer reviews on use TaskSwift.
-            </p>
+            <p class="fs-5 text-muted">Customer reviews on use TaskSwift.</p>
           </div>
           <div
             id="carouselExampleDark"
