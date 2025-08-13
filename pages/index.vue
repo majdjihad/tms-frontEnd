@@ -1,959 +1,802 @@
 <script setup>
-// Uses a custom layout with guest middleware to ensure only non-authenticated users can access
-definePageMeta({
-  layout: "none",
+useHead({
+  title: "الرئيسية",
 });
-let currentImage = ref("board");
-const isAccountMenu = ref(false);
 
-let user = useUser();
+const category = ref([
+  { name: "جميع الفئات", value: "all" },
+  { name: "عقارات", value: "real-estate" },
+  { name: "سيارات", value: "cars" },
+  { name: "أثاث", value: "furniture" },
+  { name: "خدمات", value: "services" },
+]);
+const cityes = ref([
+  { name: "مدينة غزة", value: "all" },
+  { name: "جباليا", value: "real-estate" },
+  { name: "بيت لاهيا", value: "cars" },
+  { name: "بيت حانون", value: "furniture" },
+  { name: "خانيونس", value: "services" },
+  { name: "دير البلح", value: "services" },
+  { name: "النصيرات", value: "services" },
+  { name: "رفح", value: "services" },
+]);
+const categories = [
+  { name: "خدمات" },
+  { name: "أثاث" },
+  { name: "أجهزة" },
+  { name: "سيارات" },
+  { name: "عقارات" },
+  { name: "وظائف" },
+  { name: "أطعمة" },
+  { name: "مفقودات" },
+];
+
+const ads = [
+  {
+    id: 1,
+    category: "عقارات",
+    title: "iPhone 14 Pro Max للبيع",
+    description:
+      "نص لعرض البيع وصيغ موجزة تشرح قرب من الخدمات بحي راقٍ، مناسب للعائلة.",
+    price: "شيكل 5,000",
+    time: "15 دقيقة",
+    location: "غزة - فلسطين",
+    comments: 6,
+    views: 92,
+    image: "/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 2,
+    category: "عقارات",
+    title: "سماعة بلوتوث لاسلكية أصلية",
+    description:
+      "نص بسيط عن المواصفات والجودة العالية مع عمر بطارية كبير جدًا وخدمة ممتازة.",
+    price: "شيكل 300",
+    time: "15 دقيقة",
+    location: "خان يونس - فلسطين",
+    comments: 4,
+    views: 68,
+    image: "/bg-home/bg4.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 3,
+    category: "عقارات",
+    title: "دراجة هوائية خفاش 26 بحالة ممتازة",
+    description:
+      "إطار ألومنيوم، سرعات متعددة، مكابح قرصية، مناسبة للطريق والجبال مع صيانة حديثة.",
+    price: "شيكل 3,500",
+    time: "15 دقيقة",
+    location: "رفح - فلسطين",
+    comments: 10,
+    views: 120,
+    image: "/bg-home/bg1.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 4,
+    category: "عقارات",
+    title: "فلت سياحية فخمة بسعر مغري",
+    description:
+      "مساحة واسعة، غرف نوم عديدة مع قرب من الخدمات العامة وموقع مميز للغاية.",
+    price: "شيكل ألاف 560",
+    time: "15 دقيقة",
+    location: "غزة - فلسطين",
+    comments: 7,
+    views: 140,
+    image: "/bg-home/bg3.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 5,
+    category: "عقارات",
+    title: "فلت سياحية وسكنية بعرض مميز",
+    description:
+      "سعر منافس وموقع قريب من الخدمات بحي راقٍ مناسب للعائلة والرفاهية.",
+    price: "شيكل ألاف 560",
+    time: "15 دقيقة",
+    location: "غزة - فلسطين",
+    comments: 5,
+    views: 77,
+    image: "/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 6,
+    category: "عقارات",
+    title: "جهاز للاعتناء المنزلية بالأسرة",
+    description:
+      "منتج عملي أنيق مع ضمان وخدمة ما بعد البيع، مواصفات ممتازة ومستويات أمان عالية.",
+    price: "شيكل 300",
+    time: "15 دقيقة",
+    location: "خان يونس - فلسطين",
+    comments: 8,
+    views: 91,
+    image: "/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 7,
+    category: "عقارات",
+    title: "كاميرا احترافية بحالة ممتازة للبيع",
+    description:
+      "عدسة أساسية 50mm، تصوير بدقة عالية 4K، مثالية للهواة والمحترفين مع إكسسوارات.",
+    price: "شيكل 3,500",
+    time: "15 دقيقة",
+    location: "رفح - فلسطين",
+    comments: 9,
+    views: 200,
+    image: "/bg-home/bg9.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 8,
+    category: "عقارات",
+    title: "عطر فخم برائحة العود وثابت قوي",
+    description:
+      "ثبات عالٍ ولمسة فاخرة تناسب المناسبات، عبوة أصلية وتوصيل متاح داخل المدينة.",
+    price: "شيكل ألاف 560",
+    time: "15 دقيقة",
+    location: "غزة - فلسطين",
+    comments: 2,
+    views: 55,
+    image: "/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 9,
+    category: "عقارات",
+    title: "iPhone 14 Pro Max للبيع",
+    description:
+      "نص لعرض البيع وصيغ موجزة تشرح قرب من الخدمات بحي راقٍ، مناسب للعائلة.",
+    price: "شيكل 5,000",
+    time: "15 دقيقة",
+    location: "غزة - فلسطين",
+    comments: 6,
+    views: 92,
+    image: "/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 10,
+    category: "عقارات",
+    title: "سماعة بلوتوث لاسلكية أصلية",
+    description:
+      "نص بسيط عن المواصفات والجودة العالية مع عمر بطارية كبير جدًا وخدمة ممتازة.",
+    price: "شيكل 300",
+    time: "15 دقيقة",
+    location: "خان يونس - فلسطين",
+    comments: 4,
+    views: 68,
+    image: "/bg-home/bg4.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 11,
+    category: "عقارات",
+    title: "دراجة هوائية خفاش 26 بحالة ممتازة",
+    description:
+      "إطار ألومنيوم، سرعات متعددة، مكابح قرصية، مناسبة للطريق والجبال مع صيانة حديثة.",
+    price: "شيكل 3,500",
+    time: "15 دقيقة",
+    location: "رفح - فلسطين",
+    comments: 10,
+    views: 120,
+    image: "/bg-home/bg1.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 12,
+    category: "عقارات",
+    title: "فلت سياحية فخمة بسعر مغري",
+    description:
+      "مساحة واسعة، غرف نوم عديدة مع قرب من الخدمات العامة وموقع مميز للغاية.",
+    price: "شيكل ألاف 560",
+    time: "15 دقيقة",
+    location: "غزة - فلسطين",
+    comments: 7,
+    views: 140,
+    image: "/bg-home/bg3.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 13,
+    category: "عقارات",
+    title: "فلت سياحية وسكنية بعرض مميز",
+    description:
+      "سعر منافس وموقع قريب من الخدمات بحي راقٍ مناسب للعائلة والرفاهية.",
+    price: "شيكل ألاف 560",
+    time: "15 دقيقة",
+    location: "غزة - فلسطين",
+    comments: 5,
+    views: 77,
+    image: "/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 14,
+    category: "عقارات",
+    title: "جهاز للاعتناء المنزلية بالأسرة",
+    description:
+      "منتج عملي أنيق مع ضمان وخدمة ما بعد البيع، مواصفات ممتازة ومستويات أمان عالية.",
+    price: "شيكل 300",
+    time: "15 دقيقة",
+    location: "خان يونس - فلسطين",
+    comments: 8,
+    views: 91,
+    image: "/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 15,
+    category: "عقارات",
+    title: "كاميرا احترافية بحالة ممتازة للبيع",
+    description:
+      "عدسة أساسية 50mm، تصوير بدقة عالية 4K، مثالية للهواة والمحترفين مع إكسسوارات.",
+    price: "شيكل 3,500",
+    time: "15 دقيقة",
+    location: "رفح - فلسطين",
+    comments: 9,
+    views: 200,
+    image: "/bg-home/bg9.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+  {
+    id: 16,
+    category: "عقارات",
+    title: "عطر فخم برائحة العود وثابت قوي",
+    description:
+      "ثبات عالٍ ولمسة فاخرة تناسب المناسبات، عبوة أصلية وتوصيل متاح داخل المدينة.",
+    price: "شيكل ألاف 560",
+    time: "15 دقيقة",
+    location: "غزة - فلسطين",
+    comments: 2,
+    views: 55,
+    image: "/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/avatars/user.png" },
+  },
+];
+
+const chunkedAds = computed(() => {
+  const size = 8;
+  const chunks = [];
+  for (let i = 0; i < ads.length; i += size)
+    chunks.push(ads.slice(i, i + size));
+  return chunks;
+});
+const offers = ref([
+  {
+    id: 1,
+    title: "أجهزة للعناية المنزلية بالبشرة",
+    city: "البلح",
+    region: "فلسطين",
+    price: 750,
+    image: "/bg-home/bg1.png",
+  },
+  {
+    id: 2,
+    title: "كاميرا احترافية بحالة ممتازة للبيع",
+    city: "غزة",
+    region: "فلسطين",
+    price: 2300,
+    image: "/bg-home/bg2.png",
+  },
+  {
+    id: 3,
+    title: "قميص ستايل عصري",
+    city: "النصر",
+    region: "فلسطين",
+    price: 240,
+    image: "/bg-home/bg3.png",
+  },
+  {
+    id: 4,
+    title: "عطر خليجي برائحة العود وثابت قوي",
+    city: "جباليا",
+    region: "فلسطين",
+    price: 560,
+    image: "/bg-home/bg4.png",
+  },
+  {
+    id: 5,
+    title: "أجهزة تنظيف وتعقيم منزلية",
+    city: "غزة",
+    region: "فلسطين",
+    price: 420,
+    image: "/bg-home/bg5.png",
+  },
+  {
+    id: 6,
+    title: "عدسة 85mm فتحة 1.8",
+    city: "غزة",
+    region: "فلسطين",
+    price: 1150,
+    image: "/bg-home/bg6.png",
+  },
+  {
+    id: 7,
+    title: "حذاء جلد طبيعي كلاسيك",
+    city: "النصر",
+    region: "فلسطين",
+    price: 330,
+    image: "/bg-home/bg7.png",
+  },
+  {
+    id: 8,
+    title: "بخور عود فاخر",
+    city: "جباليا",
+    region: "فلسطين",
+    price: 199,
+    image: "/bg-home/bg8.png",
+  },
+]);
+
+const currency = "شيكل";
+const perSlide = 4;
+const chunk = (arr, size) => {
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+};
+const slides = computed(() => chunk(offers.value, perSlide));
+const carouselId = "offersCarousel";
 </script>
-
 <template>
   <div>
-    <!--begin::Root-->
-    <div
-      class="d-grid min-vh-100"
-      style="grid-template-rows: auto auto 1fr auto"
-      id="kt_app_root"
-    >
-      <!--begin::Header Section-->
-      <div class="mb-0" id="home">
-        <div
-          class="bgi-no-repeat bgi-size-contain bgi-position-x-center bgi-position-y-bottom landing-dark-bg"
-          style="background-color: #071437 !important"
-        >
-          <div
-            class="landing-header"
-            data-kt-sticky="true"
-            data-kt-sticky-name="landing-header"
-            data-kt-sticky-offset="{default: '200px', lg: '300px'}"
-          >
-            <div class="container h-80px">
-              <div
-                class="d-flex align-items-center justify-content-between h-100"
-              >
-                <div class="d-flex align-items-center flex-equal">
-                  <NuxtLink to="/">
-                    <img
-                      alt="Logo"
-                      src="~/assets/media/logos/logo-light.png"
-                      class="logo-sticky h-20px h-lg-50px h-sm-40px"
-                    />
-                  </NuxtLink>
-                </div>
-                <div class="d-lg-block" id="kt_header_nav_wrapper">
-                  <div class="d-lg-block p-5 p-lg-0">
-                    <div
-                      class="menu flex-nowrap menu-rounded menu-lg-row menu-title-gray-600 menu-state-title-primary nav nav-flush fs-5 fw-semibold"
-                    >
-                      <div class="menu-item">
-                        <NuxtLink
-                          class="menu-link nav-link active py-3 px-4 px-xxl-6"
-                          href="#"
-                          data-kt-scroll-toggle="true"
-                          data-kt-drawer-dismiss="true"
-                          >Home</NuxtLink
-                        >
-                      </div>
-                      <div class="menu-item">
-                        <NuxtLink
-                          class="menu-link nav-link py-3 px-4 px-xxl-6"
-                          href="#how-it-works"
-                          data-kt-scroll-toggle="true"
-                          data-kt-drawer-dismiss="true"
-                          >How it Works</NuxtLink
-                        >
-                      </div>
-                      <div class="menu-item">
-                        <NuxtLink
-                          class="menu-link nav-link py-3 px-4 px-xxl-6"
-                          href="#customers"
-                          data-kt-scroll-toggle="true"
-                          data-kt-drawer-dismiss="true"
-                          >Customers</NuxtLink
-                        >
-                      </div>
-                      <div class="menu-item">
-                        <NuxtLink
-                          class="menu-link nav-link py-3 px-4 px-xxl-6"
-                          href="#questions"
-                          data-kt-scroll-toggle="true"
-                          data-kt-drawer-dismiss="true"
-                          >Questions</NuxtLink
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex-equal text-end ms-1" v-if="!user">
-                  <NuxtLink
-                    to="/login"
-                    class="btn border border-primary border-2 text-white me-5"
-                    >Log In</NuxtLink
-                  >
-                  <NuxtLink to="/join" class="btn btn-primary">
-                    Sign Up</NuxtLink
-                  >
-                </div>
-                <div v-else class="flex-equal text-end ms-1">
-                  <div
-                    class="symbol symbol-35px symbol-md-40px position-relative rounded-pill shadow"
-                    @click="isAccountMenu = !isAccountMenu"
-                    v-click-outside="
-                      () => {
-                        isAccountMenu = false;
-                      }
-                    "
-                  >
-                    <img
-                      v-if="user?.url_photo"
-                      class="symbol symbol-25px symbol-md-30px symbol-circle cursor-pointer"
-                      :src="user?.url_photo"
-                      :alt="user?.name"
-                    />
-                    <img
-                      v-else
-                      class="symbol symbol-35px symbol-md-45px cursor-pointer"
-                      src="../assets/media/avatars/blank.png"
-                      :alt="user?.name"
-                    />
-                    <AccountMenu :isAccountMenu="isAccountMenu" />
-                  </div>
-                </div>
-              </div>
+    <section class="hero-section position-relative text-white">
+      <div
+        class="hero-background-grid position-absolute top-0 start-0 w-100 h-100 z-n1"
+      >
+        <div class="row g-0 h-100">
+          <!-- الصف الأول -->
+          <div class="row g-0">
+            <div class="col-3">
+              <img
+                src="/bg-home/bg1.png"
+                class="img-fluid w-100 h-100 object-fit-cover"
+              />
+            </div>
+            <div class="col-2">
+              <img
+                src="/bg-home/bg2.png"
+                class="img-fluid w-100 h-100 object-fit-cover"
+              />
+            </div>
+            <div class="col-4">
+              <img
+                src="/bg-home/bg3.png"
+                class="img-fluid w-100 h-100 object-fit-cover"
+              />
+            </div>
+            <div class="col-3">
+              <img
+                src="/bg-home/bg4.png"
+                class="img-fluid w-100 h-100 object-fit-cover"
+              />
             </div>
           </div>
-          <section class="d-flex justify-content-center p-7 text-center">
-            <div class="hero-content text-center">
+
+          <!-- الصف الثاني -->
+          <div class="row g-0">
+            <div class="col-2">
               <img
-                src="~/assets/media/logos/logo-light.png"
-                class="w-75"
-                alt="Logo"
+                src="/bg-home/bg5.png"
+                class="img-fluid w-100 h-100 object-fit-cover"
               />
-              <h1 class="btn-show">
-                Streamline Your Tasks, Amplify Your Productivity
-              </h1>
-              <p class="text-white fs-3 px-9 my-6">
-                The intelligent task management system that helps teams work
-                smarter and achieve more together.
-              </p>
-              <div class="cta-buttons">
-                <NuxtLink to="/join" class="btn btn-lg btn-primary"
-                  >Start Free Trial</NuxtLink
-                >
-              </div>
             </div>
-          </section>
-        </div>
-        <div class="landing-curve landing-dark-color mb-10 mb-lg-20">
-          <svg
-            viewBox="15 12 1470 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 11C3.93573 11.3356 7.85984 11.6689 11.7725 12H1488.16C1492.1 11.6689 1496.04 11.3356 1500 11V12H1488.16C913.668 60.3476 586.282 60.6117 11.7725 12H0V11Z"
-              fill="currentColor"
-            ></path>
-          </svg>
+            <div class="col-5">
+              <img
+                src="/bg-home/bg6.png"
+                class="img-fluid w-100 h-100 object-fit-cover"
+              />
+            </div>
+            <div class="col-3">
+              <img
+                src="/bg-home/bg7.png"
+                class="img-fluid w-100 h-100 object-fit-cover"
+              />
+            </div>
+            <div class="col-2">
+              <img
+                src="/bg-home/bg8.png"
+                class="img-fluid w-100 h-100 object-fit-cover"
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <!--end::Header Section-->
-      <!--begin::How It Works Section-->
-      <section class="mb-n10 mb-lg-n20 z-index-2 py-20">
-        <div class="container text-center mb-17">
-          <div class="title">
-            <h3
-              class="display-4 text-dark mb-5"
-              id="how-it-works"
-              data-kt-scroll-offset="{default: 100, lg: 150}"
-            >
-              How it <span class="btn-show">Works?</span>
-            </h3>
-            <p class="fs-5 text-muted">
-              TaskSwift is a Task Management System and it's <br />
-              easy-to-use software for different type of projects.
-            </p>
-          </div>
-          <div>
-            <div class="relative row mt-1 bg-slate-50 rounded-lg p-6">
-              <div class="d-flex col-12 col-lg-7">
-                <svg
-                  class="col-2"
-                  width="80"
-                  height="348"
-                  viewBox="0 0 46 348"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="hero-overlay position-absolute top-0 start-0 w-100 h-100 z-0 bg-dark opacity-50"
+      ></div>
+      <section class="hero-content position-relative z-1">
+        <div class="container text-center">
+          <h2 class="hero-subtitle bg-primary d-inline p-5 text-white">
+            أكثر من 100,000 إعلان نشط
+          </h2>
+          <h1 class="text-center hero-title fs-1 fw-bold my-9 py-9 text-white">
+            منصـة إعلانيـة تجمـع لـك كـل مـا تحتاجـه مـن حولـك، وتمنحـك مساحـة
+            سهلـة وآمنـة لعـرض إعلاناتـك
+          </h1>
+          <!-- Search Box -->
+          <div class="row g-0 align-items-stretch w-100 justify-content-center">
+            <div class="col-md-3">
+              <div class="input-group d-flex align-items-stretch h-100">
+                <span
+                  class="input-group-text bg-white p-3 text-secondary rounded-0 border-0 border-end"
                 >
-                  <g filter="url(#filter0_f_1491_132638)">
-                    <path
-                      d="M22.0234 31.9944L24.3548 330"
-                      stroke="url(#paint0_linear_1491_132638)"
-                      stroke-width="4"
-                      stroke-opacity="0.7"
-                      stroke-linecap="round"
-                      opacity="1"
-                      pathLength="1"
-                      stroke-dashoffset="0px"
-                      stroke-dasharray="1px 1px"
-                    ></path>
-                  </g>
-                  <path
-                    d="M22.0234 31.9944L24.3548 330"
-                    stroke="url(#paint1_linear_1491_132638)"
-                    stroke-width="4"
-                    stroke-linecap="round"
-                    opacity="1"
-                    pathLength="1"
-                    stroke-dashoffset="0px"
-                    stroke-dasharray="1px 1px"
-                  ></path>
-                  <g filter="url(#filter1_f_1491_132638)">
-                    <mask id="path-3-inside-1_1491_132638" fill="white">
-                      <path
-                        d="M32 22C32 27.5228 27.5228 32 22 32C16.4772 32 12 27.5228 12 22C12 16.4772 16.4772 12 22 12C27.5228 12 32 16.4772 32 22ZM15.1906 22C15.1906 25.7607 18.2393 28.8094 22 28.8094C25.7607 28.8094 28.8094 25.7607 28.8094 22C28.8094 18.2393 25.7607 15.1906 22 15.1906C18.2393 15.1906 15.1906 18.2393 15.1906 22Z"
-                      ></path>
-                    </mask>
-                    <path
-                      d="M32 22C32 27.5228 27.5228 32 22 32C16.4772 32 12 27.5228 12 22C12 16.4772 16.4772 12 22 12C27.5228 12 32 16.4772 32 22ZM15.1906 22C15.1906 25.7607 18.2393 28.8094 22 28.8094C25.7607 28.8094 28.8094 25.7607 28.8094 22C28.8094 18.2393 25.7607 15.1906 22 15.1906C18.2393 15.1906 15.1906 18.2393 15.1906 22Z"
-                      fill="#14f88b"
-                    ></path>
-                    <path
-                      d="M32 22C32 27.5228 27.5228 32 22 32C16.4772 32 12 27.5228 12 22C12 16.4772 16.4772 12 22 12C27.5228 12 32 16.4772 32 22ZM15.1906 22C15.1906 25.7607 18.2393 28.8094 22 28.8094C25.7607 28.8094 28.8094 25.7607 28.8094 22C28.8094 18.2393 25.7607 15.1906 22 15.1906C18.2393 15.1906 15.1906 18.2393 15.1906 22Z"
-                      stroke="#14f88b"
-                      stroke-width="2"
-                      mask="url(#path-3-inside-1_1491_132638)"
-                    ></path>
-                  </g>
-                  <circle
-                    cx="22"
-                    cy="22"
-                    r="8.5"
-                    fill="#0B0D10"
-                    stroke="#14f88b"
-                    stroke-width="3"
-                  ></circle>
-                  <g filter="url(#filter2_f_1491_132638)">
-                    <mask id="path-5-inside-2_1491_132638" fill="white">
-                      <path
-                        d="M34 164C34 169.523 29.5228 174 24 174C18.4772 174 14 169.523 14 164C14 158.477 18.4772 154 24 154C29.5228 154 34 158.477 34 164ZM17.1906 164C17.1906 167.761 20.2393 170.809 24 170.809C27.7607 170.809 30.8094 167.761 30.8094 164C30.8094 160.239 27.7607 157.191 24 157.191C20.2393 157.191 17.1906 160.239 17.1906 164Z"
-                      ></path>
-                    </mask>
-                    <path
-                      d="M34 164C34 169.523 29.5228 174 24 174C18.4772 174 14 169.523 14 164C14 158.477 18.4772 154 24 154C29.5228 154 34 158.477 34 164ZM17.1906 164C17.1906 167.761 20.2393 170.809 24 170.809C27.7607 170.809 30.8094 167.761 30.8094 164C30.8094 160.239 27.7607 157.191 24 157.191C20.2393 157.191 17.1906 160.239 17.1906 164Z"
-                      fill="#14f88b"
-                    ></path>
-                    <path
-                      d="M34 164C34 169.523 29.5228 174 24 174C18.4772 174 14 169.523 14 164C14 158.477 18.4772 154 24 154C29.5228 154 34 158.477 34 164ZM17.1906 164C17.1906 167.761 20.2393 170.809 24 170.809C27.7607 170.809 30.8094 167.761 30.8094 164C30.8094 160.239 27.7607 157.191 24 157.191C20.2393 157.191 17.1906 160.239 17.1906 164Z"
-                      stroke="#14f88b"
-                      stroke-width="2"
-                      mask="url(#path-5-inside-2_1491_132638)"
-                    ></path>
-                  </g>
-                  <circle
-                    cx="24"
-                    cy="164"
-                    r="8.5"
-                    fill="#0B0D10"
-                    stroke="#14f88b"
-                    stroke-width="3"
-                  ></circle>
-                  <g filter="url(#filter3_f_1491_132638)">
-                    <mask id="path-7-inside-3_1491_132638" fill="white">
-                      <path
-                        d="M33 326C33 331.523 28.5228 336 23 336C17.4772 336 13 331.523 13 326C13 320.477 17.4772 316 23 316C28.5228 316 33 320.477 33 326ZM16.1906 326C16.1906 329.761 19.2393 332.809 23 332.809C26.7607 332.809 29.8094 329.761 29.8094 326C29.8094 322.239 26.7607 319.191 23 319.191C19.2393 319.191 16.1906 322.239 16.1906 326Z"
-                      ></path>
-                    </mask>
-                    <path
-                      d="M33 326C33 331.523 28.5228 336 23 336C17.4772 336 13 331.523 13 326C13 320.477 17.4772 316 23 316C28.5228 316 33 320.477 33 326ZM16.1906 326C16.1906 329.761 19.2393 332.809 23 332.809C26.7607 332.809 29.8094 329.761 29.8094 326C29.8094 322.239 26.7607 319.191 23 319.191C19.2393 319.191 16.1906 322.239 16.1906 326Z"
-                      fill="#14f88b"
-                    ></path>
-                    <path
-                      d="M33 326C33 331.523 28.5228 336 23 336C17.4772 336 13 331.523 13 326C13 320.477 17.4772 316 23 316C28.5228 316 33 320.477 33 326ZM16.1906 326C16.1906 329.761 19.2393 332.809 23 332.809C26.7607 332.809 29.8094 329.761 29.8094 326C29.8094 322.239 26.7607 319.191 23 319.191C19.2393 319.191 16.1906 322.239 16.1906 326Z"
-                      stroke="#14f88b"
-                      stroke-width="2"
-                      mask="url(#path-7-inside-3_1491_132638)"
-                    ></path>
-                  </g>
-                  <circle
-                    cx="23"
-                    cy="326"
-                    r="8.5"
-                    fill="#0B0D10"
-                    stroke="#14f88b"
-                    stroke-width="3"
-                  ></circle>
-                  <defs>
-                    <filter
-                      id="filter0_f_1491_132638"
-                      x="8.02344"
-                      y="17.9944"
-                      width="30.332"
-                      height="326.005"
-                      filterUnits="userSpaceOnUse"
-                      color-interpolation-filters="sRGB"
-                    >
-                      <feFlood
-                        flood-opacity="0"
-                        result="BackgroundImageFix"
-                      ></feFlood>
-                      <feBlend
-                        mode="normal"
-                        in="SourceGraphic"
-                        in2="BackgroundImageFix"
-                        result="shape"
-                      ></feBlend>
-                      <feGaussianBlur
-                        stdDeviation="6"
-                        result="effect1_foregroundBlur_1491_132638"
-                      ></feGaussianBlur>
-                    </filter>
-                    <filter
-                      id="filter1_f_1491_132638"
-                      x="0"
-                      y="0"
-                      width="44"
-                      height="44"
-                      filterUnits="userSpaceOnUse"
-                      color-interpolation-filters="sRGB"
-                    >
-                      <feFlood
-                        flood-opacity="0"
-                        result="BackgroundImageFix"
-                      ></feFlood>
-                      <feBlend
-                        mode="normal"
-                        in="SourceGraphic"
-                        in2="BackgroundImageFix"
-                        result="shape"
-                      ></feBlend>
-                      <feGaussianBlur
-                        stdDeviation="6"
-                        result="effect1_foregroundBlur_1491_132638"
-                      ></feGaussianBlur>
-                    </filter>
-                    <filter
-                      id="filter2_f_1491_132638"
-                      x="2"
-                      y="142"
-                      width="44"
-                      height="44"
-                      filterUnits="userSpaceOnUse"
-                      color-interpolation-filters="sRGB"
-                    >
-                      <feFlood
-                        flood-opacity="0"
-                        result="BackgroundImageFix"
-                      ></feFlood>
-                      <feBlend
-                        mode="normal"
-                        in="SourceGraphic"
-                        in2="BackgroundImageFix"
-                        result="shape"
-                      ></feBlend>
-                      <feGaussianBlur
-                        stdDeviation="6"
-                        result="effect1_foregroundBlur_1491_132638"
-                      ></feGaussianBlur>
-                    </filter>
-                    <filter
-                      id="filter3_f_1491_132638"
-                      x="1"
-                      y="304"
-                      width="44"
-                      height="44"
-                      filterUnits="userSpaceOnUse"
-                      color-interpolation-filters="sRGB"
-                    >
-                      <feFlood
-                        flood-opacity="0"
-                        result="BackgroundImageFix"
-                      ></feFlood>
-                      <feBlend
-                        mode="normal"
-                        in="SourceGraphic"
-                        in2="BackgroundImageFix"
-                        result="shape"
-                      ></feBlend>
-                      <feGaussianBlur
-                        stdDeviation="6"
-                        result="effect1_foregroundBlur_1491_132638"
-                      ></feGaussianBlur>
-                    </filter>
-                    <linearGradient
-                      id="paint0_linear_1491_132638"
-                      x1="22.0018"
-                      y1="32.0036"
-                      x2="14.5092"
-                      y2="387.333"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stop-color="#14f88b"></stop>
-                      <stop offset="1" stop-color="#14f88b"></stop>
-                    </linearGradient>
-                    <linearGradient
-                      id="paint1_linear_1491_132638"
-                      x1="22.0018"
-                      y1="32.0036"
-                      x2="14.5092"
-                      y2="387.333"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stop-color="#14f88b"></stop>
-                      <stop offset="1" stop-color="#14f88b"></stop>
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div class="p-0 d-flex flex-column">
-                  <div class="step-item">
-                    <div
-                      class="step-content bg-gray-200 p-6 rounded mt-3 cursor-pointer"
-                      @click="currentImage = 'board'"
-                    >
-                      <p class="h2 text-dark m-0 text-start">Board</p>
-                      <p class="text-muted px-1 fs-5 text-start">
-                        Organize tasks visually with a Kanban-style board. Drag
-                        and drop tasks to update their status.
-                      </p>
-                    </div>
-                  </div>
-                  <div class="step-item">
-                    <div
-                      class="step-content bg-gray-200 p-6 rounded mt-3 cursor-pointer"
-                      @click="currentImage = 'backlog'"
-                    >
-                      <p class="h2 text-dark m-0 text-start">Backlog</p>
-                      <p class="text-muted px-1 fs-5 text-start">
-                        Manage your task backlog efficiently. Prioritize tasks
-                        and plan sprints with ease.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="step-item">
-                    <div
-                      class="step-content bg-gray-200 p-6 rounded mt-3 cursor-pointer"
-                      @click="currentImage = 'teams'"
-                    >
-                      <p class="h2 text-dark m-0 text-start">Teams</p>
-                      <p class="text-muted px-1 fs-5 text-start">
-                        Collaborate with your team. Assign tasks, track
-                        progress, and communicate seamlessly.
-                      </p>
-                    </div>
-                  </div>
+                  <Icon name="mdi:form-textbox-password" class="fs-1" />
+                </span>
+                <input
+                  type="text"
+                  class="form-control bg-white py-6 text-white border-0 rounded-0"
+                  placeholder="ادخل كلمة البحث هنا"
+                />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="input-group d-flex align-items-stretch h-100">
+                <span
+                  class="input-group-text bg-white p-3 text-secondary rounded-0 border-0 border-end"
+                >
+                  <Icon name="mdi:tag-multiple" class="fs-1" />
+                </span>
+                <div class="dropdown flex-grow-1">
+                  <button
+                    class="btn bg-white py-6 w-100 h-100 text-end fs-2 text-secondary rounded-0"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <h4 class="text-secondary m-0">اختر القسم</h4>
+                  </button>
+                  <ul class="dropdown-menu w-100">
+                    <li v-for="category in category" :key="category.value">
+                      <h5 class="btn dropdown-item text-end">
+                        {{ category.name }}
+                      </h5>
+                    </li>
+                  </ul>
                 </div>
               </div>
+            </div>
+            <div class="col-md-3">
               <div
-                class="col-5 m-auto d-none d-lg-flex justify-content-center align-items-center"
+                class="input-group d-flex align-items-stretch h-100 border-2"
               >
-                <img
-                  v-if="currentImage == 'board'"
-                  src="~/assets/media/images-desgin/board.png"
-                  class="d-sm-none d-lg-block mw-100 shadow"
-                />
-                <img
-                  v-else-if="currentImage == 'backlog'"
-                  src="~/assets/media/images-desgin/backlog.png"
-                  class="d-sm-none d-lg-block mw-100 shadow"
-                />
-                <img
-                  v-else-if="currentImage == 'teams'"
-                  src="~/assets/media/images-desgin/team.png"
-                  class="d-sm-none d-lg-block mw-100 shadow"
-                />
+                <span
+                  class="input-group-text bg-white p-3 text-secondary rounded-0 border-1 border-start-0"
+                >
+                  <Icon name="material-symbols:location-on" class="fs-1" />
+                </span>
+                <div class="dropdown flex-grow-1">
+                  <button
+                    class="btn bg-white py-6 w-100 h-100 text-end rounded-0 border-0"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <h4 class="text-secondary m-0">اختر المدينة</h4>
+                  </button>
+                  <ul class="dropdown-menu w-100">
+                    <li v-for="city in cityes" :key="city.value">
+                      <h5 class="btn dropdown-item text-end">
+                        {{ city.name }}
+                      </h5>
+                    </li>
+                  </ul>
+                </div>
               </div>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-main w-100 h-100 rounded-0" type="button">
+                <h1 class="fs-2 text-white m-0">بحث</h1>
+              </button>
             </div>
           </div>
         </div>
       </section>
-      <!--end::How It Works Section-->
-      <!-- Start customers Section -->
-      <section
-        class="customers mb-n10 mb-lg-n20 z-index-2 py-20"
-        id="customers"
-      >
-        <div class="container text-center mb-17">
-          <div class="title">
-            <h3
-              class="display-4 mb-5"
-              id="how-it-works"
-              data-kt-scroll-offset="{default: 100, lg: 150}"
-            >
-              Customer <span class="btn-show">Reviews</span>
-            </h3>
-            <p class="fs-5 text-muted">Customer reviews on use TaskSwift.</p>
-          </div>
-          <div
-            id="carouselExampleDark"
-            class="carousel carousel-dark slide py-4"
-            data-bs-ride="carousel"
+    </section>
+    <section class="categories-section bg-white">
+      <div class="container my-5">
+        <div class="row g-3 py-4">
+          <NuxtLink
+            to="#"
+            v-for="(cat, index) in categories"
+            :key="index"
+            class="col-6 col-md-3 my-9 position-relative"
           >
-            <div class="carousel-indicators m-0">
-              <button
-                type="button"
-                data-bs-target="#carouselExampleDark"
-                data-bs-slide-to="0"
-                class="active"
-                aria-current="true"
-                aria-label="Slide 1"
-              ></button>
-              <button
-                type="button"
-                data-bs-target="#carouselExampleDark"
-                data-bs-slide-to="1"
-                aria-label="Slide 2"
-              ></button>
-              <button
-                type="button"
-                data-bs-target="#carouselExampleDark"
-                data-bs-slide-to="2"
-                aria-label="Slide 3"
-              ></button>
-              <button
-                type="button"
-                data-bs-target="#carouselExampleDark"
-                data-bs-slide-to="3"
-                aria-label="Slide 3"
-              ></button>
-            </div>
-            <div class="carousel-inner col-12 col-lg-8 py-4 position-relative">
+            <div
+              class="category-card h-150px text-center border rounded d-flex flex-column align-items-center justify-content-between mx-3"
+            >
               <div
-                class="carousel-item position-relative w-100 active overflow-hidden"
-                data-bs-interval="10000"
+                class="bg-white w-25 px-2"
+                style="position: relative; top: -25px"
               >
-                <div
-                  class="carousel-caption bg-white pb-0 position-relative start-0 top-0 d-md-block card"
-                >
-                  <p
-                    class="card-body d-flex align-items-center m-4 p-3 fs-2 text-muted"
-                  >
-                    “I’ve been using TaskSwift for several months now, and I
-                    couldn’t be happier. The user interface is easy to navigate,
-                    and the pages load quickly. I love how tasks are organized
-                    and tracked, which has helped me manage my personal and work
-                    projects much more effectively.”
-                  </p>
-                  <div
-                    class="card-footer bg-light p-3 d-flex justify-content-center align-items-center"
-                  >
-                    <img
-                      src="~/assets/media/avatars/blank.png"
-                      alt="customer"
-                    />
-                    <div class="text ms-3">
-                      <h4 class="fw-bold m-0">Carl Rowan</h4>
-                      <span>Aglets Inc</span>
-                    </div>
-                  </div>
-                </div>
+                <img
+                  :src="`/categories/${cat.name}.png`"
+                  class="w-100"
+                  :alt="cat.name"
+                />
               </div>
-              <div
-                class="carousel-item position-relative w-100"
-                data-bs-interval="2000"
-              >
-                <div
-                  class="carousel-caption pb-0 position-relative start-0 top-0 d-md-block card"
-                >
-                  <p
-                    class="card-body d-flex align-items-center m-4 p-3 fs-2 text-muted"
-                  >
-                    “I’ve tried several task management websites, but TaskSwift
-                    is by far the best for me. It allows me to easily add tasks
-                    and projects, with plenty of options for categorizing and
-                    organizing them flexibly.”
-                  </p>
-                  <div
-                    class="card-footer bg-light p-3 d-flex justify-content-center align-items-center"
-                  >
-                    <img
-                      src="~/assets/media/avatars/blank.png"
-                      alt="customer"
-                    />
-                    <div class="text ms-3">
-                      <h4 class="fw-bold m-0">Joe Rowan</h4>
-                      <span>Aglets Inc</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="carousel-item position-relative w-100"
-                data-bs-interval="3000"
-              >
-                <div
-                  class="carousel-caption pb-0 position-relative start-0 top-0 d-md-block card"
-                >
-                  <p
-                    class="card-body d-flex align-items-center m-4 p-3 fs-2 text-muted"
-                  >
-                    “While the website is generally good, I had trouble
-                    customizing some tasks and advanced options. Sometimes it’s
-                    difficult to adjust deadlines or set priorities as flexibly
-                    as I’d like.”
-                  </p>
-                  <div
-                    class="card-footer bg-light p-3 d-flex justify-content-center align-items-center"
-                  >
-                    <img
-                      src="~/assets/media/avatars/blank.png"
-                      alt="customer"
-                    />
-                    <div class="text ms-3">
-                      <h4 class="fw-bold m-0">Sara Ahmed</h4>
-                      <span>Aglets Inc</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="carousel-item position-relative w-100"
-                data-bs-interval="4000"
-              >
-                <div
-                  class="carousel-caption pb-0 position-relative start-0 top-0 d-md-block card"
-                >
-                  <p
-                    class="card-body d-flex align-items-center m-4 p-3 fs-2 text-muted"
-                  >
-                    “The site is fine overall, but I found it a bit hard to
-                    navigate between sections. For instance, it took me a while
-                    to find old tasks or organize them in a more structured way.
-                    I think improving the navigation structure would greatly
-                    enhance the user experience.”
-                  </p>
-                  <div
-                    class="card-footer bg-light p-3 d-flex justify-content-center align-items-center"
-                  >
-                    <img
-                      src="~/assets/media/avatars/blank.png"
-                      alt="customer"
-                    />
-                    <div class="text ms-3">
-                      <h4 class="fw-bold m-0">Ali Rowan</h4>
-                      <span>Aglets Inc</span>
-                    </div>
-                  </div>
+              <div class="position-absolute bottom-0">
+                <h4>{{ cat.name }}</h4>
+                <div class="btn-category bg-white px-4">
+                  <button class="btn btn-sm mt-2">
+                    <Icon name="line-md:arrow-left" class="fs-1 fw-bold" />
+                  </button>
                 </div>
               </div>
             </div>
-            <button
-              class="carousel-control-prev top-50 btn-slider d-none d-lg-flex"
-              type="button"
-              data-bs-target="#carouselExampleDark"
-              data-bs-slide="prev"
-            >
-              <span
-                class="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button
-              class="carousel-control-next top-50 btn-slider d-none d-lg-flex"
-              type="button"
-              data-bs-target="#carouselExampleDark"
-              data-bs-slide="next"
-            >
-              <span
-                class="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
+          </NuxtLink>
         </div>
-      </section>
-      <!-- End customers Section -->
-      <!-- Start questions Section -->
-      <section
-        class="questions mb-n10 mb-lg-n20 z-index-2 py-20"
-        id="questions"
-      >
-        <div class="container text-center mb-17">
-          <div class="title">
-            <h3
-              class="display-4 mb-5"
-              id="how-it-works"
-              data-kt-scroll-offset="{default: 100, lg: 150}"
-            >
-              Got <span class="btn-show">questions?</span>
-            </h3>
-            <p class="fs-5 text-muted">
-              Get the answers to your questions about TaskSwift.
+
+        <!-- قسم الإعلان -->
+        <div
+          class="bg-primary text-white rounded p-9 mt-5 d-flex flex-column flex-md-row align-items-center justify-content-between"
+        >
+          <div>
+            <h2 class="fw-bold text-white">بيع ما لا تحتاج واكسب المال</h2>
+            <p class="mb-0 mt-3 fs-3">
+              أضف إعلانك الآن لتصل إلى ملايين المشترين وتبيع كل ما تريد بأفضل
+              الأسعار.
             </p>
           </div>
-          <div class="ques my-5 mx-3">
-            <div class="accordion col-12 col-lg-8 m-auto" id="accordionExample">
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button
-                    class="accordion-button fs-3 collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseOne"
-                    aria-expanded="false"
-                    aria-controls="collapseOne"
-                  >
-                    What is TaskSwift?
-                  </button>
-                </h2>
-                <div
-                  id="collapseOne"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#accordionExample"
-                >
-                  <div class="accordion-body text-start fs-4">
-                    TaskSwift is an easy-to-use task management system designed
-                    to help teams and individuals manage projects, tasks,
-                    deadlines, and workflows. It offers features like task
-                    creation, assignment, progress tracking, and collaboration
-                    tools to streamline project management.
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button
-                    class="accordion-button fs-3 collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseTwo"
-                    aria-expanded="false"
-                    aria-controls="collapseTwo"
-                  >
-                    How can I sign up for TaskSwift?
-                  </button>
-                </h2>
-                <div
-                  id="collapseTwo"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#accordionExample"
-                >
-                  <div class="accordion-body text-start fs-4">
-                    To sign up, simply visit our website and click on the “Sign
-                    Up” button. You’ll need to provide your email address and
-                    create a password. After registering, you can start managing
-                    your tasks right away!
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button
-                    class="accordion-button fs-3 collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseThree"
-                    aria-expanded="false"
-                    aria-controls="collapseThree"
-                  >
-                    Can I use TaskSwift for multiple projects?
-                  </button>
-                </h2>
-                <div
-                  id="collapseThree"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#accordionExample"
-                >
-                  <div class="accordion-body text-start fs-4">
-                    Yes! TaskSwift allows you to create and manage multiple
-                    projects. You can easily switch between projects, track
-                    progress, and assign tasks to different team members within
-                    each project.
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button
-                    class="accordion-button fs-3 collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse3"
-                    aria-expanded="false"
-                    aria-controls="collapse3"
-                  >
-                    Is there a free version of TaskSwift?
-                  </button>
-                </h2>
-                <div
-                  id="collapse3"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#accordionExample"
-                >
-                  <div class="accordion-body text-start fs-4">
-                    Yes, we offer a free version of TaskSwift with basic
-                    features like task creation, project management, and
-                    collaboration. If you need more advanced features such as
-                    additional integrations, reporting tools, and priority
-                    support, we offer paid plans.
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button
-                    class="accordion-button fs-3 collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse5"
-                    aria-expanded="false"
-                    aria-controls="collapse5"
-                  >
-                    Can I export my project data from TaskSwift?
-                  </button>
-                </h2>
-                <div
-                  id="collapse5"
-                  class="accordion-collapse collapse"
-                  data-bs-parent="#accordionExample"
-                >
-                  <div class="accordion-body text-start fs-4">
-                    Yes! TaskSwift allows you to export your project data into
-                    various formats, including CSV and PDF, so you can share
-                    reports or analyze your project progress externally.
-                  </div>
-                </div>
+          <button class="btn-info mt-3 mt-md-0 d-flex align-items-center">
+            <span class="fs-3 ms-3">أضف إعلانك الآن</span>
+            <Icon name="line-md:arrow-left" class="fs-1 fw-bold" />
+          </button>
+        </div>
+      </div>
+    </section>
+    <section
+      class="offers-section container my-4 py-4 px-3 px-sm-4 bg-secandary"
+    >
+      <!-- Bootstrap Carousel -->
+      <div class="d-flex justify-content-between offers-header mb-3">
+        <div>
+          <h2 class="fs-1 fw-bold mb-1">عروضنا الخاصة</h2>
+          <div class="fs-3 offers-subtitle">عروض حصرية من إدارة الموقع</div>
+        </div>
+        <div class="d-flex align-items-center gap-2 offers-toolbar">
+          <!-- Prev -->
+          <button
+            class="btn-carousel"
+            :data-bs-target="`#${carouselId}`"
+            data-bs-slide="prev"
+            aria-label="السابق"
+          >
+            <Icon name="line-md:arrow-right" size="20" />
+          </button>
+
+          <!-- Next -->
+          <button
+            class="btn-carousel"
+            :data-bs-target="`#${carouselId}`"
+            data-bs-slide="next"
+            aria-label="التالي"
+          >
+            <Icon name="line-md:arrow-left" size="20" />
+          </button>
+          <NuxtLink to="/products" class="btn-view-all">
+            <h5 class="mb-0 text-white">عرض الكل</h5>
+            <Icon
+              name="material-symbols:arrow-back-rounded"
+              class="text-white"
+              size="20"
+            />
+          </NuxtLink>
+        </div>
+      </div>
+      <div
+        class="carousel slide"
+        :id="carouselId"
+        data-bs-ride="false"
+        data-bs-interval="0"
+      >
+        <div class="carousel-inner">
+          <div
+            v-for="(group, idx) in slides"
+            :key="idx"
+            :class="['carousel-item', { active: idx === 0 }]"
+          >
+            <div class="row g-3 g-md-4">
+              <div
+                v-for="item in group"
+                :key="item.id"
+                class="col-12 col-sm-6 col-lg-3"
+              >
+                <ProductCard :item="item" :currency="currency" />
               </div>
             </div>
           </div>
         </div>
-      </section>
-      <!-- End questions Section -->
-      <!--begin::Footer Section-->
-      <footer class="mb-0">
-        <div class="bg-white">
-          <div class="container">
-            <div class="d-flex flex-stack py-7 justify-content-between">
-              <div class="d-flex align-items-center">
-                <NuxtLink to="/">
-                  <img
-                    alt="Logo"
-                    src="~/assets/media/logos/logo-dark.png"
-                    class="logo-sticky h-20px h-lg-40px h-sm-40px"
-                  />
-                </NuxtLink>
-              </div>
-              <div>
-                <span class="mx-5 fs-6 fw-semibold text-gray-600 pt-1" href="#"
-                  >&copy; 2023-2025 copyright in TaskSwift Software.</span
-                >
+      </div>
+    </section>
+    <section class="container container-ads pt-4 mb-9 py-md-5">
+      <!-- Header + Toolbar -->
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-4">
+          <span class="badge-chip p-2 ms-1 secondary">جديد</span>
+          <div>
+            <h2 class="fs-1 section-title mb-0">أحدث الإعلانات</h2>
+            <div class="fs-3 small-muted">
+              ابقَ على اطلاع.. لا تفوت الفرص الجديدة!
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 offers-toolbar">
+          <!-- Prev -->
+          <button
+            class="btn-carousel"
+            data-bs-target="#adsCarousel"
+            data-bs-slide="prev"
+            aria-label="السابق"
+          >
+            <Icon name="line-md:arrow-right" size="20" />
+          </button>
+
+          <!-- Next -->
+          <button
+            class="btn-carousel"
+            data-bs-target="#adsCarousel"
+            data-bs-slide="next"
+            aria-label="التالي"
+          >
+            <Icon name="line-md:arrow-left" size="20" />
+          </button>
+          <NuxtLink to="/ads" class="btn-view-all">
+            <h5 class="mb-0 text-white">عرض الكل</h5>
+            <Icon
+              name="material-symbols:arrow-back-rounded"
+              class="text-white"
+              size="20"
+            />
+          </NuxtLink>
+        </div>
+      </div>
+      <!-- Bootstrap Carousel -->
+      <div id="adsCarousel" class="carousel slide" data-bs-interval="false">
+        <div class="carousel-inner">
+          <div
+            v-for="(group, idx) in chunkedAds"
+            :key="'slide-' + idx"
+            class="carousel-item"
+            :class="{ active: idx === 0 }"
+          >
+            <div class="row g-4">
+              <div
+                v-for="ad in group"
+                :key="ad.id"
+                class="col-12 col-md-6 col-xl-3"
+              >
+                <AdsCard :ad="ad" />
               </div>
             </div>
           </div>
         </div>
-      </footer>
-      <!--end::Footer Section-->
-    </div>
+      </div>
+    </section>
   </div>
 </template>
 <style scoped>
+.hero-section {
+  height: 100vh;
+  overflow: hidden;
+}
+.hero-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .hero-content {
-  max-width: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
-.card-body i {
-  transition: transform 0.3s ease;
+.category-card:hover button {
+  background-color: var(--bs-primary);
+  color: white;
 }
-
-.card-body i.fa-angle-up {
-  transform: rotate(180deg);
+.btn-category {
+  position: relative;
+  bottom: -20px;
 }
-.btn-show {
-  font-size: 4rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #5fb751 0%, #14f88b 100%);
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-@media (max-width: 768px) {
-  .hero {
-    grid-template-columns: 1fr;
-    text-align: center;
-    padding-top: 6rem;
-  }
-
-  h1 {
-    font-size: 2.5rem;
-  }
-}
-/* Timeline container styles */
-.step-content {
-  background: white;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-.step-content:hover {
-  background-color: var(--bs-app-bg-color);
-}
-/* Start customers section */
-.customers .carousel .carousel-indicators button {
-  font-size: 0;
-  height: 16px;
-  width: 16px;
-  padding: 0;
-  border-radius: 100px;
-  background: white;
-  border: 2px solid #eee;
-  transition: all 0.3s ease;
-}
-.customers img {
-  max-width: 40px;
+.btn-category button {
   border-radius: 50%;
-}
-
-.customers .carousel .carousel-indicators button.active {
-  width: 32px;
-}
-.customers .carousel .carousel-inner {
-  width: 60%;
-  margin: auto;
-}
-.customers .carousel .carousel-caption .card-body {
-  padding: 50px;
-}
-.customers .carousel button.btn-slider {
-  border-radius: 50%;
-  background-color: #eee;
   width: 50px;
   height: 50px;
+  display: flex;
+  align-items: center;
+  background-color: #e7f1f9;
+  color: var(--bs-primary);
 }
-@media (width < 991px) {
-  .customers .carousel .carousel-inner,
-  .how-work {
-    width: 80% !important;
+.offers-toolbar .btn-carousel {
+  width: 42px;
+  height: 42px;
+  border-radius: 0.75rem;
+  background: #e7f1f9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #eef0f4;
+  transition: 0.2s ease;
+  color: var(--bs-primary);
+}
+.offers-toolbar .btn-carousel:hover {
+  box-shadow: var(--shadow);
+  background: var(--bs-primary);
+  color: white;
+}
+
+.btn-view-all {
+  border-radius: 0.8rem;
+  padding-inline: 16px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #eef0f4;
+  background: var(--bs-primary);
+  transition: 0.2s ease;
+}
+.btn-view-all:hover {
+  background: var(--bs-primary-hover);
+}
+
+.badge-chip {
+  background: #e7f1f9;
+  color: #1b3a8a;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .search-form {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .stats-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .category-card {
+    padding: 20px 15px;
+  }
+
+  .category-icon {
+    font-size: 2rem;
+  }
+
+  .cta-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-content {
+    padding: 1rem;
+  }
+
+  .search-box {
+    margin: 0 1rem 2rem;
+    padding: 15px;
   }
 }
-@media (width > 991px) {
-  .customers .carousel .carousel-control-next {
-    right: 10%;
-  }
-  .customers .carousel .carousel-control-prev {
-    left: 10%;
-  }
-}
-/* End customers section */
-/* Start questions section */
-.questions .container .ques .card {
-  width: 60%;
-  margin: auto;
-  height: auto;
-  height: 62px;
-  background-color: transparent;
-  overflow: hidden;
-  transition: ease-in-out 0.2s;
-}
-.questions .container .ques .card:not(:last-child) {
-  border-bottom: 1px solid #e5dbfb !important;
-}
-.accordion-item .accordion-button {
-  color: black;
-}
-/* End questions section */
 </style>

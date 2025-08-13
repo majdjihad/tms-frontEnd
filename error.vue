@@ -3,11 +3,7 @@
     id="error-view"
     class="landing-hero-bg d-flex align-items-center justify-content-center"
   >
-    <Error
-      :statusCode="error.statusCode"
-      :message="error.message"
-      errType="not-mobile"
-    />
+    <Error :statusCode="error.statusCode" :message="error.message" />
   </div>
 </template>
 

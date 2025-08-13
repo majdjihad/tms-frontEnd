@@ -19,47 +19,14 @@
 
 <script setup>
 // Configure global page title template
-// If a page has a title, it will be displayed as "[title] - TaskSwift"
-// If no title is provided, it will display just "TaskSwift"
+// If a page has a title, it will be displayed as "[title] - AzzA"
+// If no title is provided, it will display just "AzzA"
 useHead({
-  titleTemplate: (title) => (title ? `${title} - TaskSwift` : "TaskSwift"),
-});
-
-// State to track if the device is mobile
-const isMobile = ref(null);
-
-/**
- * Check if the current screen width is mobile-sized (<=768px)
- * Updates isMobile state accordingly to show mobile error view
- */
-const checkScreen = () => {
-  if (window.innerWidth <= 768) {
-    isMobile.value = true;
-    return;
-  }
-  isMobile.value = false;
-};
-
-// Lifecycle hooks
-onBeforeMount(() => {
-  // Check screen size before mounting the app
-  checkScreen();
-
-  // Add window resize listener to handle screen size changes dynamically
-  window.addEventListener("resize", checkScreen);
+  titleTemplate: (title) => (title ? `${title} - AzzA` : "AzzA"),
 });
 </script>
 
 <style>
-#mobile-error-view {
-  padding: 0 15px;
-  min-height: 100vh;
-  min-width: 100%;
-  background-image: url("./assets/media/auth/bg14.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
 .ghost {
   background-color: var(--bs-gray-200);
 }
