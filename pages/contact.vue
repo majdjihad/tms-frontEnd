@@ -6,10 +6,10 @@ useHead({
 <template>
   <section class="contact-section py-5" dir="rtl">
     <div class="container">
-      <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-4 p-md-5">
+      <div class="p-md-5">
+        <div class="p-9">
           <h1>تواصل معنا</h1>
-          <div class="d-flex align-items-center mb-4">
+          <div class="d-flex align-items-center">
             <h2 class="fs-3 m-0 fw-normal text-primary d-inline">الرئيسية</h2>
             <Icon
               name="mdi:chevron-left-circle-outline"
@@ -17,15 +17,17 @@ useHead({
             />
             <h2 class="fs-3 m-0 fw-semibold text-muted">تواصل معنا</h2>
           </div>
-          <div class="mb-4 px-9 py-4">
-            <h2 class="fw-bold text-primary mb-2">نحن هنا من أجلك!</h2>
-            <p class="fs-5 text-dark mb-0">
-              يسعدنا تواصلك معنا للإجابة عن استفساراتك، استقبال اقتراحاتك. لا
-              تتردد في مراسلتنا وسنرد عليك في أقرب وقت ممكن.
-            </p>
-          </div>
-          <form class="px-9">
-            <div class="row g-4">
+        </div>
+        <form class="px-9">
+          <div>
+            <div class="row g-4 rounded-1 p-9 bg-white shadow-sm">
+              <div class="mb-4 py-4">
+                <h2 class="fw-bold text-primary mb-2">نحن هنا من أجلك!</h2>
+                <p class="fs-5 text-dark mb-0">
+                  يسعدنا تواصلك معنا للإجابة عن استفساراتك، استقبال اقتراحاتك.
+                  لا تتردد في مراسلتنا وسنرد عليك في أقرب وقت ممكن.
+                </p>
+              </div>
               <div class="col-md-6">
                 <label class="form-label fw-semibold">الإسم الكامل</label>
                 <input
@@ -59,7 +61,9 @@ useHead({
                   class="form-select form-select-lg bg-light border-0 rounded-0"
                   name="city"
                 >
-                  <option class="text-light" selected disabled>اختر المدينة</option>
+                  <option class="text-light" selected disabled>
+                    اختر المدينة
+                  </option>
                   <option>غزة</option>
                   <option>جباليا</option>
                   <option>خان يونس</option>
@@ -76,26 +80,25 @@ useHead({
                   placeholder="اكتب تفاصيل الطلب هنا..."
                 ></textarea>
               </div>
-
-              <div class="col-12 text-center my-8">
-                <button type="submit" class="btn-view-all">
-                  <span class="mb-0 text-white">أرسال الرسالة</span>
-                  <Icon
-                    name="material-symbols:arrow-back-rounded"
-                    class="text-white"
-                    size="20"
-                  />
-                </button>
-              </div>
             </div>
-          </form>
-        </div>
+            <div class="text-center my-8">
+              <button type="submit" class="btn btn-lg btn-view-all">
+                <span class="mb-0 text-white">أرسال الرسالة</span>
+                <Icon
+                  name="material-symbols:arrow-back-rounded"
+                  class="text-white"
+                  size="20"
+                />
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </section>
 </template>
 <style>
-.form-control-lg,
+.bg-scandary .form-control-lg,
 .form-select-lg {
   min-height: 3.25rem;
 }

@@ -22,7 +22,7 @@
 // If a page has a title, it will be displayed as "[title] - AzzA"
 // If no title is provided, it will display just "AzzA"
 useHead({
-  titleTemplate: (title) => (title ? `${title} - AzzA` : "AzzA"),
+  titleTemplate: (title) => (title ? `${title} - AZZA` : "AZZA"),
 });
 </script>
 

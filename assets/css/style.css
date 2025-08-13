@@ -91,7 +91,12 @@ body {
   background: var(--bs-primary-hover);
 }
 
-/* 5. تخصيص زر secondary */
+.bg-secondary {
+  background-color: var(--bs-secondary) !important;
+}
+.bg-light {
+  background-color: #f6f6f6 !important;
+}
 .btn-secondary {
   background-color: var(--bs-secondary) !important;
   border: none !important;

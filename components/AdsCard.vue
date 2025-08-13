@@ -30,7 +30,7 @@
 
       <div class="mt-3 d-flex align-items-center justify-content-between">
         <div class="text-muted small d-flex align-items-center gap-1">
-          <i class="bi bi-geo-alt"></i>
+          <Icon name="material-symbols:location-on-outline"/>
           <span>{{ ad.location }}</span>
         </div>
 
