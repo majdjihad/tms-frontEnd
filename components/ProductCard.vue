@@ -13,19 +13,18 @@ const props = defineProps({
 });
 
 const formattedPrice = computed(() =>
-  Number(props.item?.price ?? 0).toLocaleString("ar-EG")
+  Number(props.item?.price ?? 0).toLocaleString("en-US")
 );
 </script>
 
 <template>
-  <article class="offer-card h-100 d-flex flex-column">
+  <NuxtLink to="/products/details" class="offer-card h-100 d-flex flex-column">
     <div class="offer-media">
       <img :src="item.image" :alt="item.title" />
     </div>
 
     <div class="offer-body">
       <h3 class="offer-title">{{ item.title }}</h3>
-
       <div class="d-flex align-items-center text-secondary gap-1 offer-meta">
         <Icon name="mdi:map-marker-outline" size="18" />
         <span class="fs-5">{{ item.city }}</span>
@@ -53,7 +52,7 @@ const formattedPrice = computed(() =>
         </button>
       </div>
     </div>
-  </article>
+  </NuxtLink>
 </template>
 
 <style scoped>
@@ -85,6 +84,9 @@ const formattedPrice = computed(() =>
 /* النص */
 .offer-body {
   padding: 1rem 1rem 0.5rem 1rem;
+}
+.offer-card:hover h3 {
+  text-decoration: underline;
 }
 .offer-title {
   font-weight: 700;

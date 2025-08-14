@@ -1,49 +1,46 @@
-/* 1.import font */
+/* 1) حمّل الخطوط – لاحظ المسارات والأسماء مع المسافات */
 @font-face {
   font-family: 'Expo Arabic';
-  src: url('~/assets/fonts/ExpoArabic-Light.ttf') format('truetype');
+  src: url('../fonts/Expo Arabic Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Expo Arabic';
-  src: url('~/assets/fonts/ExpoArabic-Book.ttf') format('truetype');
+  src: url('../fonts/Expo Arabic Book.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Expo Arabic';
-  src: url('~/assets/fonts/ExpoArabic-Medium.ttf') format('truetype');
+  src: url('../fonts/Expo Arabic Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Expo Arabic';
-  src: url('~/assets/fonts/ExpoArabic-SemiBold.ttf') format('truetype');
+  src: url('../fonts/ExpoArabic-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
+  font-display: swap;
 }
 
-:root {
-  --bs-primary: #1838a3;
-  --bs-primary-hover: #264fcf;
-  --bs-secondary: #a5acb9;
-  --bs-info: #f5bc48;
-  --bs-info-hover: #f2bb4d;
+:root{
+  --bs-body-font-family: 'Expo Arabic', Arial, Helvetica, sans-serif;
+  --bs-font-sans-serif: 'Expo Arabic', Arial, Helvetica, sans-serif;
+  --bs-primary: #1838a3; --bs-primary-hover: #264fcf; --bs-secondary: #a5acb9; --bs-info: #f5bc48; --bs-info-hover: #f2bb4d;
 }
-html, body, *, *::before, *::after {
-  font-family: 'Expo Arabic', sans-serif !important;
-}
-p,span {
-  font-family: 'Expo Arabic', sans-serif !important;
-}
-body {
-  font-family: 'Expo Arabic', sans-serif !important;
-  direction: rtl;
-  background-color: #f9f9f9;
-}
-* {
-  font-family: var(--font-main), 'Expo Arabic', Arial, Helvetica, sans-serif !important;
+
+html { direction: rtl; }
+body { background-color: #fcfcfc; }
+
+*,
+*::before,
+*::after {
+  font-family: var(--bs-body-font-family) !important;
 }
 
 .text-primary {

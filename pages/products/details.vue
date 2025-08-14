@@ -83,9 +83,8 @@ function mockListing(id) {
     description:
       "فرصة ذهبية للاستثمار أو السكن الراقي!فلل سياحية عظم للبيع بموقع استراتيجي مميز، تجمع بين التصميم الهندسي العصري والموقـــع الفريـــد، بأسعـــار مغريــة لا تُعوّض. تتميز الفلل بمساحات رحبة وتوزيع داخلي ذكـي يوفر أقصـــى درجــــات الراحـــة والخصوصـــية، مــــع إمكانية تخصيــص التشطيبات النهائية بالكامل بما يتناسب مع ذوقك واحتياجاتك. تقع هذه الفلل فــي منطقة هادئة وآمنة، قريبة من المنتجعات السياحية، والمرافق الحيوية مثل المدارس، المـــولات، والمراكــــز الطبية، ما يجعلها خيارًا مثاليًــا للعائلات أو حتى للمستثمريـــن الباحثين عن عائد مميز من الإيجارات السياحية.استغل الفرصة الآن، واختر وحدتك قبل ارتفاع الأسعار أو نفاد المتاح. فلل فاخرة، سعر منافس، وموقع لا يتكرر... لا تتردد، تواصل معنا الآن!استفد من عروضنا الخاصة لفترة محدودة واحصل على استشارات مجانية من خبراء العقارات.تمتع بإمكانية تقسيط ميسرة وخطط دفع مرنة تناسب جميع الميزانيات.زر موقع المشروع بنفسك لتكتشف روعة التصميم وجودة البناء عن قرب.",
     publisher: {
-      name: "حسين العوضي",
-      joinedAt: "2021-07-15",
-      avatar: "/avatars/user.png",
+      name: "AZZA",
+      avatar: "/avatars/logo.png",
       phone: "0592072249",
       whatsapp: "+970592072249",
       email: "husseinswalhy8@gmail.com",
@@ -100,239 +99,82 @@ function mockListing(id) {
     },
   };
 }
-const ads = [
+const offers = ref([
   {
     id: 1,
-    category: "عقارات",
-    title: "iPhone 14 Pro Max للبيع",
-    description:
-      "نص لعرض البيع وصيغ موجزة تشرح قرب من الخدمات بحي راقٍ، مناسب للعائلة.",
-    price: "شيكل 5,000",
-    time: "15 دقيقة",
-    location: "غزة - فلسطين",
-    comments: 6,
-    views: 92,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    title: "أجهزة للعناية المنزلية بالبشرة",
+    city: "البلح",
+    region: "فلسطين",
+    price: 750,
+    image: "/bg-home/bg1.png",
   },
   {
     id: 2,
-    category: "عقارات",
-    title: "سماعة بلوتوث لاسلكية أصلية",
-    description:
-      "نص بسيط عن المواصفات والجودة العالية مع عمر بطارية كبير جدًا وخدمة ممتازة.",
-    price: "شيكل 300",
-    time: "15 دقيقة",
-    location: "خان يونس - فلسطين",
-    comments: 4,
-    views: 68,
-    image: "/bg-home/bg4.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    title: "كاميرا احترافية بحالة ممتازة للبيع",
+    city: "غزة",
+    region: "فلسطين",
+    price: 2300,
+    image: "/bg-home/bg2.png",
   },
   {
     id: 3,
-    category: "عقارات",
-    title: "دراجة هوائية خفاش 26 بحالة ممتازة",
-    description:
-      "إطار ألومنيوم، سرعات متعددة، مكابح قرصية، مناسبة للطريق والجبال مع صيانة حديثة.",
-    price: "شيكل 3,500",
-    time: "15 دقيقة",
-    location: "رفح - فلسطين",
-    comments: 10,
-    views: 120,
-    image: "/bg-home/bg1.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    title: "قميص ستايل عصري",
+    city: "النصر",
+    region: "فلسطين",
+    price: 240,
+    image: "/bg-home/bg3.png",
   },
   {
     id: 4,
-    category: "عقارات",
-    title: "فلت سياحية فخمة بسعر مغري",
-    description:
-      "مساحة واسعة، غرف نوم عديدة مع قرب من الخدمات العامة وموقع مميز للغاية.",
-    price: "شيكل ألاف 560",
-    time: "15 دقيقة",
-    location: "غزة - فلسطين",
-    comments: 7,
-    views: 140,
-    image: "/bg-home/bg3.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    title: "عطر خليجي برائحة العود وثابت قوي",
+    city: "جباليا",
+    region: "فلسطين",
+    price: 560,
+    image: "/bg-home/bg4.png",
   },
   {
     id: 5,
-    category: "عقارات",
-    title: "فلت سياحية وسكنية بعرض مميز",
-    description:
-      "سعر منافس وموقع قريب من الخدمات بحي راقٍ مناسب للعائلة والرفاهية.",
-    price: "شيكل ألاف 560",
-    time: "15 دقيقة",
-    location: "غزة - فلسطين",
-    comments: 5,
-    views: 77,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    title: "أجهزة تنظيف وتعقيم منزلية",
+    city: "غزة",
+    region: "فلسطين",
+    price: 420,
+    image: "/bg-home/bg5.png",
   },
   {
     id: 6,
-    category: "عقارات",
-    title: "جهاز للاعتناء المنزلية بالأسرة",
-    description:
-      "منتج عملي أنيق مع ضمان وخدمة ما بعد البيع، مواصفات ممتازة ومستويات أمان عالية.",
-    price: "شيكل 300",
-    time: "15 دقيقة",
-    location: "خان يونس - فلسطين",
-    comments: 8,
-    views: 91,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    title: "عدسة 85mm فتحة 1.8",
+    city: "غزة",
+    region: "فلسطين",
+    price: 1150,
+    image: "/bg-home/bg6.png",
   },
   {
     id: 7,
-    category: "عقارات",
-    title: "كاميرا احترافية بحالة ممتازة للبيع",
-    description:
-      "عدسة أساسية 50mm، تصوير بدقة عالية 4K، مثالية للهواة والمحترفين مع إكسسوارات.",
-    price: "شيكل 3,500",
-    time: "15 دقيقة",
-    location: "رفح - فلسطين",
-    comments: 9,
-    views: 200,
-    image: "/bg-home/bg9.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    title: "حذاء جلد طبيعي كلاسيك",
+    city: "النصر",
+    region: "فلسطين",
+    price: 330,
+    image: "/bg-home/bg7.png",
   },
   {
     id: 8,
-    category: "عقارات",
-    title: "عطر فخم برائحة العود وثابت قوي",
-    description:
-      "ثبات عالٍ ولمسة فاخرة تناسب المناسبات، عبوة أصلية وتوصيل متاح داخل المدينة.",
-    price: "شيكل ألاف 560",
-    time: "15 دقيقة",
-    location: "غزة - فلسطين",
-    comments: 2,
-    views: 55,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    title: "بخور عود فاخر",
+    city: "جباليا",
+    region: "فلسطين",
+    price: 199,
+    image: "/bg-home/bg8.png",
   },
-  {
-    id: 9,
-    category: "عقارات",
-    title: "iPhone 14 Pro Max للبيع",
-    description:
-      "نص لعرض البيع وصيغ موجزة تشرح قرب من الخدمات بحي راقٍ، مناسب للعائلة.",
-    price: "شيكل 5,000",
-    time: "15 دقيقة",
-    location: "غزة - فلسطين",
-    comments: 6,
-    views: 92,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
-  },
-  {
-    id: 10,
-    category: "عقارات",
-    title: "سماعة بلوتوث لاسلكية أصلية",
-    description:
-      "نص بسيط عن المواصفات والجودة العالية مع عمر بطارية كبير جدًا وخدمة ممتازة.",
-    price: "شيكل 300",
-    time: "15 دقيقة",
-    location: "خان يونس - فلسطين",
-    comments: 4,
-    views: 68,
-    image: "/bg-home/bg4.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
-  },
-  {
-    id: 11,
-    category: "عقارات",
-    title: "دراجة هوائية خفاش 26 بحالة ممتازة",
-    description:
-      "إطار ألومنيوم، سرعات متعددة، مكابح قرصية، مناسبة للطريق والجبال مع صيانة حديثة.",
-    price: "شيكل 3,500",
-    time: "15 دقيقة",
-    location: "رفح - فلسطين",
-    comments: 10,
-    views: 120,
-    image: "/bg-home/bg1.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
-  },
-  {
-    id: 12,
-    category: "عقارات",
-    title: "فلت سياحية فخمة بسعر مغري",
-    description:
-      "مساحة واسعة، غرف نوم عديدة مع قرب من الخدمات العامة وموقع مميز للغاية.",
-    price: "شيكل ألاف 560",
-    time: "15 دقيقة",
-    location: "غزة - فلسطين",
-    comments: 7,
-    views: 140,
-    image: "/bg-home/bg3.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
-  },
-  {
-    id: 13,
-    category: "عقارات",
-    title: "فلت سياحية وسكنية بعرض مميز",
-    description:
-      "سعر منافس وموقع قريب من الخدمات بحي راقٍ مناسب للعائلة والرفاهية.",
-    price: "شيكل ألاف 560",
-    time: "15 دقيقة",
-    location: "غزة - فلسطين",
-    comments: 5,
-    views: 77,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
-  },
-  {
-    id: 14,
-    category: "عقارات",
-    title: "جهاز للاعتناء المنزلية بالأسرة",
-    description:
-      "منتج عملي أنيق مع ضمان وخدمة ما بعد البيع، مواصفات ممتازة ومستويات أمان عالية.",
-    price: "شيكل 300",
-    time: "15 دقيقة",
-    location: "خان يونس - فلسطين",
-    comments: 8,
-    views: 91,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
-  },
-  {
-    id: 15,
-    category: "عقارات",
-    title: "كاميرا احترافية بحالة ممتازة للبيع",
-    description:
-      "عدسة أساسية 50mm، تصوير بدقة عالية 4K، مثالية للهواة والمحترفين مع إكسسوارات.",
-    price: "شيكل 3,500",
-    time: "15 دقيقة",
-    location: "رفح - فلسطين",
-    comments: 9,
-    views: 200,
-    image: "/bg-home/bg9.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
-  },
-  {
-    id: 16,
-    category: "عقارات",
-    title: "عطر فخم برائحة العود وثابت قوي",
-    description:
-      "ثبات عالٍ ولمسة فاخرة تناسب المناسبات، عبوة أصلية وتوصيل متاح داخل المدينة.",
-    price: "شيكل ألاف 560",
-    time: "15 دقيقة",
-    location: "غزة - فلسطين",
-    comments: 2,
-    views: 55,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
-  },
-];
-const chunkedAds = computed(() => {
-  const size = 4;
-  const chunks = [];
-  for (let i = 0; i < ads.length; i += size)
-    chunks.push(ads.slice(i, i + size));
-  return chunks;
-});
+]);
+const currency = "شيكل";
+const perSlide = 4;
+const chunk = (arr, size) => {
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+};
+
+const slides = computed(() => chunk(offers.value, perSlide));
+const carouselId = "offersCarousel";
 </script>
 
 
@@ -481,9 +323,6 @@ const chunkedAds = computed(() => {
               />
               <div>
                 <h3 class="fw-bold mt-3">{{ listing.publisher.name }}</h3>
-                <div class="small text-muted fs-4">
-                  تاريخ الانضمام: {{ listing.publisher.joinedAt }}
-                </div>
               </div>
             </div>
 
@@ -491,7 +330,7 @@ const chunkedAds = computed(() => {
               to="#"
               class="d-block text-primary fw-bold my-3 text-decoration-underline text-center fs-3 mb-2"
             >
-              عرض جميع إعلاناته
+              عرض جميع المنتجات
             </NuxtLink>
 
             <div class="user-data gap-2 my-3 pb-3 px-3">
@@ -529,7 +368,6 @@ const chunkedAds = computed(() => {
                 </div>
               </NuxtLink>
               <NuxtLink
-                :to="`mailto:${listing.publisher?.email}`"
                 class="d-flex w-md-100 w-50 mx-auto align-items-center btn p-0 mb-4"
                 v-if="listing.publisher?.email"
               >
@@ -609,21 +447,22 @@ const chunkedAds = computed(() => {
         </div>
       </aside>
     </div>
-    <section class="container container-ads pt-4 mb-9 py-md-5">
-      <!-- Header + Toolbar -->
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <div class="d-flex align-items-center gap-4">
-          <div>
-            <p class="fs-3 text-muted">قد يعجبك أيضا</p>
-            <h2 class="fs-1 section-title mb-0">إعلانات ذات صلة</h2>
-          </div>
+    <section
+      class="offers-section container my-4 py-4 px-3 px-sm-4 bg-secandary"
+    >
+      <!-- Bootstrap Carousel -->
+      <div class="d-flex justify-content-between offers-header mb-3">
+        <div>
+          <p class="fs-3 offers-subtitle text-muted">
+            عروض حصرية من إدارة الموقع
+          </p>
+          <h2 class="fs-1 fw-bold mb-1">عروضنا الخاصة</h2>
         </div>
-
         <div class="d-flex align-items-center gap-2 offers-toolbar">
           <!-- Prev -->
           <button
             class="btn-carousel"
-            data-bs-target="#adsCarousel"
+            :data-bs-target="`#${carouselId}`"
             data-bs-slide="prev"
             aria-label="السابق"
           >
@@ -633,13 +472,13 @@ const chunkedAds = computed(() => {
           <!-- Next -->
           <button
             class="btn-carousel"
-            data-bs-target="#adsCarousel"
+            :data-bs-target="`#${carouselId}`"
             data-bs-slide="next"
             aria-label="التالي"
           >
             <Icon name="line-md:arrow-left" size="20" />
           </button>
-          <NuxtLink to="/ads" class="btn-view-all">
+          <NuxtLink to="/products" class="btn-view-all">
             <h5 class="mb-0 text-white">عرض الكل</h5>
             <Icon
               name="material-symbols:arrow-back-rounded"
@@ -649,22 +488,25 @@ const chunkedAds = computed(() => {
           </NuxtLink>
         </div>
       </div>
-      <!-- Bootstrap Carousel -->
-      <div id="adsCarousel" class="carousel slide" data-bs-interval="false">
+      <div
+        class="carousel slide"
+        :id="carouselId"
+        data-bs-ride="false"
+        data-bs-interval="0"
+      >
         <div class="carousel-inner">
           <div
-            v-for="(group, idx) in chunkedAds"
-            :key="'slide-' + idx"
-            class="carousel-item"
-            :class="{ active: idx === 0 }"
+            v-for="(group, idx) in slides"
+            :key="idx"
+            :class="['carousel-item', { active: idx === 0 }]"
           >
-            <div class="row g-4">
+            <div class="row g-3 g-md-4">
               <div
-                v-for="ad in group"
-                :key="ad.id"
-                class="col-12 col-md-6 col-xl-3"
+                v-for="item in group"
+                :key="item.id"
+                class="col-12 col-sm-6 col-lg-3"
               >
-                <AdsCard :ad="ad" />
+                <ProductCard :item="item" :currency="currency" />
               </div>
             </div>
           </div>

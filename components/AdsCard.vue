@@ -8,7 +8,6 @@
       >
         {{ ad.category }}
       </span>
-
       <div class="avatar-holder">
         <div class="avatar-ring">
           <i class="bi bi-person fs-1 text-secondary"></i>
@@ -18,22 +17,21 @@
 
     <!-- Body -->
     <div class="card-body pt-5">
-      <div class="text-muted small mb-1">منذ {{ ad.time }}</div>
-      <h5 class="ad-title mb-2">
-        {{ ad.title }} <span class="fw-bold">للبيع</span>
-      </h5>
-      <p class="ad-desc mb-3">{{ ad.description }}</p>
-
-      <div class="d-flex align-items-center justify-content-between">
-        <div class="ad-price fs-5">{{ ad.price }}</div>
-      </div>
-
+      <NuxtLink to="ads/detail">
+        <div class="text-muted small mb-1">منذ {{ ad.time }}</div>
+        <h5 class="ad-title mb-2">
+          {{ ad.title }} <span class="fw-bold">للبيع</span>
+        </h5>
+        <p class="ad-desc mb-3">{{ ad.description }}</p>
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="ad-price fs-5">{{ ad.price }}</div>
+        </div>
+      </NuxtLink>
       <div class="mt-3 d-flex align-items-center justify-content-between">
         <div class="text-muted small d-flex align-items-center gap-1">
-          <Icon name="material-symbols:location-on-outline"/>
+          <Icon name="material-symbols:location-on-outline" />
           <span>{{ ad.location }}</span>
         </div>
-
         <div class="meta d-flex align-items-center gap-1 fs-5">
           <button class="btn text-secondary btn-sm p-1" aria-label="تواصل">
             <Icon name="akar-icons:whatsapp-fill" size="18" />

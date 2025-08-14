@@ -32,10 +32,12 @@ const isActive = (path) => {
     >
       <div class="d-flex align-items-center">
         <NuxtLink to="#" class="text-dark fs-5 mx-2">إنشاء حساب</NuxtLink>
-        <NuxtLink to="#" class="text-dark fs-5 border-start border-end px-2"
+        <NuxtLink to="/terms-of-use" class="text-dark fs-5 border-start border-end px-2"
           >شروط الاستخدام</NuxtLink
         >
-        <NuxtLink to="#" class="text-dark fs-5 mx-2">سياسة الخصوصية</NuxtLink>
+        <NuxtLink to="/privacy-policy" class="text-dark fs-5 mx-2"
+          >سياسة الخصوصية</NuxtLink
+        >
       </div>
       <div class="d-flex flex-row-reverse gap-6">
         <NuxtLink to="https://www.facebook.com/">
@@ -55,7 +57,6 @@ const isActive = (path) => {
         </NuxtLink>
       </div>
     </div>
-
     <!-- Row 2 -->
     <div
       class="d-flex justify-content-between align-items-center py-3 px-9 bg-white border-bottom"
@@ -76,7 +77,7 @@ const isActive = (path) => {
           >
             <Icon name="fa-solid:heart" class="fs-2" />
             <span
-              class="fs-5 h5 mt-4"
+              class="fs-5 mt-4"
               :class="favoritesMenuVisible ? 'text-primary' : 'text-secondary'"
               >المفضلة</span
             >
@@ -101,7 +102,7 @@ const isActive = (path) => {
           >
             <Icon name="fa-solid:bell" class="fs-2" />
             <span
-              class="fs-5 h5 mt-4"
+              class="fs-5 mt-4"
               :class="
                 notificationsMenuVisible ? 'text-primary' : 'text-secondary'
               "
@@ -123,7 +124,7 @@ const isActive = (path) => {
           class="btn btn-link text-dark text-decoration-none d-flex flex-column align-items-center"
         >
           <Icon name="fa-solid:book" class="text-secondary fs-2" />
-          <span class="text-secondary fs-5 h5 mt-4">أعلانتي</span>
+          <span class="text-secondary fs-5 mt-4">أعلانتي</span>
         </NuxtLink>
         <div class="d-flex justify-center align-items-start gap-3">
           <img
@@ -137,8 +138,8 @@ const isActive = (path) => {
               to="#"
               class="text-dark text-decoration-none d-flex flex-column align-items-start justify-content-center"
             >
-              <span class="text-dark h5 fs-5">مجد قويدر</span>
-              <span class="text-secondary h5 fs-7">حسابي</span>
+              <span class="text-dark fs-5">مجد قويدر</span>
+              <span class="text-secondary fs-7">حسابي</span>
             </NuxtLink>
           </div>
         </div>

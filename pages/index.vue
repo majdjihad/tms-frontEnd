@@ -349,7 +349,6 @@ const carouselId = "offersCarousel";
         class="hero-background-grid position-absolute top-0 start-0 w-100 h-100 z-n1"
       >
         <div class="row g-0 h-100">
-          <!-- الصف الأول -->
           <div class="row g-0">
             <div class="col-3">
               <img
@@ -376,8 +375,6 @@ const carouselId = "offersCarousel";
               />
             </div>
           </div>
-
-          <!-- الصف الثاني -->
           <div class="row g-0">
             <div class="col-2">
               <img
@@ -530,8 +527,6 @@ const carouselId = "offersCarousel";
             </div>
           </NuxtLink>
         </div>
-
-        <!-- قسم الإعلان -->
         <div
           class="bg-primary text-white rounded p-9 mt-5 d-flex flex-column flex-md-row align-items-center justify-content-between"
         >
