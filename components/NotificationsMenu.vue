@@ -102,7 +102,7 @@ const getBadgeClass = (status) => {
         </div>
 
         <!-- الرسالة -->
-        <p class="mb-1 pt-1">{{ notification.message }}</p>
+        <p class="mb-1 pt-1 text-muted">{{ notification.message }}</p>
 
         <!-- التفاصيل -->
         <div v-if="notification.showDetails" class="mt-2 alert alert-secondary">

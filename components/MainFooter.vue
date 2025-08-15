@@ -2,8 +2,7 @@
   <footer class="footer bg-light border-top pt-4">
     <div class="">
       <div class="row text-end px-6">
-        <!-- العمود الأول: الوصف -->
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 col-10 mb-4">
           <div class="mb-3 pe-9">
             <img
               src="~\assets\media\logos\azza-logo.png"
@@ -19,9 +18,7 @@
             وآمنة للتواصل المباشر بين البائعين والمشترين.
           </p>
         </div>
-
-        <!-- العمود الثاني: الصفحات -->
-        <div class="col-md-4 mb-4">
+        <div class="col-4 col-md-3 mb-4">
           <h5 class="fw-bold mb-3">الصفحات</h5>
           <ul class="list-unstyled p-0">
             <li>
@@ -56,9 +53,7 @@
             </li>
           </ul>
         </div>
-
-        <!-- العمود الثالث: روابط سريعة -->
-        <div class="col-md-2 mb-4">
+        <div class="col-4 col-md-3 mb-4">
           <h5 class="fw-bold mb-3">روابط سريعة</h5>
           <ul class="list-unstyled p-0">
             <li>
@@ -94,8 +89,7 @@
           </ul>
         </div>
 
-        <!-- العمود الرابع: بيانات التواصل -->
-        <div class="col-md-2 mb-4">
+        <div class="col-4 col-md-2 mb-4">
           <h5 class="fw-bold mb-3">بيانات التواصل</h5>
           <p class="d-flex align-items-center mb-1">
             <span class="ms-2 p-2 bg-primary rounded-circle">

@@ -54,7 +54,7 @@ const handleClearError = () => clearError({ redirect: "/projects" });
               <i
                 v-if="isMobileError"
                 class="pi pi-exclamation-circle mw-100 mh-300px text-warning"
-                style="font-size: 200px;"
+                style="font-size: 200px"
               ></i>
               <img
                 v-else
@@ -67,7 +67,7 @@ const handleClearError = () => clearError({ redirect: "/projects" });
             <!--begin::Link-->
             <div class="mb-0 mt-8" v-if="!isMobileError">
               <button class="btn btn-sm btn-primary" @click="handleClearError">
-                Return To Projects
+                Return To Home Page
               </button>
             </div>
             <!--end::Link-->

@@ -31,11 +31,11 @@
 :root{
   --bs-body-font-family: 'Expo Arabic', Arial, Helvetica, sans-serif;
   --bs-font-sans-serif: 'Expo Arabic', Arial, Helvetica, sans-serif;
-  --bs-primary: #1838a3; --bs-primary-hover: #264fcf; --bs-secondary: #a5acb9; --bs-info: #f5bc48; --bs-info-hover: #f2bb4d;
+  --bs-primary: #1839a0; --bs-primary-hover: #264fcf; --bs-secondary: #a5acb9; --bs-info: #f5bc48; --bs-info-hover: #f2bb4d;
 }
 
 html { direction: rtl; }
-body { background-color: #fcfcfc; }
+body { background-color: #ffffff; }
 
 *,
 *::before,
@@ -135,4 +135,7 @@ input:focus {
   box-shadow: none !important;
   outline: var(--bs-primary) !important;
   color: #000 !important;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
