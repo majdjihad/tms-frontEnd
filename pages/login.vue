@@ -6,14 +6,19 @@ import BasePassword from "@/components/form/BasePassword.vue";
 useHead({
   title: "تسجيل الدخول",
 });
+// definePageMeta({
+//   middleware: ["guest"],
+// });
+const { login } = useAuth();
+const router = useRouter();
+const inProgress = ref(false);
+
 const form = reactive({
-  phone: "",
   email: "",
   password: "",
 });
 
 const errors = reactive({
-  phone: "",
   email: "",
   password: "",
 });
@@ -23,8 +28,6 @@ function resetErrors() {
 
 function onSubmit() {
   resetErrors();
-  if (!form.phone || !/^(\+?\d{8,15})$/.test(form.phone))
-    errors.phone = "يرجى إدخال رقم جوال صحيح";
   if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email))
     errors.email = "البريد الإلكتروني غير صحيح";
   if (!form.password || form.password.length < 6)
@@ -32,9 +35,39 @@ function onSubmit() {
 
   const hasError = Object.values(errors).some(Boolean);
   if (!hasError) {
-    alert("تم تسجيل الدخول بنجاح");
+    formHandle();
   }
 }
+
+// handle form
+const formHandle = async () => {
+  try {
+    inProgress.value = true;
+    const { submit } = useSubmit(() => login(form), {
+      onSuccess: (response) => {
+        // Handle the response
+        router.push({
+          path: "/",
+        });
+        showToast("success", response?.message || "تم تسجيل الدخول بنجاح");
+      },
+      onError: (error) => {
+        showToast("error", error?.data?.message);
+        if (error?.data?.code === 400) {
+          showToast("error", error?.data?.message);
+          return navigateTo("/login", { replace: true });
+        }
+      },
+    });
+    await submit();
+  } catch (error) {
+    if (!error?.data?.message) {
+      showToast("error", "فشل التسجيل");
+    }
+  } finally {
+    inProgress.value = false;
+  }
+};
 </script>
 
 <template>
@@ -94,7 +127,7 @@ function onSubmit() {
           </div>
         </div>
         <div class="col-lg-8 py-9">
-          <div class="card border-0 py-9 h-100 bg-light">
+          <div class="card border-0 py-9 h-100 bg-white">
             <div class="card-body p-4 p-md-5">
               <h1 class="fw-bold text-end mb-4">
                 <span class="display-4">👋</span>مرحبًا بك
@@ -136,12 +169,23 @@ function onSubmit() {
                   </div>
                 </div>
                 <div class="text-end mt-3">
-                  <button class="btn btn-main px-4" type="submit">
-                    تسجيل الدخول
-                    <Icon
-                      name="material-symbols:arrow-back-rounded"
-                      class="text-white me-2"
-                      size="22"
+                  <button
+                    class="btn btn-main px-4"
+                    :disabled="inProgress"
+                    type="submit"
+                  >
+                    <span v-if="!inProgress">
+                      تسجيل الدخول
+                      <Icon
+                        name="material-symbols:arrow-back-rounded"
+                        class="text-white me-2"
+                        size="22"
+                      />
+                    </span>
+                    <icon
+                      v-else
+                      name="svg-spinners:ring-resize"
+                      class="indicator-label fs-1"
                     />
                   </button>
                 </div>

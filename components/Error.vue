@@ -5,13 +5,13 @@ const props = defineProps(["message", "errType", "statusCode"]);
 // === computed === //
 const errorImage = computed(() => {
   if (props.statusCode === 404) {
-    return "~/assets/media/auth/404-error.svg";
+    return "~/public/media/auth/404-error.svg";
   } else if (props.statusCode === 500) {
-    return "~/assets/media/auth/500-error.png";
+    return "~/public/media/auth/500-error.png";
   } else if (props.statusCode === 403) {
-    return "~/assets/media/auth/403-error.svg";
+    return "~/public/media/auth/403-error.svg";
   }
-  return "~/assets/media/auth/404-error.svg";
+  return "~/public/media/auth/404-error.svg";
 });
 
 const isMobileError = computed(() =>
@@ -19,7 +19,7 @@ const isMobileError = computed(() =>
 );
 
 // === methods === //
-const handleClearError = () => clearError({ redirect: "/projects" });
+const handleClearError = () => clearError({ redirect: "/" });
 </script>
 
 <template>
@@ -35,15 +35,14 @@ const handleClearError = () => clearError({ redirect: "/projects" });
         <div class="card card-flush w-lg-650px py-5">
           <div class="card-body py-15 py-lg-20">
             <!--begin::Title-->
-            <h1 class="fw-bolder fs-2hx text-gray-900 mb-4">Sorry!</h1>
+            <h1 class="fw-bolder fs-2hx text-gray-900 mb-4">حدث خطأ ما…!</h1>
             <!--end::Title-->
             <!--begin::Text-->
             <div
               v-if="isMobileError"
               class="fw-bold fs-1 text-capitalize text-center mb-6"
             >
-              <p class="text-primary">TaskSwift Softwatre</p>
-              <span>Does Not Allowed for mobile devices</span>
+              {{ message }}
             </div>
             <div v-else class="fw-semibold fs-6 text-gray-500 mb-7">
               {{ message }}
@@ -65,9 +64,17 @@ const handleClearError = () => clearError({ redirect: "/projects" });
             </div>
             <!--end::Illustration-->
             <!--begin::Link-->
-            <div class="mb-0 mt-8" v-if="!isMobileError">
-              <button class="btn btn-sm btn-primary" @click="handleClearError">
-                Return To Home Page
+            <div
+              class="mb-0 mt-8 d-flex justify-content-center"
+              v-if="!isMobileError"
+            >
+              <button class="btn btn-sm btn-main" @click="handleClearError">
+                الرجوع للصفحة الرئيسية
+                <Icon
+                  name="material-symbols:arrow-back-rounded"
+                  class="text-white me-2"
+                  size="22"
+                />
               </button>
             </div>
             <!--end::Link-->

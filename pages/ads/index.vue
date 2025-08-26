@@ -14,8 +14,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 6,
     views: 92,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 2,
@@ -28,8 +28,8 @@ const ads = [
     location: "خان يونس - فلسطين",
     comments: 4,
     views: 68,
-    image: "/bg-home/bg4.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg4.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 3,
@@ -42,8 +42,8 @@ const ads = [
     location: "رفح - فلسطين",
     comments: 10,
     views: 120,
-    image: "/bg-home/bg1.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg1.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 4,
@@ -56,8 +56,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 7,
     views: 140,
-    image: "/bg-home/bg3.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg3.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 5,
@@ -70,8 +70,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 5,
     views: 77,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 6,
@@ -84,8 +84,8 @@ const ads = [
     location: "خان يونس - فلسطين",
     comments: 8,
     views: 91,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 7,
@@ -98,8 +98,8 @@ const ads = [
     location: "رفح - فلسطين",
     comments: 9,
     views: 200,
-    image: "/bg-home/bg9.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg9.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 8,
@@ -112,8 +112,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 2,
     views: 55,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 9,
@@ -126,8 +126,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 6,
     views: 92,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
 ];
 const cats = ref([

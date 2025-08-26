@@ -17,7 +17,7 @@
 
     <!-- Body -->
     <div class="card-body pt-5">
-      <NuxtLink to="ads/detail">
+      <NuxtLink to="ads/details">
         <div class="text-muted small mb-1">منذ {{ ad.time }}</div>
         <h5 class="ad-title mb-2">
           {{ ad.title }} <span class="fw-bold">للبيع</span>

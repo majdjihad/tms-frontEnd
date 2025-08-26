@@ -25,4 +25,4 @@ export const showToast = (statusCode, msg) => {
       ...toastAttr,
     });
   }
-}
+};

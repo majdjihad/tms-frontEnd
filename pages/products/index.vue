@@ -9,7 +9,7 @@ const products = ref([
     city: "البلح",
     region: "فلسطين",
     price: 750,
-    image: "/bg-home/bg1.png",
+    image: "/media/bg-home/bg1.png",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const products = ref([
     city: "غزة",
     region: "فلسطين",
     price: 2300,
-    image: "/bg-home/bg2.png",
+    image: "/media/bg-home/bg2.png",
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ const products = ref([
     city: "النصر",
     region: "فلسطين",
     price: 240,
-    image: "/bg-home/bg3.png",
+    image: "/media/bg-home/bg3.png",
   },
   {
     id: 4,
@@ -33,7 +33,7 @@ const products = ref([
     city: "جباليا",
     region: "فلسطين",
     price: 560,
-    image: "/bg-home/bg4.png",
+    image: "/media/bg-home/bg4.png",
   },
   // إذا بدك تكرّر لعرض أكثر من سلايد:
   {
@@ -42,7 +42,7 @@ const products = ref([
     city: "غزة",
     region: "فلسطين",
     price: 420,
-    image: "/bg-home/bg5.png",
+    image: "/media/bg-home/bg5.png",
   },
   {
     id: 6,
@@ -50,7 +50,7 @@ const products = ref([
     city: "غزة",
     region: "فلسطين",
     price: 1150,
-    image: "/bg-home/bg6.png",
+    image: "/media/bg-home/bg6.png",
   },
   {
     id: 7,
@@ -58,7 +58,7 @@ const products = ref([
     city: "النصر",
     region: "فلسطين",
     price: 330,
-    image: "/bg-home/bg7.png",
+    image: "/media/bg-home/bg7.png",
   },
   {
     id: 8,
@@ -66,7 +66,7 @@ const products = ref([
     city: "جباليا",
     region: "فلسطين",
     price: 199,
-    image: "/bg-home/bg8.png",
+    image: "/media/bg-home/bg8.png",
   },
 ]);
 const cats = ref([

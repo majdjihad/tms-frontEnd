@@ -1,31 +1,38 @@
-
 <script setup>
 import BaseText from "@/components/form/BaseText.vue";
 import BasePassword from "@/components/form/BasePassword.vue";
 import BaseSelect from "~/components/form/BaseSelect.vue";
+import { showToast } from "~/composables/useToast";
+import { useAuth } from "~/composables/useAuth";
+import { useSubmit } from "~/composables/useSubmit";
+import { useRouter } from "vue-router";
+
 useHead({
   title: "تسجيل",
 });
 
+const { register } = useAuth();
+const router = useRouter();
+const inProgress = ref(false);
+
 const form = reactive({
   phone: "",
-  username: "",
+  name: "",
   city: "",
   email: "",
   password: "",
-  passwordConfirm: "",
-  acceptTerms: false,
+  password_confirmation: "",
 });
 
 const errors = reactive({
   phone: "",
-  username: "",
+  name: "",
   city: "",
   email: "",
   password: "",
-  passwordConfirm: "",
-  acceptTerms: "",
+  password_confirmation: "",
 });
+
 const cities = [
   { value: "جباليا", label: "جباليا" },
   { value: "خانيونس", label: "خانيونس" },
@@ -36,30 +43,64 @@ const cities = [
   { value: "بيت لاهيا", label: "بيت لاهيا" },
   { value: "بيت حانون", label: "بيت حانون" },
 ];
+
+// switch error msg
 function resetErrors() {
   Object.keys(errors).forEach((k) => (errors[k] = ""));
 }
 
+// validation errors form
 function onSubmit() {
   resetErrors();
   if (!form.phone || !/^(\+?\d{8,15})$/.test(form.phone))
     errors.phone = "يرجى إدخال رقم جوال صحيح";
-  if (!form.username || form.username.length < 3)
-    errors.username = "الاسم لا يقل عن 3 أحرف";
+  if (!form.name || form.name.length < 3)
+    errors.name = "الاسم لا يقل عن 3 أحرف";
   if (!form.city) errors.city = "يرجى إدخال المدينة";
   if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email))
     errors.email = "البريد الإلكتروني غير صحيح";
   if (!form.password || form.password.length < 6)
     errors.password = "كلمة المرور لا تقل عن 6 أحرف";
-  if (form.passwordConfirm !== form.password)
-    errors.passwordConfirm = "تأكيد كلمة المرور غير متطابق";
-  if (!form.acceptTerms) errors.acceptTerms = "يجب الموافقة على الشروط";
+  if (form.password_confirmation !== form.password)
+    errors.password_confirmation = "تأكيد كلمة المرور غير متطابق";
 
   const hasError = Object.values(errors).some(Boolean);
   if (!hasError) {
-    alert("تم إنشاء الحساب بنجاح (مثال)");
+    formHandle();
   }
 }
+// handle form
+const formHandle = async () => {
+  try {
+    inProgress.value = true;
+    const { submit } = useSubmit(() => register(form), {
+      onSuccess: (response) => {
+        // Handle the response
+        router.push({
+          path: "/verify-code",
+          query: {
+            email: form.email,
+            mode: "register",
+          },
+        });
+        showToast("success", response.message);
+      },
+      onError: (error) => {
+        showToast("error", error?.data?.message);
+        if (error?.data?.code === 400) {
+          return navigateTo("/login", { replace: true });
+        }
+      },
+    });
+    await submit();
+  } catch (error) {
+    if (!error?.data?.message) {
+      showToast("error", "فشل التسجيل");
+    }
+  } finally {
+    inProgress.value = false;
+  }
+};
 </script>
 
 <template>
@@ -119,7 +160,7 @@ function onSubmit() {
           </div>
         </div>
         <div class="col-lg-8">
-          <div class="card border-0 h-100 bg-light">
+          <div class="card border-0 h-100 bg-white">
             <div class="card-body p-4 p-md-5">
               <h1 class="fw-bold text-end mb-4">
                 <span class="display-4">👋</span>مرحبًا بك
@@ -140,8 +181,8 @@ function onSubmit() {
                     <BaseText
                       label="اسم المستخدم"
                       placeholder="اسم المستخدم"
-                      v-model="form.username"
-                      :error="errors.username"
+                      v-model="form.name"
+                      :error="errors.name"
                     />
                   </div>
                   <div class="col-md-6">
@@ -187,23 +228,34 @@ function onSubmit() {
                     <BasePassword
                       label="تأكيد كلمة المرور"
                       placeholder="تأكيد كلمة المرور"
-                      v-model="form.passwordConfirm"
-                      :error="errors.passwordConfirm"
+                      v-model="form.password_confirmation"
+                      :error="errors.password_confirmation"
                     />
                   </div>
                 </div>
                 <div class="text-center mt-3">
-                  <button class="btn btn-main px-4" type="submit">
-                    إنشاء حساب
-                    <Icon
-                      name="material-symbols:arrow-back-rounded"
-                      class="text-white me-2"
-                      size="22"
+                  <button
+                    class="btn btn-main px-4"
+                    :disabled="inProgress"
+                    type="submit"
+                  >
+                    <span v-if="!inProgress">
+                      إنشاء حساب
+                      <Icon
+                        name="material-symbols:arrow-back-rounded"
+                        class="text-white me-2"
+                        size="22"
+                      />
+                    </span>
+                    <icon
+                      v-else
+                      name="svg-spinners:ring-resize"
+                      class="indicator-label fs-1"
                     />
                   </button>
                 </div>
 
-                <div class="text-center text-secondary mt-4">
+                <div class="text-center text-secondary mt-4 other-register">
                   أو التسجيل باستخدام
                 </div>
                 <div class="d-flex justify-content-center gap-3 mt-3">
@@ -211,14 +263,8 @@ function onSubmit() {
                     type="button"
                     class="btn btn-light border shadow-sm px-5"
                   >
-                    <i class="bi bi-apple text-center fs-1 p-0 text-dark"></i>
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-light border shadow-sm px-5"
-                  >
                     <img
-                      src="/bg-home/google-icon.png"
+                      src="/media/bg-home/google-icon.png"
                       class="img-fluid"
                       style="width: 22px"
                       alt="google-icon"
@@ -269,5 +315,26 @@ li .active::after {
   position: absolute;
   right: 0;
   bottom: 0;
+}
+.other-register {
+  position: relative;
+}
+.other-register::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 50%;
+  width: 42%;
+  height: 1px;
+  background-color: #e5e1e9;
+}
+.other-register::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 50%;
+  width: 42%;
+  height: 1px;
+  background-color: #e5e1e9;
 }
 </style>

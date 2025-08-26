@@ -139,7 +139,7 @@ watch(
 
 <template>
   <aside class="filters-sidebar mx-2 position-relative top-0">
-    <div class="card border-0 bg-muted mb-3">
+    <div class="card border-0 mb-3">
       <div class="card-body">
         <h4 class="fw-bold pb-3 mb-3 border-bottom">الأقسام</h4>
         <div class="form-check form-check-reverse mb-2">
@@ -227,7 +227,7 @@ watch(
           <h4 class="fw-bold mb-3">المدينة</h4>
           <div class="input-group">
             <span
-              class="input-group-text text-secondary rounded-0 border-secondary rounded-end border-start-0 bg-white"
+              class="input-group-text text-secondary rounded-0 border-secondary rounded-end border-start-0"
             >
               <i class="bi bi-search"></i>
             </span>
@@ -315,8 +315,16 @@ watch(
       </div>
     </div>
     <div class="text-center">
-      <img src="/bg-home/jawwal1.jpg" class="w-100 mb-3 rounded-1" alt="jawwal" />
-      <img src="/bg-home/jawwal2.jpg" class="w-100 mb-3 rounded-1" alt="jawwal" />
+      <img
+        src="~/public/media/bg-home/jawwal1.jpg"
+        class="w-100 mb-3 rounded-1"
+        alt="jawwal"
+      />
+      <img
+        src="~/public/media/bg-home/jawwal2.jpg"
+        class="w-100 mb-3 rounded-1"
+        alt="jawwal"
+      />
     </div>
   </aside>
 </template>
@@ -327,17 +335,6 @@ watch(
 }
 .card {
   border-radius: 12px;
-}
-.form-check-input,
-.form-check-label {
-  cursor: pointer;
-}
-.form-check-input[type="checkbox"]:indeterminate {
-  background-color: var(--bs-primary);
-  border: none;
-}
-input[type="checkbox"]:checked {
-  background-color: var(--bs-primary);
 }
 .child-item {
   padding-right: 50px;

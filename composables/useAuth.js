@@ -1,9 +1,7 @@
 // Value is initialized in: ~/plugins/auth.js
 import { $larafetch } from "~/utils/$larafetch";
 
-export const useUser = () => {
-  return useState("user", () => undefined);
-};
+export const useUser = () => useState("user", () => null);
 
 export const useAuth = () => {
   const user = useUser();
@@ -17,48 +15,50 @@ export const useAuth = () => {
     }
   }
 
+  async function register(credentials) {
+    const response = await $larafetch("/api/register", {
+      method: "post",
+      body: credentials,
+    });
+    return response;
+  }
+
+  async function verify(credentials) {
+    const response = await $larafetch("/api/verify", {
+      method: "post",
+      body: credentials,
+    });
+    return response;
+  }
+
+  async function resendVerification(credentials) {
+    const response = await $larafetch("/api/resend-verification-code", {
+      method: "post",
+      body: credentials,
+    });
+    return response;
+  }
+
   async function login(credentials) {
     if (isLoggedIn.value) return;
 
-    const response = await $larafetch("/login", {
+    const response = await $larafetch("/api/login", {
       method: "post",
       body: credentials,
     });
     return [response, await refresh()];
   }
 
-  async function checkToken(credentials) {
-    const response = await $larafetch("/check-token", {
-      method: "post",
-      body: credentials,
-    });
-    return response;
-  }
-  async function welcome(credentials) {
-    const response = await $larafetch("/welcome", {
-      method: "post",
-      body: credentials,
-    });
-    return response;
-  }
+  // async function checkToken(credentials) {
+  //   const response = await $larafetch("/check-token", {
+  //     method: "post",
+  //     body: credentials,
+  //   });
+  //   return response;
+  // }
 
-  async function join(credentials) {
-    const response = await $larafetch("/join", {
-      method: "post",
-      body: credentials,
-    });
-    return response;
-  }
   async function forgetPassword(credentials) {
-    const response = await $larafetch("/forget-password", {
-      method: "post",
-      body: credentials,
-    });
-    return response;
-  }
-
-  async function checkCode(credentials) {
-    const response = await $larafetch("/check-code", {
+    const response = await $larafetch("/api/forgot-password", {
       method: "post",
       body: credentials,
     });
@@ -66,45 +66,28 @@ export const useAuth = () => {
   }
 
   async function resetPassword(credentials) {
-    return await $larafetch("/reset-password", {
+    return await $larafetch("/api/reset-password", {
       method: "post",
       body: credentials,
     });
   }
-  async function registerComplete(credentials) {
-    const response = await $larafetch("/register-complete", {
-      method: "post",
-      body: credentials,
-    });
-    return [response, await refresh()];
-  }
-
   async function logout() {
     if (!isLoggedIn.value) return;
-
     await $larafetch("/api/logout", { method: "post" });
     user.value = null;
-    await navigateTo("/login", { replace: true });
-    window.location.reload();  
+    await navigateTo("/login", { replace: true }); // ✅ بدل /api/login
+    window.location.reload();
   }
-
-  // async function resendEmailVerification() {
-  //     return await $larafetch("/email/verification-notification", {
-  //         method: "post",
-  //     });
-  // }
 
   return {
     user,
-    checkToken,
-    welcome,
     isLoggedIn,
     login,
-    join,
+    register,
+    verify,
+    resendVerification,
     forgetPassword,
-    checkCode,
     resetPassword,
-    registerComplete,
     logout,
   };
 };

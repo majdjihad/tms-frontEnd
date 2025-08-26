@@ -1,8 +1,8 @@
 /**
- * User profile management composable providing functionality for 
+ * User profile management composable providing functionality for
  * viewing and updating user profile information
  */
-import {$larafetch} from "~/utils/$larafetch";
+import { $larafetch } from "~/public/$larafetch";
 
 export const useProfile = () => {
   /** Get user profile information by user identifier */
@@ -22,13 +22,10 @@ export const useProfile = () => {
 
   /** Change user password with new credentials */
   async function resetPassword(userIdentify, credentials) {
-    return await $larafetch(
-        `api/profile/${userIdentify}/change-password`,
-        {
-          method: "post",
-          body: credentials,
-        }
-    );
+    return await $larafetch(`api/profile/${userIdentify}/change-password`, {
+      method: "post",
+      body: credentials,
+    });
   }
 
   // Return all profile management functions

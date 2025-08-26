@@ -4,30 +4,119 @@ import OtpCode from "@/components/form/OtpCode.vue";
 useHead({
   title: "تاكيد الرمز",
 });
+
+const route = useRoute();
+const router = useRouter();
+const { verify, resendVerification } = useAuth();
 const otp = ref("");
 const otpError = ref("");
-const sending = ref(false);
+const inProgress = ref(false);
+const resendCodeInProgress = ref(false);
 const otpRef = ref(null);
+
+const resendBtn = ref(null);
+const timerSpan = ref(null);
+const countdown = ref(0.2 * 60);
+const isDisabled = ref(true);
+
+onMounted(() => {
+  const interval = setInterval(() => {
+    const minutes = Math.floor(countdown.value / 60);
+    const seconds = countdown.value % 60;
+
+    if (timerSpan.value) {
+      timerSpan.value.textContent = `يمكنك إعادة الإرسال بعد: ${minutes}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
+    }
+
+    countdown.value--;
+
+    if (countdown.value < 0) {
+      clearInterval(interval);
+      isDisabled.value = false;
+      if (timerSpan.value) timerSpan.value.textContent = "";
+    }
+  }, 1000);
+});
 
 watch(otp, (v) => {
   if (otpError.value && v) otpError.value = "";
 });
 
-async function onSubmit() {
+const formData = reactive({
+  email: route.query.email,
+  verification_code: otp,
+});
+// handle form
+const formHandle = async () => {
   otpError.value = "";
-
   if (!otp.value || otp.value.length < 4) {
     otpError.value = "يرجى إدخال رمز مكوّن من 4 أرقام";
     otpRef.value?.focusFirst?.();
     return;
   }
-
-  sending.value = true;
   try {
+    inProgress.value = true;
+    const { submit } = useSubmit(() => verify(formData), {
+      onSuccess: (response) => {
+        // Handle the response
+        if (route.query.mode === "forget-password") {
+          router.push({
+            path: "/reset-password",
+            query: { email: formData.email, code: otp.value },
+          });
+          showToast("success", response.message);
+        } else if (route.query.mode === "register") {
+          router.push({
+            path: "/",
+          });
+          showToast("success", response.message);
+        }
+      },
+      onError: (error) => {
+        showToast("error", error?.data?.message);
+        if (error?.data?.code === 400) {
+          return navigateTo("/login", { replace: true });
+        }
+      },
+    });
+    await submit();
+  } catch (error) {
+    if (!error?.data?.message) {
+      showToast("error", "فشل التسجيل");
+    }
   } finally {
-    sending.value = false;
+    inProgress.value = false;
   }
-}
+};
+
+const resendVerificationCode = async () => {
+  if (inProgress.value) return;
+  try {
+    resendCodeInProgress.value = true;
+    const { submit } = useSubmit(
+      () => resendVerification({ email: formData.email }),
+      {
+        onSuccess: (response) => {
+          // Handle the response
+          showToast("success", response.message);
+        },
+        onError: (error) => {
+          showToast("error", error.data.message);
+          if (error?.data?.code === 400) {
+            return navigateTo("/login", { replace: true });
+          }
+        },
+      }
+    );
+    await submit();
+  } catch (error) {
+    showToast("error", error.data?.message || "فشل التسجيل");
+  } finally {
+    resendCodeInProgress.value = false;
+  }
+};
 </script>
 
 <template>
@@ -87,12 +176,16 @@ async function onSubmit() {
           </div>
         </div>
         <div class="col-lg-8 py-9">
-          <div class="card border-0 py-9 h-100 bg-light">
+          <div class="card border-0 py-9 h-100 bg-white">
             <div class="card-body p-4 p-md-5">
-              <form @submit.prevent="onSubmit" novalidate>
+              <form @submit.prevent="formHandle" novalidate>
                 <div>
                   <NuxtLink
-                    to="/login"
+                    :to="
+                      route.query.mode === 'forget-password'
+                        ? '/forget-password'
+                        : '/register'
+                    "
                     class="d-inline-flex align-items-center mb-3 text-primary fw-bold"
                   >
                     <Icon
@@ -105,15 +198,23 @@ async function onSubmit() {
                   <div class="w-md-50 w-75 my-8">
                     <p>
                       لقد ارسلنا رمز تحقق الى بريدك الالكتروني
-                      <span class="text-primary">majd@gmail.com</span>
+                      <span class="text-primary">{{ route.query.email }}</span>
                     </p>
                     <OtpCode
+                      v-if="!inProgress"
                       v-model="otp"
-                      :length="4"
+                      :length="6"
                       :error="otpError"
                       ref="otpRef"
                       class="my-9"
                     />
+                    <div v-else class="text-center py-4">
+                      <icon
+                        name="svg-spinners:ring-resize"
+                        class="indicator-label display-4 text-primary"
+                      />
+                    </div>
+
                     <p class="my-3 text-muted">
                       الرجاء إدخال الرمز لإكمال العملية
                     </p>
@@ -122,7 +223,7 @@ async function onSubmit() {
                 <div class="text-end my-3">
                   <button
                     class="btn btn-main mt-3"
-                    :disabled="sending"
+                    :disabled="inProgress"
                     type="submit"
                   >
                     <span class="fw-semibold">تحقق</span>
@@ -132,13 +233,30 @@ async function onSubmit() {
                       size="22"
                     />
                   </button>
-                  <div class="my-9 fw-semibold">
-                    لم تتلقَّ رسالة التحقق؟
-                    <nuxtLink
-                      to="#"
-                      class="text-primary text-decoration-underline"
-                      >اضغط هنا لإعادة الأرسال</nuxtLink
-                    >
+                  <div class="my-9 fw-semibold" v-if="!resendCodeInProgress">
+                    <div>
+                      اذا لم تتلقَّ رسالة التحقق؟
+                      <span
+                        ref="resendBtn"
+                        :class="['text-primary', 'text-decoration-underline']"
+                        @click="resendVerificationCode"
+                        class="cursor-pointer"
+                        v-if="!isDisabled"
+                      >
+                        اضغط هنا لإعادة الأرسال
+                      </span>
+                    </div>
+                    <span
+                      class="text-muted d-block mt-3"
+                      ref="timerSpan"
+                    ></span>
+                  </div>
+                  <div v-else class="text-muted mt-6">
+                    <icon
+                      name="svg-spinners:ring-resize"
+                      class="indicator-label fs-3"
+                    />
+                    <span class="fs-4 me-3">يتم الارسال</span>
                   </div>
                 </div>
               </form>

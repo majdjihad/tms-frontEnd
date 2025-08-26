@@ -1,11 +1,11 @@
 <template>
-  <footer class="footer bg-light border-top pt-4">
+  <footer class="footer bg-white border-top pt-9">
     <div class="">
       <div class="row text-end px-6">
         <div class="col-md-4 col-10 mb-4">
           <div class="mb-3 pe-9">
             <img
-              src="~\assets\media\logos\azza-logo.png"
+              src="~\public\media\logos\azza-logo.png"
               alt="Azza Logo"
               height="40"
               class="ms-2"
@@ -22,32 +22,40 @@
           <h5 class="fw-bold mb-3">الصفحات</h5>
           <ul class="list-unstyled p-0">
             <li>
-              <NuxtLink to="#" class="fs-5 text-muted text-decoration-none"
+              <NuxtLink to="/" class="fs-5 text-muted text-decoration-none"
                 >الرئيسية</NuxtLink
               >
             </li>
             <li>
-              <NuxtLink to="#" class="fs-5 text-muted text-decoration-none"
+              <NuxtLink
+                to="/products"
+                class="fs-5 text-muted text-decoration-none"
                 >منتجاتنا</NuxtLink
               >
             </li>
             <li>
-              <NuxtLink to="#" class="fs-5 text-muted text-decoration-none"
+              <NuxtLink to="/ads" class="fs-5 text-muted text-decoration-none"
                 >تصفح الإعلانات</NuxtLink
               >
             </li>
             <li>
-              <NuxtLink to="#" class="fs-5 text-muted text-decoration-none"
+              <NuxtLink
+                to="/terms-of-use"
+                class="fs-5 text-muted text-decoration-none"
                 >شروط الاستخدام</NuxtLink
               >
             </li>
             <li>
-              <NuxtLink to="#" class="fs-5 text-muted text-decoration-none"
+              <NuxtLink
+                to="/privacy-policy"
+                class="fs-5 text-muted text-decoration-none"
                 >سياسة الخصوصية</NuxtLink
               >
             </li>
             <li>
-              <NuxtLink to="#" class="fs-5 text-muted text-decoration-none"
+              <NuxtLink
+                to="/contact"
+                class="fs-5 text-muted text-decoration-none"
                 >تواصل معنا</NuxtLink
               >
             </li>
@@ -108,8 +116,6 @@
           </p>
         </div>
       </div>
-
-      <!-- الأيقونات + حقوق النشر -->
       <div
         class="border-top py-2 px-6 text-center bg-primary text-white d-flex justify-content-between align-items-center"
       >

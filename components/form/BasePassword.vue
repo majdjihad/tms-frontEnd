@@ -24,7 +24,6 @@
         <Icon :name="visible ? hideIcon : showIcon" :size="iconSize" />
       </button>
     </div>
-
     <div v-if="error" class="invalid-feedback d-block mt-1">{{ error }}</div>
   </div>
 </template>
@@ -52,6 +51,9 @@ defineProps({
 defineEmits(["update:modelValue"]);
 </script>
 <style scoped>
+.form-control {
+  background-color: #f6f6f6;
+}
 .form-control::placeholder {
   color: #a5acb9;
   opacity: 1;

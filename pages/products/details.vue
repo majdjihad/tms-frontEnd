@@ -79,12 +79,12 @@ function mockListing(id) {
     price: 350000,
     currency: "شيكل",
     category: "عقارات",
-    images: ["/bg-home/bg1.png", "/bg-home/bg2.png", "/bg-home/bg3.png"],
+    images: ["/media/bg-home/bg1.png", "/media/bg-home/bg2.png", "/media/bg-home/bg3.png"],
     description:
       "فرصة ذهبية للاستثمار أو السكن الراقي!فلل سياحية عظم للبيع بموقع استراتيجي مميز، تجمع بين التصميم الهندسي العصري والموقـــع الفريـــد، بأسعـــار مغريــة لا تُعوّض. تتميز الفلل بمساحات رحبة وتوزيع داخلي ذكـي يوفر أقصـــى درجــــات الراحـــة والخصوصـــية، مــــع إمكانية تخصيــص التشطيبات النهائية بالكامل بما يتناسب مع ذوقك واحتياجاتك. تقع هذه الفلل فــي منطقة هادئة وآمنة، قريبة من المنتجعات السياحية، والمرافق الحيوية مثل المدارس، المـــولات، والمراكــــز الطبية، ما يجعلها خيارًا مثاليًــا للعائلات أو حتى للمستثمريـــن الباحثين عن عائد مميز من الإيجارات السياحية.استغل الفرصة الآن، واختر وحدتك قبل ارتفاع الأسعار أو نفاد المتاح. فلل فاخرة، سعر منافس، وموقع لا يتكرر... لا تتردد، تواصل معنا الآن!استفد من عروضنا الخاصة لفترة محدودة واحصل على استشارات مجانية من خبراء العقارات.تمتع بإمكانية تقسيط ميسرة وخطط دفع مرنة تناسب جميع الميزانيات.زر موقع المشروع بنفسك لتكتشف روعة التصميم وجودة البناء عن قرب.",
     publisher: {
       name: "AZZA",
-      avatar: "/avatars/logo.png",
+      avatar: "/media/avatars/logo.png",
       phone: "0592072249",
       whatsapp: "+970592072249",
       email: "husseinswalhy8@gmail.com",
@@ -106,7 +106,7 @@ const offers = ref([
     city: "البلح",
     region: "فلسطين",
     price: 750,
-    image: "/bg-home/bg1.png",
+    image: "/media/bg-home/bg1.png",
   },
   {
     id: 2,
@@ -114,7 +114,7 @@ const offers = ref([
     city: "غزة",
     region: "فلسطين",
     price: 2300,
-    image: "/bg-home/bg2.png",
+    image: "/media/bg-home/bg2.png",
   },
   {
     id: 3,
@@ -122,7 +122,7 @@ const offers = ref([
     city: "النصر",
     region: "فلسطين",
     price: 240,
-    image: "/bg-home/bg3.png",
+    image: "/media/bg-home/bg3.png",
   },
   {
     id: 4,
@@ -130,7 +130,7 @@ const offers = ref([
     city: "جباليا",
     region: "فلسطين",
     price: 560,
-    image: "/bg-home/bg4.png",
+    image: "/media/bg-home/bg4.png",
   },
   {
     id: 5,
@@ -138,7 +138,7 @@ const offers = ref([
     city: "غزة",
     region: "فلسطين",
     price: 420,
-    image: "/bg-home/bg5.png",
+    image: "/media/bg-home/bg5.png",
   },
   {
     id: 6,
@@ -146,7 +146,7 @@ const offers = ref([
     city: "غزة",
     region: "فلسطين",
     price: 1150,
-    image: "/bg-home/bg6.png",
+    image: "/media/bg-home/bg6.png",
   },
   {
     id: 7,
@@ -154,7 +154,7 @@ const offers = ref([
     city: "النصر",
     region: "فلسطين",
     price: 330,
-    image: "/bg-home/bg7.png",
+    image: "/media/bg-home/bg7.png",
   },
   {
     id: 8,
@@ -162,7 +162,7 @@ const offers = ref([
     city: "جباليا",
     region: "فلسطين",
     price: 199,
-    image: "/bg-home/bg8.png",
+    image: "/media/bg-home/bg8.png",
   },
 ]);
 const currency = "شيكل";
@@ -368,6 +368,7 @@ const carouselId = "offersCarousel";
                 </div>
               </NuxtLink>
               <NuxtLink
+                :to="`mailto:${listing.publisher?.email}`"
                 class="d-flex w-md-100 w-50 mx-auto align-items-center btn p-0 mb-4"
                 v-if="listing.publisher?.email"
               >
@@ -560,12 +561,6 @@ const carouselId = "offersCarousel";
 .list-dotted li {
   padding-inline-start: 0.5rem;
   position: relative;
-}
-.list-dotted li::before {
-  content: "•";
-  position: absolute;
-  inset-inline-start: -12px;
-  color: #adb5bd;
 }
 .offers-toolbar .btn-carousel {
   width: 42px;

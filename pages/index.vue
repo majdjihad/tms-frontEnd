@@ -2,7 +2,14 @@
 useHead({
   title: "الرئيسية",
 });
+// definePageMeta({
+//   middleware: ["auth"],
+// });
 
+import { useCategoryStore } from "~/stores/categoryStore";
+
+const categoryStore = useCategoryStore();
+categoryStore?.getCategories();
 const category = ref([
   { name: "جميع الفئات", value: "all" },
   { name: "عقارات", value: "real-estate" },
@@ -10,7 +17,7 @@ const category = ref([
   { name: "أثاث", value: "furniture" },
   { name: "خدمات", value: "services" },
 ]);
-const cityes = ref([
+const cities = ref([
   { name: "مدينة غزة", value: "all" },
   { name: "جباليا", value: "real-estate" },
   { name: "بيت لاهيا", value: "cars" },
@@ -43,8 +50,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 6,
     views: 92,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 2,
@@ -57,8 +64,8 @@ const ads = [
     location: "خان يونس - فلسطين",
     comments: 4,
     views: 68,
-    image: "/bg-home/bg4.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg4.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 3,
@@ -71,8 +78,8 @@ const ads = [
     location: "رفح - فلسطين",
     comments: 10,
     views: 120,
-    image: "/bg-home/bg1.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg1.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 4,
@@ -85,8 +92,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 7,
     views: 140,
-    image: "/bg-home/bg3.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg3.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 5,
@@ -99,8 +106,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 5,
     views: 77,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 6,
@@ -113,8 +120,8 @@ const ads = [
     location: "خان يونس - فلسطين",
     comments: 8,
     views: 91,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 7,
@@ -127,8 +134,8 @@ const ads = [
     location: "رفح - فلسطين",
     comments: 9,
     views: 200,
-    image: "/bg-home/bg9.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg9.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 8,
@@ -141,8 +148,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 2,
     views: 55,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 9,
@@ -155,8 +162,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 6,
     views: 92,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 10,
@@ -169,8 +176,8 @@ const ads = [
     location: "خان يونس - فلسطين",
     comments: 4,
     views: 68,
-    image: "/bg-home/bg4.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg4.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 11,
@@ -183,8 +190,8 @@ const ads = [
     location: "رفح - فلسطين",
     comments: 10,
     views: 120,
-    image: "/bg-home/bg1.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg1.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 12,
@@ -197,8 +204,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 7,
     views: 140,
-    image: "/bg-home/bg3.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg3.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 13,
@@ -211,8 +218,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 5,
     views: 77,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 14,
@@ -225,8 +232,8 @@ const ads = [
     location: "خان يونس - فلسطين",
     comments: 8,
     views: 91,
-    image: "/bg-home/bg7.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg7.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 15,
@@ -239,8 +246,8 @@ const ads = [
     location: "رفح - فلسطين",
     comments: 9,
     views: 200,
-    image: "/bg-home/bg9.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg9.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
   {
     id: 16,
@@ -253,8 +260,8 @@ const ads = [
     location: "غزة - فلسطين",
     comments: 2,
     views: 55,
-    image: "/bg-home/bg2.png",
-    owner: { name: "ليث", avatar: "/avatars/user.png" },
+    image: "/media/bg-home/bg2.png",
+    owner: { name: "ليث", avatar: "/media/avatars/user.png" },
   },
 ];
 
@@ -272,7 +279,7 @@ const offers = ref([
     city: "البلح",
     region: "فلسطين",
     price: 750,
-    image: "/bg-home/bg1.png",
+    image: "/media/bg-home/bg1.png",
   },
   {
     id: 2,
@@ -280,7 +287,7 @@ const offers = ref([
     city: "غزة",
     region: "فلسطين",
     price: 2300,
-    image: "/bg-home/bg2.png",
+    image: "/media/bg-home/bg2.png",
   },
   {
     id: 3,
@@ -288,7 +295,7 @@ const offers = ref([
     city: "النصر",
     region: "فلسطين",
     price: 240,
-    image: "/bg-home/bg3.png",
+    image: "/media/bg-home/bg3.png",
   },
   {
     id: 4,
@@ -296,7 +303,7 @@ const offers = ref([
     city: "جباليا",
     region: "فلسطين",
     price: 560,
-    image: "/bg-home/bg4.png",
+    image: "/media/bg-home/bg4.png",
   },
   {
     id: 5,
@@ -304,7 +311,7 @@ const offers = ref([
     city: "غزة",
     region: "فلسطين",
     price: 420,
-    image: "/bg-home/bg5.png",
+    image: "/media/bg-home/bg5.png",
   },
   {
     id: 6,
@@ -312,7 +319,7 @@ const offers = ref([
     city: "غزة",
     region: "فلسطين",
     price: 1150,
-    image: "/bg-home/bg6.png",
+    image: "/media/bg-home/bg6.png",
   },
   {
     id: 7,
@@ -320,7 +327,7 @@ const offers = ref([
     city: "النصر",
     region: "فلسطين",
     price: 330,
-    image: "/bg-home/bg7.png",
+    image: "/media/bg-home/bg7.png",
   },
   {
     id: 8,
@@ -328,7 +335,7 @@ const offers = ref([
     city: "جباليا",
     region: "فلسطين",
     price: 199,
-    image: "/bg-home/bg8.png",
+    image: "/media/bg-home/bg8.png",
   },
 ]);
 
@@ -352,25 +359,25 @@ const carouselId = "offersCarousel";
           <div class="row g-0">
             <div class="col-3">
               <img
-                src="/bg-home/bg1.png"
+                src="/media/bg-home/bg1.png"
                 class="img-fluid w-100 h-100 object-fit-cover"
               />
             </div>
             <div class="col-2">
               <img
-                src="/bg-home/bg2.png"
+                src="/media/bg-home/bg2.png"
                 class="img-fluid w-100 h-100 object-fit-cover"
               />
             </div>
             <div class="col-4">
               <img
-                src="/bg-home/bg3.png"
+                src="/media/bg-home/bg3.png"
                 class="img-fluid w-100 h-100 object-fit-cover"
               />
             </div>
             <div class="col-3">
               <img
-                src="/bg-home/bg4.png"
+                src="/media/bg-home/bg4.png"
                 class="img-fluid w-100 h-100 object-fit-cover"
               />
             </div>
@@ -378,31 +385,31 @@ const carouselId = "offersCarousel";
           <div class="row g-0">
             <div class="col-2">
               <img
-                src="/bg-home/bg5.png"
+                src="/media/bg-home/bg5.png"
                 class="img-fluid w-100 h-100 object-fit-cover"
               />
             </div>
             <div class="col-5">
               <img
-                src="/bg-home/bg6.png"
+                src="/media/bg-home/bg6.png"
                 class="img-fluid w-100 h-100 object-fit-cover"
               />
             </div>
             <div class="col-3">
               <img
-                src="/bg-home/bg7.png"
+                src="/media/bg-home/bg7.png"
                 class="img-fluid w-100 h-100 object-fit-cover"
               />
             </div>
             <div class="col-2">
               <img
-                src="/bg-home/bg8.png"
+                src="/media/bg-home/bg8.png"
                 class="img-fluid w-100 h-100 object-fit-cover"
               />
             </div>
           </div>
         </div>
-      </div>
+              </div>
       <div
         class="hero-overlay position-absolute top-0 start-0 w-100 h-100 z-0 bg-dark opacity-50"
       ></div>
@@ -426,67 +433,70 @@ const carouselId = "offersCarousel";
                 </span>
                 <input
                   type="text"
-                  class="form-control bg-white py-6 text-white border-0 rounded-0"
+                  class="form-control bg-white py-6 text-dark fs-3 border-0 rounded-0"
                   placeholder="ادخل كلمة البحث هنا"
                 />
               </div>
             </div>
             <div class="col-md-3">
-              <div class="input-group d-flex align-items-stretch h-100">
-                <span
-                  class="input-group-text bg-white p-3 text-secondary rounded-0 border-0 border-end"
+              <div class="input-group row gap-0">
+                <div
+                  class="input-group-prepend col-3 text-center bg-white d-flex justify-content-center align-items-center p-0 border-end"
                 >
-                  <Icon name="mdi:tag-multiple" class="fs-1" />
-                </span>
-                <div class="dropdown flex-grow-1">
-                  <button
-                    class="btn bg-white py-6 w-100 h-100 text-end fs-2 text-secondary rounded-0"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                  <label
+                    class="input-group-text bg-white d-flex justify-content-center text-secondary rounded-0 border-0 border-end"
+                    for="inputCategoryGroup"
                   >
-                    <h4 class="text-secondary m-0">اختر القسم</h4>
-                  </button>
-                  <ul class="dropdown-menu w-100">
-                    <li v-for="category in category" :key="category.value">
-                      <h5 class="btn dropdown-item text-end">
-                        {{ category.name }}
-                      </h5>
-                    </li>
-                  </ul>
+                    <Icon name="mdi:tag-multiple" class="fs-1" />
+                  </label>
                 </div>
+                <select
+                  class="custom-select bg-white p-0 py-6 col-9 text-end fs-3 text-secondary rounded-0 border-0"
+                  id="inputCategoryGroup"
+                >
+                  <option selected>اختر القسم</option>
+                  <option
+                    v-for="category in categoryStore.Allcategories"
+                    :key="category.value"
+                    :value="category.name"
+                  >
+                    {{ category.name }}
+                  </option>
+                </select>
               </div>
             </div>
-            <div class="col-md-3">
-              <div
-                class="input-group d-flex align-items-stretch h-100 border-2"
-              >
-                <span
-                  class="input-group-text bg-white p-3 text-secondary rounded-0 border-1 border-start-0"
+            <div class="col-md-3 bg-white">
+              <div class="input-group row gap-0">
+                <div
+                  class="input-group-prepend col-3 text-center bg-white d-flex justify-content-center align-items-center p-0 border-end"
                 >
-                  <Icon name="material-symbols:location-on" class="fs-1" />
-                </span>
-                <div class="dropdown flex-grow-1">
-                  <button
-                    class="btn bg-white py-6 w-100 h-100 text-end rounded-0 border-0"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                  <label
+                    class="input-group-text bg-white d-flex justify-content-center text-secondary rounded-0 border-0 border-end"
+                    for="inputCityGroup"
                   >
-                    <h4 class="text-secondary m-0">اختر المدينة</h4>
-                  </button>
-                  <ul class="dropdown-menu w-100">
-                    <li v-for="city in cityes" :key="city.value">
-                      <h5 class="btn dropdown-item text-end">
-                        {{ city.name }}
-                      </h5>
-                    </li>
-                  </ul>
+                    <Icon name="material-symbols:location-on" class="fs-1" />
+                  </label>
                 </div>
+                <select
+                  class="custom-select bg-white p-0 py-6 col-9 text-end fs-3 text-secondary rounded-0 border-0"
+                  id="inputCityGroup"
+                >
+                  <option selected>اختر المدينة</option>
+                  <option
+                    :value="city.name"
+                    v-for="city in cities"
+                    :key="city.id"
+                  >
+                    {{ city.name }}
+                  </option>
+                </select>
               </div>
             </div>
             <div class="col-md-2">
-              <button class="btn btn-main w-100 h-100 rounded-0" type="button">
+              <button
+                class="btn btn-main d-flex align-items-center justify-content-center w-100 h-100 rounded-0"
+                type="button"
+              >
                 <h1 class="fs-2 text-white m-0">بحث</h1>
               </button>
             </div>
@@ -496,12 +506,12 @@ const carouselId = "offersCarousel";
     </section>
     <section class="categories-section bg-white">
       <div class="container my-5">
-        <div class="row g-3 py-4">
+        <div class="row g-3 py-4" v-if="!categoryStore.Allcategories">
           <NuxtLink
-            to="#"
-            v-for="(cat, index) in categories"
+            v-for="(cat, index) in categoryStore.Allcategories"
             :key="index"
             class="col-6 col-md-3 my-9 position-relative"
+            :to="`ads/category/${cat.slug}`"
           >
             <div
               class="category-card h-150px text-center border rounded d-flex flex-column align-items-center justify-content-between mx-3"
@@ -511,14 +521,16 @@ const carouselId = "offersCarousel";
                 style="position: relative; top: -25px"
               >
                 <img
-                  :src="`/categories/${cat.name}.png`"
+                  :src="`/media/categories/${cat.image_url}.png`"
                   class="w-100"
                   :alt="cat.name"
                 />
               </div>
               <div class="position-absolute bottom-0">
                 <h4>{{ cat.name }}</h4>
-                <div class="btn-category bg-white px-4">
+                <div
+                  class="btn-category bg-white px-4 d-flex justify-content-center"
+                >
                   <button class="btn btn-sm mt-2">
                     <Icon name="line-md:arrow-left" class="fs-1 fw-bold" />
                   </button>
@@ -526,6 +538,9 @@ const carouselId = "offersCarousel";
               </div>
             </div>
           </NuxtLink>
+        </div>
+        <div v-else class="text-center py-9">
+          <icon name="svg-spinners:ring-resize" class="indicator-label fs-1" />
         </div>
         <div
           class="bg-primary text-white rounded p-9 mt-5 d-flex flex-column flex-md-row align-items-center justify-content-between"
@@ -694,6 +709,20 @@ const carouselId = "offersCarousel";
   background-color: var(--bs-primary);
   color: white;
 }
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+input:focus,
+select:focus,
+label:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important; /* إذا بتحب تخفي لون البوردر كمان */
+}
+
 .btn-category {
   position: relative;
   bottom: -20px;

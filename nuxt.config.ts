@@ -32,6 +32,8 @@ export default defineNuxtConfig({
     "~/assets/css/style.bundle.css",
     "primeicons/primeicons.css",
     "~/assets/css/style.css",
+    "filepond/dist/filepond.min.css",
+    "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css",
   ],
 
   // Vue plugins
@@ -66,8 +68,8 @@ export default defineNuxtConfig({
   // Runtime configuration with environment variables
   runtimeConfig: {
     public: {
-      backendUrl: process.env.NUXT_BACKEND_URL,
-      frontendUrl: process.env.NUXT_FRONTEND_URL,
+      backendUrl: process.env.NUXT_PUBLIC_BACKEND_URL,
+      frontendUrl: process.env.NUXT_PUBLIC_FRONTEND_URL,
     },
   },
 
@@ -85,5 +87,5 @@ export default defineNuxtConfig({
   },
 
   // Set compatibility date for Nuxt features
-  compatibilityDate: "2024-11-23",
+  compatibilityDate: "2025-08-01",
 });
